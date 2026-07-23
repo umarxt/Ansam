@@ -1,15 +1,27 @@
 name = "ansam-admin"
+main = "worker/index.ts"
 compatibility_date = "2024-12-01"
-pages_build_output_dir = "dist"
+compatibility_flags = ["nodejs_compat"]
 
-# قاعدة بيانات D1
-# بعد إنشائها بالأمر:  wrangler d1 create ansam-db
-# انسخ database_id هنا
-[[d1_databases]]
-binding = "DB"
-database_name = "ansam-db"
-database_id = "REPLACE_WITH_YOUR_DATABASE_ID"
+# يبني الواجهة تلقائياً قبل النشر
+[build]
+command = "npm run build"
+
+# الملفات الثابتة (مخرجات Vite) + رجوع SPA
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+
+# قاعدة بيانات D1 — مُعطّلة مؤقتاً حتى تُنشئ القاعدة وتضع database_id
+# الخطوات:
+#   1) لوحة Cloudflare > Workers & Pages > D1 > Create database  باسم: ansam-db
+#   2) انسخ Database ID والصقه أدناه
+#   3) أزل علامات # من الأسطر الأربعة التالية ثم احفظ وادفع
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "ansam-db"
+# database_id = "REPLACE_WITH_YOUR_DATABASE_ID"
 
 [vars]
-# سر توقيع الجلسات — غيّره في لوحة Cloudflare (Environment variables) لقيمة قوية
+# غيّرها لقيمة عشوائية طويلة من إعدادات المشروع (Variables and Secrets)
 SESSION_SECRET = "change-me-to-a-long-random-secret"

@@ -1,10 +1,10 @@
 import { Hono } from "hono";
-import { handle } from "hono/cloudflare-pages";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 
 type Bindings = {
   DB: D1Database;
   SESSION_SECRET: string;
+  ASSETS: Fetcher;
 };
 
 type SessionUser = {
@@ -15,7 +15,7 @@ type SessionUser = {
   emp_code: string | null;
 };
 
-const app = new Hono<{ Bindings: Bindings; Variables: { user: SessionUser } }>().basePath("/api");
+export const app = new Hono<{ Bindings: Bindings; Variables: { user: SessionUser } }>().basePath("/api");
 
 /* ----------------------------- أدوات مساعدة ----------------------------- */
 
@@ -612,5 +612,3 @@ app.onError((err, c) => {
   console.error(err);
   return c.json({ error: "خطأ داخلي في الخادم" }, 500);
 });
-
-export const onRequest = handle(app);
