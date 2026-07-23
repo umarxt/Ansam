@@ -1,4 +1,4 @@
-name = "ansam-app"
+name = "ansam"
 main = "worker/index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
@@ -11,6 +11,9 @@ command = "npm run build"
 [assets]
 directory = "./dist"
 binding = "ASSETS"
+html_handling = "none"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
 
 # قاعدة بيانات D1 — مُعطّلة مؤقتاً حتى تُنشئ القاعدة وتضع database_id
 # الخطوات:
