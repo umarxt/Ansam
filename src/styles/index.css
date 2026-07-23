@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   خط Clother Arabic
+   ضع ملفات الخط في: public/fonts/
+     - ClotherArabic-Regular.woff2
+     - ClotherArabic-Medium.woff2
+     - ClotherArabic-Bold.woff2
+   وسيُستخدم تلقائياً. وإن لم تتوفر يُستخدم بديل احترافي (IBM Plex Sans Arabic).
+   ============================================================ */
+@font-face {
+  font-family: "Clother Arabic";
+  src: url("/fonts/ClotherArabic-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Clother Arabic";
+  src: url("/fonts/ClotherArabic-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Clother Arabic";
+  src: url("/fonts/ClotherArabic-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --navy: #12283f;
+  --brand: #2e6da6;
+  --cream: #faf7f1;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Clother Arabic", "IBM Plex Sans Arabic", "Tajawal", system-ui, sans-serif;
+  background: var(--cream);
+  color: #1b2a3a;
+}
+
+/* شريط تمرير أنيق */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #c7d3df;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a9bccd;
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-xl2 shadow-card border border-navy-100/60;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-navy text-white hover:bg-navy-700 shadow-soft;
+  }
+  .btn-brand {
+    @apply btn bg-brand text-white hover:bg-brand-dark shadow-soft;
+  }
+  .btn-ghost {
+    @apply btn bg-navy-50 text-navy hover:bg-navy-100;
+  }
+  .btn-danger {
+    @apply btn bg-red-50 text-red-600 hover:bg-red-100;
+  }
+  .input {
+    @apply w-full rounded-xl border border-navy-100 bg-white px-4 py-2.5 text-navy-800 outline-none transition
+           focus:border-brand focus:ring-2 focus:ring-brand/20 placeholder:text-steel;
+  }
+  .label {
+    @apply block text-sm font-medium text-slate-brand mb-1.5;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+}
+
+/* الطباعة: إظهار المستند فقط */
+@media print {
+  body {
+    background: #fff;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-area {
+    box-shadow: none !important;
+    border: none !important;
+  }
+  @page {
+    margin: 14mm;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.35s ease both;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

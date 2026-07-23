@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <rect width="120" height="120" rx="26" fill="#12283F"/>
+  <!-- موجة أنسام: تدفق الهواء / التبريد -->
+  <path d="M18 74
+           C18 52, 34 52, 34 74
+           C34 96, 50 96, 50 74
+           L50 52
+           C50 40, 66 40, 66 52
+           L66 68
+           C66 80, 82 80, 82 68
+           C82 46, 98 46, 98 68"
+        stroke="#D6E4F0" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="98" cy="46" r="5.5" fill="#2E6DA6"/>
+</svg>
