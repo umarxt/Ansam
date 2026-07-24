@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
+import { ensureSchema } from "./schema";
 
 type Bindings = {
   DB: D1Database;
@@ -16,6 +17,12 @@ type SessionUser = {
 };
 
 export const app = new Hono<{ Bindings: Bindings; Variables: { user: SessionUser } }>().basePath("/api");
+
+// تهيئة قاعدة البيانات تلقائياً عند أول طلب
+app.use("*", async (c, next) => {
+  await ensureSchema(c.env.DB);
+  await next();
+});
 
 /* ----------------------------- أدوات مساعدة ----------------------------- */
 

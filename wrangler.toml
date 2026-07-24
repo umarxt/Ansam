@@ -15,15 +15,11 @@ html_handling = "none"
 not_found_handling = "single-page-application"
 run_worker_first = ["/api/*"]
 
-# قاعدة بيانات D1 — مُعطّلة مؤقتاً حتى تُنشئ القاعدة وتضع database_id
-# الخطوات:
-#   1) لوحة Cloudflare > Workers & Pages > D1 > Create database  باسم: ansam-db
-#   2) انسخ Database ID والصقه أدناه
-#   3) أزل علامات # من الأسطر الأربعة التالية ثم احفظ وادفع
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "ansam-db"
-# database_id = "REPLACE_WITH_YOUR_DATABASE_ID"
+# قاعدة بيانات D1
+[[d1_databases]]
+binding = "DB"
+database_name = "ansam-db"
+database_id = "84f7e193-b009-4b53-ba46-9d92dcf27b28"
 
 [vars]
 # غيّرها لقيمة عشوائية طويلة من إعدادات المشروع (Variables and Secrets)
