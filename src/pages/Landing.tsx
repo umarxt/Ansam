@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Snowflake,
   Wrench,
@@ -58,9 +57,9 @@ export default function Landing() {
             <a href="#sectors" className="hover:text-brand">من نخدم</a>
             <a href="#contact" className="hover:text-brand">تواصل</a>
           </nav>
-          <Link to="/login" className="btn-primary text-sm">
-            دخول المنصة
-          </Link>
+          <a href="#contact" className="btn-primary text-sm">
+            اطلب الخدمة
+          </a>
         </div>
       </header>
 
@@ -235,9 +234,9 @@ export default function Landing() {
             <span className="font-medium text-navy">أنسام</span>
           </div>
           <span>© {new Date().getFullYear()} جميع الحقوق محفوظة — أنسام</span>
-          <Link to="/login" className="text-brand hover:underline">
-            دخول المنصة
-          </Link>
+          <a href="#contact" className="text-brand hover:underline">
+            تواصل معنا
+          </a>
         </div>
       </footer>
     </div>
