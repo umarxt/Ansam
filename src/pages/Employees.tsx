@@ -1,9 +1,40 @@
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, UserCog, ShieldCheck, KeyRound } from "lucide-react";
+import { Plus, Pencil, Trash2, UserCog, ShieldCheck, KeyRound, Wrench, Camera, Image as ImageIcon } from "lucide-react";
 import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { formatDate } from "../lib/format";
 import { Modal, Field, Spinner, EmptyState } from "../components/ui";
+
+const PERMISSIONS: { key: string; label: string; desc: string }[] = [
+  { key: "invoicing", label: "الفوترة وعروض الأسعار", desc: "إنشاء وإصدار الفواتير والعروض" },
+  { key: "finance", label: "المالية", desc: "الاطلاع على اللوحة المالية والحركات" },
+  { key: "tools", label: "لديه عدة / أدوات", desc: "تظهر له أدواته في بوابة الموظف" },
+  { key: "services", label: "تقديم الخدمات", desc: "يقدّم الخدمات ويصوّرها من بوابة الموظف" },
+];
+
+// ضغط صورة الأداة
+function compressImg(file: File, max = 900, quality = 0.7): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > max || height > max) {
+        const r = Math.min(max / width, max / height);
+        width = Math.round(width * r);
+        height = Math.round(height * r);
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
 
 interface Emp {
   id: number;
@@ -13,6 +44,7 @@ interface Emp {
   role: string;
   phone: string | null;
   active: number;
+  permissions?: string[];
   created_at: string;
 }
 
@@ -20,6 +52,7 @@ export default function Employees() {
   const { user } = useAuth();
   const [list, setList] = useState<Emp[] | null>(null);
   const [modal, setModal] = useState<{ open: boolean; emp?: Emp }>({ open: false });
+  const [toolsFor, setToolsFor] = useState<Emp | null>(null);
 
   async function load() {
     const res = await api.get<{ employees: Emp[] }>("/employees");
@@ -121,6 +154,13 @@ export default function Employees() {
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-1">
                         <button
+                          onClick={() => setToolsFor(e)}
+                          className="rounded-lg p-2 text-brand hover:bg-brand/10"
+                          title="أدوات / عدة الموظف"
+                        >
+                          <Wrench className="w-4 h-4" />
+                        </button>
+                        <button
                           onClick={() => setModal({ open: true, emp: e })}
                           className="rounded-lg p-2 text-slate-brand hover:bg-navy-50"
                         >
@@ -147,7 +187,115 @@ export default function Employees() {
       {modal.open && (
         <EmployeeModal emp={modal.emp} onClose={() => setModal({ open: false })} onSaved={load} />
       )}
+      {toolsFor && <ToolsManager emp={toolsFor} onClose={() => setToolsFor(null)} />}
     </div>
+  );
+}
+
+function ToolsManager({ emp, onClose }: { emp: Emp; onClose: () => void }) {
+  const [tools, setTools] = useState<any[] | null>(null);
+  const [form, setForm] = useState({ kit_name: "العدة", name: "", qty: 1, image: "" });
+  const [busy, setBusy] = useState(false);
+
+  async function load() {
+    const r = await api.get<{ tools: any[] }>(`/tools?employee_id=${emp.id}`);
+    setTools(r.tools);
+  }
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    if (f) {
+      const d = await compressImg(f);
+      setForm((s) => ({ ...s, image: d }));
+    }
+    e.target.value = "";
+  }
+  async function add() {
+    if (!form.name.trim()) return;
+    setBusy(true);
+    try {
+      await api.post("/tools", { ...form, employee_id: emp.id, qty: Number(form.qty || 1) });
+      setForm({ kit_name: form.kit_name, name: "", qty: 1, image: "" });
+      load();
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function remove(id: number) {
+    await api.del(`/tools/${id}`);
+    load();
+  }
+
+  return (
+    <Modal open onClose={onClose} title={`أدوات / عدة — ${emp.name}`} wide>
+      <div className="space-y-5">
+        <div className="rounded-xl border border-navy-100 p-4">
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="اسم العدة">
+              <input className="input" value={form.kit_name} onChange={(e) => setForm({ ...form, kit_name: e.target.value })} />
+            </Field>
+            <Field label="اسم الأداة">
+              <input className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            </Field>
+            <Field label="الكمية">
+              <input className="input" type="number" min="1" value={form.qty} onChange={(e) => setForm({ ...form, qty: Number(e.target.value) })} />
+            </Field>
+            <div>
+              <label className="label">صورة الأداة</label>
+              <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-navy-100 px-4 py-2.5 text-sm text-slate-brand hover:border-brand">
+                <Camera className="h-4 w-4" />
+                {form.image ? "تم اختيار صورة" : "اختر صورة"}
+                <input type="file" accept="image/*" className="hidden" onChange={onFile} />
+              </label>
+            </div>
+          </div>
+          {form.image && <img src={form.image} alt="" className="mt-3 h-20 rounded-lg object-cover" />}
+          <div className="mt-3 text-left">
+            <button onClick={add} disabled={busy} className="btn-brand">
+              {busy ? <Spinner className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+              إضافة أداة
+            </button>
+          </div>
+        </div>
+
+        {tools === null ? (
+          <div className="flex justify-center py-8 text-brand">
+            <Spinner className="w-6 h-6" />
+          </div>
+        ) : tools.length === 0 ? (
+          <p className="py-6 text-center text-sm text-steel">لا توجد أدوات مسندة لهذا الموظف</p>
+        ) : (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {tools.map((t) => (
+              <div key={t.id} className="card overflow-hidden">
+                {t.image ? (
+                  <img src={t.image} alt="" className="h-24 w-full object-cover" />
+                ) : (
+                  <div className="flex h-24 items-center justify-center bg-navy-50 text-steel">
+                    <ImageIcon className="h-7 w-7" />
+                  </div>
+                )}
+                <div className="flex items-center justify-between p-2">
+                  <div>
+                    <div className="text-sm font-medium text-navy">{t.name}</div>
+                    <div className="text-[11px] text-steel">
+                      {t.kit_name} · ×{t.qty}
+                    </div>
+                  </div>
+                  <button onClick={() => remove(t.id)} className="rounded-lg p-1.5 text-red-500 hover:bg-red-50">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </Modal>
   );
 }
 
@@ -169,7 +317,17 @@ function EmployeeModal({
     role: emp?.role || "employee",
     phone: emp?.phone || "",
     active: emp ? Boolean(emp.active) : true,
+    permissions: (emp?.permissions as string[]) || [],
   });
+
+  function togglePerm(key: string) {
+    setForm((f) => ({
+      ...f,
+      permissions: f.permissions.includes(key)
+        ? f.permissions.filter((p) => p !== key)
+        : [...f.permissions, key],
+    }));
+  }
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -249,6 +407,40 @@ function EmployeeModal({
             </select>
           </Field>
         </div>
+        {/* الصلاحيات */}
+        <div>
+          <label className="label">الصلاحيات</label>
+          {form.role === "admin" ? (
+            <div className="rounded-xl bg-brand/5 px-4 py-3 text-sm text-brand">
+              المدير يملك جميع الصلاحيات تلقائياً.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {PERMISSIONS.map((p) => (
+                <label
+                  key={p.key}
+                  className={`flex cursor-pointer items-start gap-2 rounded-xl border p-3 transition ${
+                    form.permissions.includes(p.key)
+                      ? "border-brand bg-brand/5"
+                      : "border-navy-100 hover:border-navy-200"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    className="mt-0.5 h-4 w-4 accent-brand"
+                    checked={form.permissions.includes(p.key)}
+                    onChange={() => togglePerm(p.key)}
+                  />
+                  <span>
+                    <span className="block text-sm font-medium text-navy">{p.label}</span>
+                    <span className="block text-xs text-steel">{p.desc}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          )}
+        </div>
+
         <label className="flex items-center gap-2 text-sm text-slate-brand">
           <input
             type="checkbox"

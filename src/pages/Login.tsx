@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 import { Spinner } from "../components/ui";
+import { Logo } from "../components/Logo";
 import { LogIn, ArrowRight } from "lucide-react";
 
 export default function Login() {
@@ -33,7 +34,7 @@ export default function Login() {
       {/* الجانب التعريفي */}
       <div className="relative hidden w-1/2 overflow-hidden bg-navy-gradient lg:flex lg:flex-col lg:justify-between lg:p-14">
         <div className="flex items-center gap-3">
-          <img src="/assets/logo-mark.svg" alt="أنسام" className="h-12 w-12" />
+          <Logo className="h-12 w-12" onDark />
           <span className="text-2xl font-bold text-white">أنسام</span>
         </div>
         <div>
@@ -60,7 +61,7 @@ export default function Login() {
         <div className="w-full max-w-sm fade-in">
           <div className="mb-8 text-center lg:text-right">
             <div className="mb-4 flex justify-center lg:hidden">
-              <img src="/assets/logo-mark.svg" alt="أنسام" className="h-14 w-14" />
+              <Logo className="h-14 w-14" />
             </div>
             <h2 className="text-2xl font-bold text-navy">تسجيل الدخول</h2>
             <p className="mt-1 text-sm text-steel">أدخل بياناتك للوصول إلى لوحة الإدارة</p>

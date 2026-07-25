@@ -7,6 +7,7 @@ export interface User {
   username: string;
   role: string;
   emp_code: string | null;
+  permissions?: string[];
 }
 
 interface AuthContextType {
@@ -16,6 +17,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
   isAdmin: boolean;
+  can: (perm: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType>(null!);
@@ -49,10 +51,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }
 
+  const isAdmin = user?.role === "admin";
+  const can = (perm: string) => isAdmin || Boolean(user?.permissions?.includes(perm));
+
   return (
-    <AuthContext.Provider
-      value={{ user, loading, login, logout, refresh, isAdmin: user?.role === "admin" }}
-    >
+    <AuthContext.Provider value={{ user, loading, login, logout, refresh, isAdmin, can }}>
       {children}
     </AuthContext.Provider>
   );

@@ -72,6 +72,49 @@ const SCHEMA: string[] = [
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     expires_at TEXT NOT NULL
   )`,
+  // كتالوج الخدمات
+  `CREATE TABLE IF NOT EXISTS services (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    default_price REAL NOT NULL DEFAULT 0,
+    active INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  )`,
+  // أدوات/عُدد الموظفين
+  `CREATE TABLE IF NOT EXISTS tools (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    employee_id INTEGER NOT NULL,
+    kit_name TEXT NOT NULL DEFAULT 'العدة',
+    name TEXT NOT NULL,
+    qty INTEGER NOT NULL DEFAULT 1,
+    image TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_tools_employee ON tools(employee_id)`,
+  // طلبات/تقارير الموظفين الميدانية
+  `CREATE TABLE IF NOT EXISTS jobs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    employee_id INTEGER NOT NULL,
+    client_name TEXT,
+    client_phone TEXT,
+    client_address TEXT,
+    service_id INTEGER,
+    service_name TEXT,
+    description TEXT,
+    photos TEXT NOT NULL DEFAULT '[]',
+    amount REAL NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'pending',
+    invoice_id INTEGER,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status)`,
+  `CREATE INDEX IF NOT EXISTS idx_jobs_employee ON jobs(employee_id)`,
+];
+
+// ترقيات للأعمدة المضافة لاحقاً (تُنفّذ كل واحدة على حدة وتُتجاهل إن كان العمود موجوداً)
+const MIGRATIONS: string[] = [
+  `ALTER TABLE employees ADD COLUMN permissions TEXT`,
 ];
 
 // حساب المدير الافتراضي: admin / Ansam@2026
@@ -87,7 +130,7 @@ const SEED: string[] = [
     "activity": "خدمات الصيانة والتبريد والتكييف وصيانة المطابخ والأفران الكبيرة",
     "cr_number": "", "vat_number": "", "phone": "0555555555",
     "email": "info@ansam.sa", "website": "www.ansam.sa",
-    "address": "المملكة العربية السعودية", "iban": "", "bank_name": ""
+    "address": "المملكة العربية السعودية", "iban": "", "bank_name": "", "logo": ""
   }'))`,
   `INSERT OR IGNORE INTO settings (key, value) VALUES ('invoice_defaults', json('{
     "vat_rate": 15, "currency": "SAR", "currency_ar": "ريال",
@@ -116,6 +159,14 @@ export async function ensureSchema(db: D1Database): Promise<void> {
   if (initialized || !db) return;
   try {
     await db.batch(SCHEMA.map((s) => db.prepare(s)));
+    // الترقيات (تجاهل الخطأ إن كان العمود موجوداً)
+    for (const m of MIGRATIONS) {
+      try {
+        await db.prepare(m).run();
+      } catch {
+        /* العمود موجود مسبقاً */
+      }
+    }
     const row = await db.prepare("SELECT COUNT(*) AS c FROM employees").first<{ c: number }>();
     if (!row || row.c === 0) {
       await db.batch(SEED.map((s) => db.prepare(s)));

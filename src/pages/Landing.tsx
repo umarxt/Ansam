@@ -16,6 +16,7 @@ import {
   Instagram,
 } from "lucide-react";
 import { api } from "../lib/api";
+import { Logo } from "../components/Logo";
 
 const SERVICE_ICONS = [Snowflake, UtensilsCrossed, FileCheck, Clock];
 
@@ -46,7 +47,7 @@ export default function Landing() {
       <header className="sticky top-0 z-40 border-b border-navy-100/60 bg-cream/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <div className="flex items-center gap-3">
-            <img src="/assets/logo-mark.svg" alt="أنسام" className="h-11 w-11" />
+            <Logo className="h-11 w-11" />
             <div>
               <div className="text-xl font-bold text-navy leading-none">أنسام</div>
               <div className="text-[11px] text-steel">صيانة · تبريد · تكييف</div>
@@ -216,7 +217,7 @@ export default function Landing() {
               </div>
             </div>
             <div className="flex flex-col items-center justify-center bg-navy-gradient p-8 text-center text-white md:p-10">
-              <img src="/assets/logo-mark.svg" alt="أنسام" className="h-16 w-16" />
+              <Logo className="h-16 w-16" onDark />
               <div className="mt-4 text-2xl font-bold">أنسام</div>
               <p className="mt-2 max-w-xs text-sm text-sky-soft/80">
                 {c.activity || "خدمات الصيانة والتبريد والتكييف وصيانة المطابخ والأفران الكبيرة"}
@@ -230,7 +231,7 @@ export default function Landing() {
       <footer className="border-t border-navy-100 bg-white py-8">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 text-sm text-steel md:flex-row">
           <div className="flex items-center gap-2">
-            <img src="/assets/logo-mark.svg" alt="أنسام" className="h-8 w-8" />
+            <Logo className="h-8 w-8" />
             <span className="font-medium text-navy">أنسام</span>
           </div>
           <span>© {new Date().getFullYear()} جميع الحقوق محفوظة — أنسام</span>

@@ -1,13 +1,40 @@
 import { useEffect, useState } from "react";
-import { Building2, ReceiptText, Cloud, Globe, KeyRound, Save, Check, Plus, Trash2 } from "lucide-react";
+import { Building2, ReceiptText, Cloud, Globe, KeyRound, Save, Check, Plus, Trash2, Camera, Wrench } from "lucide-react";
 import { api } from "../lib/api";
 import { Field, Spinner } from "../components/ui";
+import { resetLogoCache } from "../lib/brand";
 
-type Tab = "company" | "invoice" | "integrations" | "landing" | "security";
+// ضغط الصور (للشعار)
+function compressImage(file: File, max = 512, quality = 0.9): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > max || height > max) {
+        const r = Math.min(max / width, max / height);
+        width = Math.round(width * r);
+        height = Math.round(height * r);
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+      URL.revokeObjectURL(url);
+      // PNG للحفاظ على الشفافية
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+type Tab = "company" | "invoice" | "services" | "integrations" | "landing" | "security";
 
 const TABS: { key: Tab; label: string; icon: any }[] = [
   { key: "company", label: "بيانات الشركة", icon: Building2 },
   { key: "invoice", label: "إعدادات الفوترة", icon: ReceiptText },
+  { key: "services", label: "الخدمات", icon: Wrench },
   { key: "integrations", label: "النسخ الاحتياطي", icon: Cloud },
   { key: "landing", label: "الموقع الرسمي", icon: Globe },
   { key: "security", label: "الأمان", icon: KeyRound },
@@ -39,6 +66,7 @@ export default function Settings() {
 
       {tab === "company" && <CompanySettings />}
       {tab === "invoice" && <InvoiceSettings />}
+      {tab === "services" && <ServicesSettings />}
       {tab === "integrations" && <IntegrationSettings />}
       {tab === "landing" && <LandingSettings />}
       {tab === "security" && <SecuritySettings />}
@@ -81,6 +109,7 @@ function useSetting(key: string, initial: any) {
     setSaved(false);
     try {
       await api.put(`/settings/${key}`, { value });
+      if (key === "company") resetLogoCache();
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } finally {
@@ -111,14 +140,47 @@ function CompanySettings() {
     address: "",
     iban: "",
     bank_name: "",
+    logo: "",
   });
   if (s.loading) return <Loading />;
   const set = (k: string, v: any) => s.setValue({ ...s.value, [k]: v });
+
+  async function onLogo(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    if (f) {
+      const d = await compressImage(f);
+      set("logo", d);
+    }
+    e.target.value = "";
+  }
   return (
     <div className="card space-y-5 p-6">
       <p className="text-sm text-steel">
         هذه البيانات تُشكّل الهيدر الثابت لكل الفواتير وعروض الأسعار — تُدخلها مرة واحدة فقط.
       </p>
+
+      {/* الشعار */}
+      <div className="rounded-xl border border-navy-100 p-4">
+        <label className="label">شعار الشركة</label>
+        <div className="flex items-center gap-4">
+          <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-navy-50 p-2">
+            <img src={s.value.logo || "/assets/logo-mark.svg"} alt="الشعار" className="max-h-full max-w-full object-contain" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="btn-brand cursor-pointer text-sm">
+              <Camera className="h-4 w-4" />
+              رفع شعار (PNG / JPG / SVG)
+              <input type="file" accept="image/*" className="hidden" onChange={onLogo} />
+            </label>
+            {s.value.logo && (
+              <button onClick={() => set("logo", "")} className="text-sm text-red-500 hover:underline">
+                إزالة الشعار (العودة للافتراضي)
+              </button>
+            )}
+            <p className="text-xs text-steel">يُفضّل شعار بخلفية شفافة. يظهر في المنصة والفواتير والموقع.</p>
+          </div>
+        </div>
+      </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="اسم الشركة (عربي)">
           <input className="input" value={s.value.name_ar} onChange={(e) => set("name_ar", e.target.value)} />
@@ -330,6 +392,95 @@ function LandingSettings() {
         </div>
       </div>
       <SaveBar onSave={s.save} saving={s.saving} saved={s.saved} />
+    </div>
+  );
+}
+
+function ServicesSettings() {
+  const [services, setServices] = useState<any[] | null>(null);
+  const [form, setForm] = useState({ name: "", default_price: "" });
+  const [busy, setBusy] = useState(false);
+
+  async function load() {
+    const r = await api.get<{ services: any[] }>("/services");
+    setServices(r.services);
+  }
+  useEffect(() => {
+    load();
+  }, []);
+
+  async function add() {
+    if (!form.name.trim()) return;
+    setBusy(true);
+    try {
+      await api.post("/services", { name: form.name, default_price: Number(form.default_price || 0) });
+      setForm({ name: "", default_price: "" });
+      load();
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function toggle(s: any) {
+    await api.put(`/services/${s.id}`, { active: !s.active });
+    load();
+  }
+  async function remove(id: number) {
+    if (!window.confirm("حذف الخدمة؟")) return;
+    await api.del(`/services/${id}`);
+    load();
+  }
+
+  return (
+    <div className="card space-y-5 p-6">
+      <p className="text-sm text-steel">
+        الخدمات التي تظهر للموظفين في بوابتهم لاختيارها عند تقديم خدمة للعميل.
+      </p>
+      <div className="flex flex-wrap items-end gap-3 rounded-xl border border-navy-100 p-4">
+        <div className="flex-1">
+          <Field label="اسم الخدمة">
+            <input className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="مثال: صيانة مكيف مركزي" />
+          </Field>
+        </div>
+        <div className="w-40">
+          <Field label="السعر الافتراضي">
+            <input className="input" type="number" dir="ltr" value={form.default_price} onChange={(e) => setForm({ ...form, default_price: e.target.value })} />
+          </Field>
+        </div>
+        <button onClick={add} disabled={busy} className="btn-brand">
+          {busy ? <Spinner className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+          إضافة
+        </button>
+      </div>
+
+      {services === null ? (
+        <Loading />
+      ) : services.length === 0 ? (
+        <p className="py-6 text-center text-sm text-steel">لا توجد خدمات — أضف أول خدمة.</p>
+      ) : (
+        <div className="divide-y divide-navy-100">
+          {services.map((s) => (
+            <div key={s.id} className="flex items-center justify-between py-3">
+              <div>
+                <span className="font-medium text-navy">{s.name}</span>
+                {s.default_price > 0 && (
+                  <span className="mr-2 text-sm text-steel">— {Number(s.default_price).toLocaleString("ar-SA")} ريال</span>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => toggle(s)}
+                  className={`badge ${s.active ? "bg-green-100 text-green-700" : "bg-navy-100 text-slate-brand"}`}
+                >
+                  {s.active ? "مفعّلة" : "معطّلة"}
+                </button>
+                <button onClick={() => remove(s.id)} className="rounded-lg p-1.5 text-red-500 hover:bg-red-50">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { formatMoney, formatDate, PAYMENT_LABELS, STATUS_LABELS, STATUS_COLORS } from "../lib/format";
 import { Spinner } from "../components/ui";
+import { Logo } from "../components/Logo";
 
 export default function DocumentView() {
   const { id } = useParams();
@@ -92,7 +93,7 @@ export default function DocumentView() {
         <div className="bg-navy-gradient p-8 text-white">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-4">
-              <img src="/assets/logo-mark.svg" alt="أنسام" className="h-16 w-16" />
+              <Logo className="h-16 w-16" onDark />
               <div>
                 <div className="text-2xl font-bold">{company.name_ar || "مؤسسة أنسام"}</div>
                 <div className="mt-1 max-w-xs text-xs text-sky-soft/80">{company.activity}</div>

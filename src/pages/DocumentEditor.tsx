@@ -4,6 +4,7 @@ import { Plus, Trash2, Save, ArrowRight, Building2 } from "lucide-react";
 import { api } from "../lib/api";
 import { formatMoney } from "../lib/format";
 import { Field, Spinner } from "../components/ui";
+import { Logo } from "../components/Logo";
 
 interface Item {
   desc: string;
@@ -176,7 +177,7 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
       <div className="card bg-navy-gradient p-5 text-white">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src="/assets/logo-mark.svg" alt="أنسام" className="h-12 w-12" />
+            <Logo className="h-12 w-12" onDark />
             <div>
               <div className="text-lg font-bold">{company.name_ar || "مؤسسة أنسام"}</div>
               <div className="text-xs text-sky-soft/80">{company.activity}</div>

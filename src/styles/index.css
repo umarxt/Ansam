@@ -100,20 +100,39 @@ body {
   }
 }
 
-/* الطباعة: إظهار المستند فقط */
+/* الطباعة: إظهار المستند فقط (إخفاء كل ما عداه) */
 @media print {
   body {
-    background: #fff;
+    background: #fff !important;
   }
   .no-print {
     display: none !important;
   }
+  /* إخفاء كل شيء ثم إظهار منطقة الطباعة فقط */
+  body * {
+    visibility: hidden !important;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible !important;
+  }
   .print-area {
+    position: absolute !important;
+    inset: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
     box-shadow: none !important;
     border: none !important;
+    border-radius: 0 !important;
+  }
+  /* الحفاظ على ألوان الخلفية عند الطباعة */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
   @page {
-    margin: 14mm;
+    margin: 12mm;
   }
 }
 

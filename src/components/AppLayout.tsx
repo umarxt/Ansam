@@ -12,22 +12,33 @@ import {
   Menu,
   X,
   ChevronLeft,
+  PieChart,
+  ClipboardList,
 } from "lucide-react";
 import { useAuth } from "../lib/auth";
+import { Logo } from "./Logo";
 
 const nav = [
   { to: "/app", label: "لوحة المعلومات", icon: LayoutDashboard, end: true },
-  { to: "/app/finance", label: "المالية", icon: Wallet },
-  { to: "/app/invoices", label: "الفوترة", icon: FileText },
-  { to: "/app/quotes", label: "عروض الأسعار", icon: FileSpreadsheet },
+  { to: "/app/financial", label: "اللوحة المالية", icon: PieChart, perm: "finance" },
+  { to: "/app/jobs", label: "الطلبات الميدانية", icon: ClipboardList, admin: true },
+  { to: "/app/finance", label: "المالية", icon: Wallet, perm: "finance" },
+  { to: "/app/invoices", label: "الفوترة", icon: FileText, perm: "invoicing" },
+  { to: "/app/quotes", label: "عروض الأسعار", icon: FileSpreadsheet, perm: "invoicing" },
   { to: "/app/employees", label: "الموظفون", icon: Users, admin: true },
   { to: "/app/settings", label: "الإعدادات", icon: Settings, admin: true },
 ];
 
 export default function AppLayout() {
-  const { user, logout, isAdmin } = useAuth();
+  const { user, logout, isAdmin, can } = useAuth();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+
+  const visibleNav = nav.filter((n) => {
+    if (n.admin) return isAdmin;
+    if (n.perm) return can(n.perm);
+    return true;
+  });
 
   async function handleLogout() {
     await logout();
@@ -37,7 +48,7 @@ export default function AppLayout() {
   const SidebarContent = (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-3 px-5 py-6">
-        <img src="/assets/logo-mark.svg" alt="أنسام" className="h-11 w-11" />
+        <Logo className="h-11 w-11" onDark />
         <div>
           <div className="text-xl font-bold text-white leading-none">أنسام</div>
           <div className="text-[11px] text-sky-soft/80 mt-1">منصة الإدارة</div>
@@ -45,9 +56,7 @@ export default function AppLayout() {
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-2">
-        {nav
-          .filter((n) => !n.admin || isAdmin)
-          .map((n) => (
+        {visibleNav.map((n) => (
             <NavLink
               key={n.to}
               to={n.to}
@@ -120,7 +129,7 @@ export default function AppLayout() {
       <div className="lg:pr-64">
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-navy-100 bg-cream/80 px-4 py-3 backdrop-blur lg:hidden">
           <div className="flex items-center gap-2">
-            <img src="/assets/logo-mark.svg" alt="أنسام" className="h-8 w-8" />
+            <Logo className="h-8 w-8" />
             <span className="font-bold text-navy">أنسام</span>
           </div>
           <button onClick={() => setOpen(!open)} className="rounded-lg p-2 text-navy hover:bg-navy-50">

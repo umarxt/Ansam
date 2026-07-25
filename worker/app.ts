@@ -14,7 +14,19 @@ type SessionUser = {
   username: string;
   role: string;
   emp_code: string | null;
+  permissions: string[];
 };
+
+const ALL_PERMS = ["invoicing", "finance", "tools", "services"];
+function effectivePerms(role: string, permissions: string | null | undefined): string[] {
+  if (role === "admin") return [...ALL_PERMS];
+  try {
+    const p = JSON.parse(permissions || "[]");
+    return Array.isArray(p) ? p : [];
+  } catch {
+    return [];
+  }
+}
 
 export const app = new Hono<{ Bindings: Bindings; Variables: { user: SessionUser } }>().basePath("/api");
 
@@ -114,18 +126,52 @@ async function currentUser(c: any): Promise<SessionUser | null> {
   const token = getCookie(c, "ansam_session");
   if (!token) return null;
   const row = await c.env.DB.prepare(
-    `SELECT e.id, e.name, e.username, e.role, e.emp_code, s.expires_at
+    `SELECT e.id, e.name, e.username, e.role, e.emp_code, e.permissions, s.expires_at
      FROM sessions s JOIN employees e ON e.id = s.employee_id
      WHERE s.token = ? AND e.active = 1`
   )
     .bind(token)
-    .first<SessionUser & { expires_at: string }>();
+    .first<any>();
   if (!row) return null;
   if (new Date(row.expires_at).getTime() < Date.now()) {
     await c.env.DB.prepare("DELETE FROM sessions WHERE token = ?").bind(token).run();
     return null;
   }
-  return { id: row.id, name: row.name, username: row.username, role: row.role, emp_code: row.emp_code };
+  return {
+    id: row.id,
+    name: row.name,
+    username: row.username,
+    role: row.role,
+    emp_code: row.emp_code,
+    permissions: effectivePerms(row.role, row.permissions),
+  };
+}
+
+// إنشاء جلسة وإرجاع الكوكي
+async function createSession(c: any, employeeId: number) {
+  const token = randomToken();
+  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  await c.env.DB.prepare("INSERT INTO sessions (token, employee_id, expires_at) VALUES (?, ?, ?)")
+    .bind(token, employeeId, expires.toISOString())
+    .run();
+  setCookie(c, "ansam_session", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "Lax",
+    path: "/",
+    maxAge: 7 * 24 * 60 * 60,
+  });
+}
+
+// التحقق من صلاحية معينة
+function requirePermission(perm: string) {
+  return async (c: any, next: any) => {
+    const user = c.get("user");
+    if (!user || (user.role !== "admin" && !user.permissions.includes(perm))) {
+      return c.json({ error: "لا تملك صلاحية لهذه العملية" }, 403);
+    }
+    await next();
+  };
 }
 
 const requireAuth = async (c: any, next: any) => {
@@ -150,20 +196,47 @@ app.post("/auth/login", async (c) => {
   if (!emp || !(await verifyPassword(password, emp.password_hash))) {
     return c.json({ error: "بيانات الدخول غير صحيحة" }, 401);
   }
-  const token = randomToken();
-  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  await c.env.DB.prepare("INSERT INTO sessions (token, employee_id, expires_at) VALUES (?, ?, ?)")
-    .bind(token, emp.id, expires.toISOString())
-    .run();
-  setCookie(c, "ansam_session", token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "Lax",
-    path: "/",
-    maxAge: 7 * 24 * 60 * 60,
-  });
+  await createSession(c, emp.id);
   return c.json({
-    user: { id: emp.id, name: emp.name, username: emp.username, role: emp.role, emp_code: emp.emp_code },
+    user: {
+      id: emp.id,
+      name: emp.name,
+      username: emp.username,
+      role: emp.role,
+      emp_code: emp.emp_code,
+      permissions: effectivePerms(emp.role, emp.permissions),
+    },
+  });
+});
+
+/* ----------------------------- بوابة الموظفين (دخول بالاسم + الرمز) ----------------------------- */
+
+// قائمة الموظفين للاختيار (عام — الاسم فقط)
+app.get("/portal/employees", async (c) => {
+  const { results } = await c.env.DB.prepare(
+    "SELECT id, name FROM employees WHERE active = 1 AND role != 'admin' ORDER BY name"
+  ).all();
+  return c.json({ employees: results });
+});
+
+app.post("/portal/login", async (c) => {
+  const { employee_id, code } = await c.req.json().catch(() => ({}));
+  if (!employee_id || !code) return c.json({ error: "اختر اسمك وأدخل الرمز" }, 400);
+  const emp = await c.env.DB.prepare("SELECT * FROM employees WHERE id = ? AND active = 1")
+    .bind(employee_id)
+    .first<any>();
+  if (!emp || !emp.emp_code || String(emp.emp_code) !== String(code)) {
+    return c.json({ error: "الرمز غير صحيح" }, 401);
+  }
+  await createSession(c, emp.id);
+  return c.json({
+    user: {
+      id: emp.id,
+      name: emp.name,
+      role: emp.role,
+      emp_code: emp.emp_code,
+      permissions: effectivePerms(emp.role, emp.permissions),
+    },
   });
 });
 
@@ -200,14 +273,27 @@ app.use("/finance", requireAuth);
 app.use("/dashboard", requireAuth);
 app.use("/settings/*", requireAuth);
 app.use("/account/*", requireAuth);
+app.use("/services/*", requireAuth);
+app.use("/services", requireAuth);
+app.use("/tools/*", requireAuth);
+app.use("/tools", requireAuth);
+app.use("/jobs/*", requireAuth);
+app.use("/jobs", requireAuth);
+app.use("/portal/tools", requireAuth);
+app.use("/portal/services", requireAuth);
+app.use("/portal/jobs", requireAuth);
 
 /* ----------------------------- الموظفون ----------------------------- */
 
 app.get("/employees", async (c) => {
   const { results } = await c.env.DB.prepare(
-    "SELECT id, name, username, emp_code, role, phone, active, created_at FROM employees ORDER BY id"
+    "SELECT id, name, username, emp_code, role, phone, active, permissions, created_at FROM employees ORDER BY id"
   ).all();
-  return c.json({ employees: results });
+  const employees = (results as any[]).map((e) => ({
+    ...e,
+    permissions: effectivePerms(e.role, e.permissions),
+  }));
+  return c.json({ employees });
 });
 
 app.post("/employees", requireAdmin, async (c) => {
@@ -217,10 +303,11 @@ app.post("/employees", requireAdmin, async (c) => {
   const exists = await c.env.DB.prepare("SELECT id FROM employees WHERE username = ?").bind(username).first();
   if (exists) return c.json({ error: "اسم الدخول مستخدم مسبقاً" }, 409);
   const hash = await hashPassword(password);
+  const perms = Array.isArray(b.permissions) ? JSON.stringify(b.permissions) : "[]";
   const res = await c.env.DB.prepare(
-    "INSERT INTO employees (name, username, password_hash, emp_code, role, phone) VALUES (?, ?, ?, ?, ?, ?)"
+    "INSERT INTO employees (name, username, password_hash, emp_code, role, phone, permissions) VALUES (?, ?, ?, ?, ?, ?, ?)"
   )
-    .bind(name, username, hash, emp_code || null, role === "admin" ? "admin" : "employee", phone || null)
+    .bind(name, username, hash, emp_code || null, role === "admin" ? "admin" : "employee", phone || null, perms)
     .run();
   return c.json({ id: res.meta.last_row_id });
 });
@@ -236,19 +323,20 @@ app.put("/employees/:id", requireAdmin, async (c) => {
   const role = b.role ? (b.role === "admin" ? "admin" : "employee") : emp.role;
   const phone = b.phone ?? emp.phone;
   const active = b.active === undefined ? emp.active : b.active ? 1 : 0;
+  const perms = Array.isArray(b.permissions) ? JSON.stringify(b.permissions) : emp.permissions ?? "[]";
 
   if (b.password) {
     const hash = await hashPassword(b.password);
     await c.env.DB.prepare(
-      "UPDATE employees SET name=?, emp_code=?, role=?, phone=?, active=?, password_hash=?, updated_at=datetime('now') WHERE id=?"
+      "UPDATE employees SET name=?, emp_code=?, role=?, phone=?, active=?, permissions=?, password_hash=?, updated_at=datetime('now') WHERE id=?"
     )
-      .bind(name, emp_code, role, phone, active, hash, id)
+      .bind(name, emp_code, role, phone, active, perms, hash, id)
       .run();
   } else {
     await c.env.DB.prepare(
-      "UPDATE employees SET name=?, emp_code=?, role=?, phone=?, active=?, updated_at=datetime('now') WHERE id=?"
+      "UPDATE employees SET name=?, emp_code=?, role=?, phone=?, active=?, permissions=?, updated_at=datetime('now') WHERE id=?"
     )
-      .bind(name, emp_code, role, phone, active, id)
+      .bind(name, emp_code, role, phone, active, perms, id)
       .run();
   }
   return c.json({ ok: true });
@@ -563,6 +651,7 @@ app.get("/finance/summary", async (c) => {
 
 app.get("/dashboard", async (c) => {
   const db = c.env.DB;
+  const today = new Date().toISOString().slice(0, 10);
   const totals = await db.prepare(
     `SELECT
        (SELECT COUNT(*) FROM documents WHERE doc_type='invoice') AS invoices_count,
@@ -570,8 +659,19 @@ app.get("/dashboard", async (c) => {
        (SELECT COUNT(*) FROM employees WHERE active=1) AS employees_count,
        (SELECT COALESCE(SUM(total),0) FROM documents WHERE doc_type='invoice') AS invoices_total,
        (SELECT COALESCE(SUM(amount),0) FROM finance_transactions WHERE txn_type='income') AS income_total,
-       (SELECT COALESCE(SUM(amount),0) FROM finance_transactions WHERE txn_type='expense') AS expense_total`
-  ).first<any>();
+       (SELECT COALESCE(SUM(amount),0) FROM finance_transactions WHERE txn_type='expense') AS expense_total,
+       (SELECT COUNT(*) FROM jobs WHERE status='pending') AS jobs_pending,
+       (SELECT COUNT(*) FROM jobs WHERE substr(created_at,1,10)=?) AS jobs_today,
+       (SELECT COUNT(*) FROM jobs) AS jobs_total,
+       (SELECT COUNT(DISTINCT client_name) FROM documents WHERE client_name IS NOT NULL AND client_name!='') AS clients_count,
+       (SELECT COUNT(*) FROM services WHERE active=1) AS services_count`
+  ).bind(today).first<any>();
+
+  const recentJobs = await db.prepare(
+    `SELECT j.id, j.client_name, j.service_name, j.status, j.amount, j.created_at, e.name AS employee_name
+     FROM jobs j LEFT JOIN employees e ON e.id = j.employee_id
+     ORDER BY j.id DESC LIMIT 6`
+  ).all();
 
   const byMethod = await db.prepare(
     `SELECT payment_method, COALESCE(SUM(amount),0) AS amount
@@ -595,7 +695,183 @@ app.get("/dashboard", async (c) => {
     byMethod: byMethod.results,
     monthly: (monthly.results || []).reverse(),
     recent: recent.results,
+    recentJobs: recentJobs.results,
   });
+});
+
+/* ----------------------------- الخدمات (كتالوج) ----------------------------- */
+
+app.get("/services", async (c) => {
+  const { results } = await c.env.DB.prepare("SELECT * FROM services ORDER BY id DESC").all();
+  return c.json({ services: results });
+});
+app.post("/services", requireAdmin, async (c) => {
+  const b = await c.req.json().catch(() => ({}));
+  if (!b.name) return c.json({ error: "اسم الخدمة مطلوب" }, 400);
+  const res = await c.env.DB.prepare("INSERT INTO services (name, default_price, active) VALUES (?,?,?)")
+    .bind(b.name, Number(b.default_price || 0), b.active === false ? 0 : 1)
+    .run();
+  return c.json({ id: res.meta.last_row_id });
+});
+app.put("/services/:id", requireAdmin, async (c) => {
+  const b = await c.req.json().catch(() => ({}));
+  const s = await c.env.DB.prepare("SELECT * FROM services WHERE id=?").bind(c.req.param("id")).first<any>();
+  if (!s) return c.json({ error: "غير موجود" }, 404);
+  await c.env.DB.prepare("UPDATE services SET name=?, default_price=?, active=? WHERE id=?")
+    .bind(b.name ?? s.name, b.default_price ?? s.default_price, b.active === undefined ? s.active : b.active ? 1 : 0, s.id)
+    .run();
+  return c.json({ ok: true });
+});
+app.delete("/services/:id", requireAdmin, async (c) => {
+  await c.env.DB.prepare("DELETE FROM services WHERE id=?").bind(c.req.param("id")).run();
+  return c.json({ ok: true });
+});
+
+/* ----------------------------- الأدوات / العُدد ----------------------------- */
+
+app.get("/tools", requireAdmin, async (c) => {
+  const empId = c.req.query("employee_id");
+  let sql = "SELECT t.*, e.name AS employee_name FROM tools t LEFT JOIN employees e ON e.id=t.employee_id";
+  const binds: any[] = [];
+  if (empId) {
+    sql += " WHERE t.employee_id=?";
+    binds.push(empId);
+  }
+  sql += " ORDER BY t.employee_id, t.kit_name, t.id";
+  const { results } = await c.env.DB.prepare(sql).bind(...binds).all();
+  return c.json({ tools: results });
+});
+app.post("/tools", requireAdmin, async (c) => {
+  const b = await c.req.json().catch(() => ({}));
+  if (!b.employee_id || !b.name) return c.json({ error: "الموظف واسم الأداة مطلوبان" }, 400);
+  const res = await c.env.DB.prepare("INSERT INTO tools (employee_id, kit_name, name, qty, image) VALUES (?,?,?,?,?)")
+    .bind(b.employee_id, b.kit_name || "العدة", b.name, Number(b.qty || 1), b.image || null)
+    .run();
+  return c.json({ id: res.meta.last_row_id });
+});
+app.put("/tools/:id", requireAdmin, async (c) => {
+  const b = await c.req.json().catch(() => ({}));
+  const t = await c.env.DB.prepare("SELECT * FROM tools WHERE id=?").bind(c.req.param("id")).first<any>();
+  if (!t) return c.json({ error: "غير موجود" }, 404);
+  await c.env.DB.prepare("UPDATE tools SET kit_name=?, name=?, qty=?, image=? WHERE id=?")
+    .bind(b.kit_name ?? t.kit_name, b.name ?? t.name, b.qty ?? t.qty, b.image !== undefined ? b.image : t.image, t.id)
+    .run();
+  return c.json({ ok: true });
+});
+app.delete("/tools/:id", requireAdmin, async (c) => {
+  await c.env.DB.prepare("DELETE FROM tools WHERE id=?").bind(c.req.param("id")).run();
+  return c.json({ ok: true });
+});
+
+/* ----------------------------- بوابة الموظف ----------------------------- */
+
+app.get("/portal/tools", requirePermission("tools"), async (c) => {
+  const user = c.get("user");
+  const { results } = await c.env.DB.prepare("SELECT * FROM tools WHERE employee_id=? ORDER BY kit_name, id")
+    .bind(user.id)
+    .all();
+  return c.json({ tools: results });
+});
+app.get("/portal/services", requirePermission("services"), async (c) => {
+  const { results } = await c.env.DB.prepare("SELECT id, name, default_price FROM services WHERE active=1 ORDER BY name").all();
+  return c.json({ services: results });
+});
+app.post("/portal/jobs", requirePermission("services"), async (c) => {
+  const user = c.get("user");
+  const b = await c.req.json().catch(() => ({}));
+  const photos = Array.isArray(b.photos) ? b.photos : [];
+  const res = await c.env.DB.prepare(
+    `INSERT INTO jobs (employee_id, client_name, client_phone, client_address, service_id, service_name, description, photos, amount, status)
+     VALUES (?,?,?,?,?,?,?,?,?, 'pending')`
+  )
+    .bind(
+      user.id,
+      b.client_name || null,
+      b.client_phone || null,
+      b.client_address || null,
+      b.service_id || null,
+      b.service_name || null,
+      b.description || null,
+      JSON.stringify(photos),
+      Number(b.amount || 0)
+    )
+    .run();
+  return c.json({ id: res.meta.last_row_id });
+});
+app.get("/portal/jobs", async (c) => {
+  const user = c.get("user");
+  const { results } = await c.env.DB.prepare(
+    "SELECT id, client_name, service_name, status, amount, created_at FROM jobs WHERE employee_id=? ORDER BY id DESC LIMIT 50"
+  )
+    .bind(user.id)
+    .all();
+  return c.json({ jobs: results });
+});
+
+/* ----------------------------- الطلبات الميدانية (الإدارة) ----------------------------- */
+
+app.get("/jobs", requireAdmin, async (c) => {
+  const status = c.req.query("status");
+  let sql = "SELECT j.*, e.name AS employee_name FROM jobs j LEFT JOIN employees e ON e.id=j.employee_id";
+  const binds: any[] = [];
+  if (status) {
+    sql += " WHERE j.status=?";
+    binds.push(status);
+  }
+  sql += " ORDER BY j.id DESC LIMIT 200";
+  const { results } = await c.env.DB.prepare(sql).bind(...binds).all();
+  return c.json({ jobs: results });
+});
+app.get("/jobs/:id", requireAdmin, async (c) => {
+  const j = await c.env.DB.prepare(
+    "SELECT j.*, e.name AS employee_name FROM jobs j LEFT JOIN employees e ON e.id=j.employee_id WHERE j.id=?"
+  )
+    .bind(c.req.param("id"))
+    .first();
+  if (!j) return c.json({ error: "غير موجود" }, 404);
+  return c.json({ job: j });
+});
+app.post("/jobs/:id/confirm", requireAdmin, async (c) => {
+  const user = c.get("user");
+  const j = await c.env.DB.prepare("SELECT * FROM jobs WHERE id=?").bind(c.req.param("id")).first<any>();
+  if (!j) return c.json({ error: "غير موجود" }, 404);
+  if (j.invoice_id) return c.json({ ok: true, invoice_id: j.invoice_id });
+  const defaults = await getSetting<any>(c.env.DB, "invoice_defaults", { vat_rate: 15 });
+  const vatRate = defaults.vat_rate ?? 15;
+  const items = [{ desc: j.service_name || "خدمة", qty: 1, price: Number(j.amount || 0) }];
+  const totals = computeTotals(items, 0, vatRate);
+  const number = await nextNumber(c.env.DB, "invoice");
+  const issueDate = new Date().toISOString().slice(0, 10);
+  const res = await c.env.DB.prepare(
+    `INSERT INTO documents (doc_type, number, issue_date, client_name, client_phone, client_address, items, subtotal, discount, vat_rate, vat_amount, total, status, notes, created_by)
+     VALUES ('invoice',?,?,?,?,?,?,?,0,?,?,?, 'draft', ?, ?)`
+  )
+    .bind(
+      number,
+      issueDate,
+      j.client_name || "",
+      j.client_phone || null,
+      j.client_address || null,
+      JSON.stringify(items),
+      totals.subtotal,
+      vatRate,
+      totals.vat_amount,
+      totals.total,
+      j.description || null,
+      user.id
+    )
+    .run();
+  const docId = res.meta.last_row_id;
+  await c.env.DB.prepare("UPDATE jobs SET status='confirmed', invoice_id=?, updated_at=datetime('now') WHERE id=?")
+    .bind(docId, j.id)
+    .run();
+  return c.json({ ok: true, invoice_id: docId, number });
+});
+app.post("/jobs/:id/reject", requireAdmin, async (c) => {
+  await c.env.DB.prepare("UPDATE jobs SET status='rejected', updated_at=datetime('now') WHERE id=?")
+    .bind(c.req.param("id"))
+    .run();
+  return c.json({ ok: true });
 });
 
 /* ----------------------------- الإعدادات ----------------------------- */
