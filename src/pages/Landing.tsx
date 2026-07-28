@@ -46,10 +46,9 @@ export default function Landing() {
       <header className="sticky top-0 z-40 border-b border-navy-100/60 bg-cream/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <div className="flex items-center gap-3">
-            <Logo className="h-11 w-11" />
             <div>
-              <div className="text-xl font-bold text-navy leading-none">أنسام</div>
-              <div className="text-[11px] text-steel">صيانة · تبريد · تكييف</div>
+              <Logo variant="horizontal" className="h-8 w-auto" />
+              <div className="mt-1 text-[11px] text-steel">صيانة · تبريد · تكييف</div>
             </div>
           </div>
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-brand md:flex">
@@ -216,9 +215,8 @@ export default function Landing() {
               </div>
             </div>
             <div className="flex flex-col items-center justify-center bg-navy-gradient p-8 text-center text-white md:p-10">
-              <Logo className="h-16 w-16" onDark />
-              <div className="mt-4 text-2xl font-bold">أنسام</div>
-              <p className="mt-2 max-w-xs text-sm text-sky-soft/80">
+              <Logo variant="stacked" onDark className="h-28 w-auto" />
+              <p className="mt-5 max-w-xs text-sm text-sky-soft/80">
                 {c.activity || "خدمات الصيانة والتبريد والتكييف وصيانة المطابخ والأفران الكبيرة"}
               </p>
             </div>
@@ -230,8 +228,7 @@ export default function Landing() {
       <footer className="border-t border-navy-100 bg-white py-8">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 text-sm text-steel md:flex-row">
           <div className="flex items-center gap-2">
-            <Logo className="h-8 w-8" />
-            <span className="font-medium text-navy">أنسام</span>
+            <Logo variant="horizontal" className="h-7 w-auto" />
           </div>
           <span>© {new Date().getFullYear()} جميع الحقوق محفوظة — أنسام</span>
           <a href="#contact" className="text-brand hover:underline">

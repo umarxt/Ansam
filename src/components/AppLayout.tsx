@@ -47,12 +47,9 @@ export default function AppLayout() {
 
   const SidebarContent = (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-3 px-5 py-6">
-        <Logo className="h-11 w-11" onDark />
-        <div>
-          <div className="text-xl font-bold text-white leading-none">أنسام</div>
-          <div className="text-[11px] text-sky-soft/80 mt-1">منصة الإدارة</div>
-        </div>
+      <div className="px-5 py-6">
+        <Logo variant="horizontal" onDark className="h-8 w-auto" />
+        <div className="text-[11px] text-sky-soft/80 mt-2">منصة الإدارة</div>
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-2">
@@ -129,8 +126,7 @@ export default function AppLayout() {
       <div className="lg:pr-64">
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-navy-100 bg-cream/80 px-4 py-3 backdrop-blur lg:hidden">
           <div className="flex items-center gap-2">
-            <Logo className="h-8 w-8" />
-            <span className="font-bold text-navy">أنسام</span>
+            <Logo variant="horizontal" className="h-7 w-auto" />
           </div>
           <button onClick={() => setOpen(!open)} className="rounded-lg p-2 text-navy hover:bg-navy-50">
             {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

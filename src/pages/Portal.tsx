@@ -184,8 +184,8 @@ function PortalLogin({ onDone }: { onDone: () => Promise<void> }) {
     <div className="flex min-h-screen flex-col items-center justify-center bg-navy-gradient px-6">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
-          <div className="mb-3 flex justify-center">
-            <Logo className="h-14 w-14" onDark />
+          <div className="mb-4 flex justify-center">
+            <Logo variant="stacked" onDark className="h-24 w-auto" />
           </div>
           <h1 className="text-2xl font-bold text-white">بوابة الموظف</h1>
           <p className="mt-1 text-sm text-sky-soft/80">اختر اسمك وأدخل الرمز الخاص بك</p>

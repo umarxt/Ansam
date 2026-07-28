@@ -34,8 +34,7 @@ export default function Login() {
       {/* الجانب التعريفي */}
       <div className="relative hidden w-1/2 overflow-hidden bg-navy-gradient lg:flex lg:flex-col lg:justify-between lg:p-14">
         <div className="flex items-center gap-3">
-          <Logo className="h-12 w-12" onDark />
-          <span className="text-2xl font-bold text-white">أنسام</span>
+          <Logo variant="horizontal" onDark className="h-9 w-auto" />
         </div>
         <div>
           <h1 className="text-4xl font-bold leading-snug text-white">
@@ -61,7 +60,7 @@ export default function Login() {
         <div className="w-full max-w-sm fade-in">
           <div className="mb-8 text-center lg:text-right">
             <div className="mb-4 flex justify-center lg:hidden">
-              <Logo className="h-14 w-14" />
+              <Logo variant="stacked" className="h-24 w-auto" />
             </div>
             <h2 className="text-2xl font-bold text-navy">تسجيل الدخول</h2>
             <p className="mt-1 text-sm text-steel">أدخل بياناتك للوصول إلى لوحة الإدارة</p>
