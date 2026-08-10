@@ -135,7 +135,7 @@ export default function Landing() {
                 key={i}
                 className="card group p-6 transition-all hover:-translate-y-1 hover:shadow-glow"
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand transition group-hover:bg-brand group-hover:text-white">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand transition-all duration-300 ease-out group-hover:bg-brand group-hover:text-white group-hover:-rotate-6 group-active:-rotate-12 group-active:scale-95">
                   <Icon className="h-6 w-6" />
                 </div>
                 <h3 className="font-medium text-navy">{s.title}</h3>
