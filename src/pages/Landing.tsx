@@ -45,13 +45,13 @@ export default function Landing() {
       {/* الشريط العلوي */}
       <header className="sticky top-0 z-40 border-b border-navy-100/60 bg-cream/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <div className="flex items-center gap-3">
-            <Logo className="h-11 w-11" />
-            <div>
-              <div className="text-xl font-medium text-navy leading-none">أنسام</div>
-              <div className="text-[11px] text-steel">صيانة · تبريد · تكييف</div>
-            </div>
-          </div>
+          <a href="#" aria-label="أنسام" className="flex items-center">
+            <img
+              src="/ansam-lockup-horizontal.svg"
+              alt="أنسام"
+              className="h-12 w-auto md:h-16"
+            />
+          </a>
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-brand md:flex">
             <a href="#services" className="hover:text-brand">الخدمات</a>
             <a href="#sectors" className="hover:text-brand">من نخدم</a>

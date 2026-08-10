@@ -21,7 +21,9 @@ export function Logo({
   }, []);
 
   const isCustom = Boolean(logo);
-  const src = logo || "/assets/logo-mark.svg";
+  // الأصل الافتراضي موجود في public/ مباشرة؛ النسخة البيضاء على الخلفيات الداكنة
+  const defaultSrc = onDark ? "/ansam-mark-white.svg" : "/ansam-mark.svg";
+  const src = logo || defaultSrc;
 
   if (isCustom && onDark) {
     return (
