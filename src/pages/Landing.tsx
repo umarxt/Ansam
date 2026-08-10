@@ -129,9 +129,9 @@ export default function Landing() {
               </p>
               <div className="mt-6 grid grid-cols-3 gap-3 text-center">
                 {[
-                  { n: "+٥٠", t: "عميل" },
-                  { n: "٢٤/٧", t: "دعم" },
-                  { n: "١٠٠٪", t: "جودة" },
+                  { n: "+50", t: "عميل" },
+                  { n: "24/7", t: "دعم" },
+                  { n: "100%", t: "جودة" },
                 ].map((s) => (
                   <div key={s.t} className="rounded-xl bg-white/10 py-3">
                     <div className="text-lg font-medium">{s.n}</div>
