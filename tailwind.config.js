@@ -33,13 +33,30 @@ export default {
         cream: "#FAF7F1",
       },
       fontFamily: {
-        arabic: [
+        sans: [
           "Clother Arabic",
+          "SF Arabic",
+          "Segoe UI",
           "IBM Plex Sans Arabic",
-          "Tajawal",
           "system-ui",
           "sans-serif",
         ],
+        arabic: [
+          "Clother Arabic",
+          "SF Arabic",
+          "Segoe UI",
+          "IBM Plex Sans Arabic",
+          "system-ui",
+          "sans-serif",
+        ],
+      },
+      fontSize: {
+        // المقياس الطباعي — القسم 3 (القيَم للديسكتوب؛ الجوال عبر أصناف type-*)
+        hero: ["48px", { lineHeight: "1.35" }],
+        section: ["34px", { lineHeight: "1.4" }],
+        "card-title": ["19px", { lineHeight: "1.5" }],
+        body: ["16px", { lineHeight: "1.8" }],
+        eyebrow: ["13px", { lineHeight: "1.5" }],
       },
       boxShadow: {
         soft: "0 4px 24px -8px rgba(18, 40, 63, 0.12)",

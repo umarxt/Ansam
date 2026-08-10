@@ -3,31 +3,23 @@
 @tailwind utilities;
 
 /* ============================================================
-   خط Clother Arabic
-   ضع ملفات الخط في: public/fonts/
-     - ClotherArabic-Regular.woff2
-     - ClotherArabic-Medium.woff2
-     - ClotherArabic-Bold.woff2
-   وسيُستخدم تلقائياً. وإن لم تتوفر يُستخدم بديل احترافي (IBM Plex Sans Arabic).
+   خط Clother Arabic — استضافة ذاتية، وزنان فقط (400 و500)
+   ضع الملفات في: public/fonts/
+     - clother-ar-400.woff2
+     - clother-ar-500.woff2
+   وسيُستخدم تلقائياً. وإن لم تتوفر يُستخدم بديل احترافي من السلسلة.
    ============================================================ */
 @font-face {
   font-family: "Clother Arabic";
-  src: url("/fonts/ClotherArabic-Regular.woff2") format("woff2");
+  src: url("/fonts/clother-ar-400.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Clother Arabic";
-  src: url("/fonts/ClotherArabic-Medium.woff2") format("woff2");
+  src: url("/fonts/clother-ar-500.woff2") format("woff2");
   font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Clother Arabic";
-  src: url("/fonts/ClotherArabic-Bold.woff2") format("woff2");
-  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -51,7 +43,15 @@ body,
 
 body {
   margin: 0;
-  font-family: "Clother Arabic", "IBM Plex Sans Arabic", "Tajawal", system-ui, sans-serif;
+  font-family: "Clother Arabic", "SF Arabic", "Segoe UI", "IBM Plex Sans Arabic",
+    system-ui, sans-serif;
+  /* نص الفقرات: 16px ووزن 400 وارتفاع سطر 1.8 (إلزامي للعربية) */
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.8;
+  /* أرقام لاتينية بمحاذاة عمودية */
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
   background: var(--cream);
   color: #1b2a3a;
 }
@@ -67,6 +67,59 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #a9bccd;
+}
+
+/* ============================================================
+   المقياس الطباعي (القسم 3) — أصناف دلالية بأحجام متجاوبة.
+   الوزن 500 فقط للعناوين، و400 للنص والتسميات.
+   ============================================================ */
+@layer components {
+  .type-hero {
+    @apply font-medium;
+    font-size: 30px;
+    line-height: 1.35;
+  }
+  .type-section-title {
+    @apply font-medium;
+    font-size: 25px;
+    line-height: 1.4;
+  }
+  .type-card-title {
+    @apply font-medium;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  .type-body {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  .type-eyebrow {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .num {
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+  }
+}
+@media (min-width: 768px) {
+  .type-hero {
+    font-size: 48px;
+  }
+  .type-section-title {
+    font-size: 34px;
+  }
+  .type-card-title {
+    font-size: 19px;
+  }
+  .type-body {
+    font-size: 16px;
+  }
+  .type-eyebrow {
+    font-size: 13px;
+  }
 }
 
 @layer components {

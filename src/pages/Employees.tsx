@@ -76,7 +76,7 @@ export default function Employees() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="flex items-center gap-2 text-2xl font-bold text-navy">
+          <h1 className="flex items-center gap-2 text-2xl font-medium text-navy">
             <UserCog className="h-6 w-6 text-brand" />
             الموظفون
           </h1>
@@ -114,7 +114,7 @@ export default function Employees() {
                   <tr key={e.id} className="hover:bg-navy-50/30">
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-2">
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/10 text-xs font-bold text-brand">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/10 text-xs font-medium text-brand">
                           {e.name.charAt(0)}
                         </span>
                         <span className="font-medium text-navy">{e.name}</span>

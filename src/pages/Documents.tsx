@@ -41,7 +41,7 @@ export default function Documents({ type }: { type: "invoice" | "quote" }) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="flex items-center gap-2 text-2xl font-bold text-navy">
+          <h1 className="flex items-center gap-2 text-2xl font-medium text-navy">
             <Icon className="h-6 w-6 text-brand" />
             {title}
           </h1>
@@ -108,7 +108,7 @@ export default function Documents({ type }: { type: "invoice" | "quote" }) {
                     </td>
                     <td className="px-5 py-3 text-navy">{d.client_name}</td>
                     <td className="px-5 py-3 text-steel">{formatDate(d.issue_date)}</td>
-                    <td className="px-5 py-3 font-semibold text-navy">{formatMoney(d.total)}</td>
+                    <td className="px-5 py-3 font-medium text-navy">{formatMoney(d.total)}</td>
                     {type === "invoice" && (
                       <td className="px-5 py-3 text-slate-brand">
                         {d.payment_method ? PAYMENT_LABELS[d.payment_method] : "-"}

@@ -35,10 +35,10 @@ export default function Login() {
       <div className="relative hidden w-1/2 overflow-hidden bg-navy-gradient lg:flex lg:flex-col lg:justify-between lg:p-14">
         <div className="flex items-center gap-3">
           <Logo className="h-12 w-12" onDark />
-          <span className="text-2xl font-bold text-white">أنسام</span>
+          <span className="text-2xl font-medium text-white">أنسام</span>
         </div>
         <div>
-          <h1 className="text-4xl font-bold leading-snug text-white">
+          <h1 className="text-4xl font-medium leading-snug text-white">
             منصة إدارة متكاملة
             <br />
             للصيانة والتبريد والتكييف
@@ -63,7 +63,7 @@ export default function Login() {
             <div className="mb-4 flex justify-center lg:hidden">
               <Logo className="h-14 w-14" />
             </div>
-            <h2 className="text-2xl font-bold text-navy">تسجيل الدخول</h2>
+            <h2 className="text-2xl font-medium text-navy">تسجيل الدخول</h2>
             <p className="mt-1 text-sm text-steel">أدخل بياناتك للوصول إلى لوحة الإدارة</p>
           </div>
 

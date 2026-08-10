@@ -63,7 +63,7 @@ export default function Portal() {
           <div className="flex items-center gap-3">
             <Logo className="h-9 w-9" onDark />
             <div>
-              <div className="text-lg font-bold leading-none">بوابة الموظف</div>
+              <div className="text-lg font-medium leading-none">بوابة الموظف</div>
               <div className="text-[11px] text-sky-soft/80 mt-1">
                 {user.name} {user.emp_code ? `· ${user.emp_code}` : ""}
               </div>
@@ -90,7 +90,7 @@ export default function Portal() {
 
         {view === "home" && (
           <>
-            <h1 className="mb-1 text-2xl font-bold text-navy">مرحباً {user.name.split(" ")[0]} 👋</h1>
+            <h1 className="mb-1 text-2xl font-medium text-navy">مرحباً {user.name.split(" ")[0]} 👋</h1>
             <p className="mb-6 text-sm text-steel">اختر الإجراء المطلوب</p>
             <div className="grid grid-cols-2 gap-4">
               {can("tools") && (
@@ -145,7 +145,7 @@ function PortalTile({ icon: Icon, label, sub, onClick, primary }: any) {
         <Icon className="h-6 w-6" />
       </span>
       <div>
-        <div className={`font-bold ${primary ? "text-white" : "text-navy"}`}>{label}</div>
+        <div className={`font-medium ${primary ? "text-white" : "text-navy"}`}>{label}</div>
         <div className={`text-xs ${primary ? "text-sky-soft/80" : "text-steel"}`}>{sub}</div>
       </div>
     </button>
@@ -187,7 +187,7 @@ function PortalLogin({ onDone }: { onDone: () => Promise<void> }) {
           <div className="mb-3 flex justify-center">
             <Logo className="h-14 w-14" onDark />
           </div>
-          <h1 className="text-2xl font-bold text-white">بوابة الموظف</h1>
+          <h1 className="text-2xl font-medium text-white">بوابة الموظف</h1>
           <p className="mt-1 text-sm text-sky-soft/80">اختر اسمك وأدخل الرمز الخاص بك</p>
         </div>
         <form onSubmit={submit} className="card space-y-4 p-6">
@@ -253,10 +253,10 @@ function ToolsView() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-navy">أدواتي</h1>
+      <h1 className="text-xl font-medium text-navy">أدواتي</h1>
       {Object.entries(kits).map(([kit, items]) => (
         <div key={kit}>
-          <h3 className="mb-3 font-bold text-slate-brand">{kit}</h3>
+          <h3 className="mb-3 font-medium text-slate-brand">{kit}</h3>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {items.map((t) => (
               <div key={t.id} className="card overflow-hidden">
@@ -343,14 +343,14 @@ function ServiceForm({ onSubmitted }: { onSubmitted: () => void }) {
     return (
       <div className="card flex flex-col items-center gap-3 py-16 text-center">
         <CheckCircle2 className="h-14 w-14 text-green-600" />
-        <div className="text-lg font-bold text-navy">تم إرسال الطلب بنجاح</div>
+        <div className="text-lg font-medium text-navy">تم إرسال الطلب بنجاح</div>
         <p className="text-sm text-steel">سيصل الطلب للإدارة للمراجعة والتأكيد.</p>
       </div>
     );
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold text-navy">تقديم خدمة للعميل</h1>
+      <h1 className="text-xl font-medium text-navy">تقديم خدمة للعميل</h1>
       {error && <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
 
       <div className="card space-y-4 p-5">
@@ -445,7 +445,7 @@ function HistoryView() {
     );
   return (
     <div className="space-y-3">
-      <h1 className="text-xl font-bold text-navy">سجل طلباتي</h1>
+      <h1 className="text-xl font-medium text-navy">سجل طلباتي</h1>
       {jobs.map((j) => (
         <div key={j.id} className="card flex items-center justify-between p-4">
           <div>
@@ -455,7 +455,7 @@ function HistoryView() {
             </div>
           </div>
           <div className="text-left">
-            <div className="font-semibold text-navy">{formatMoney(j.amount)}</div>
+            <div className="font-medium text-navy">{formatMoney(j.amount)}</div>
             <span className={`badge ${JOB_STATUS[j.status]?.cls || ""}`}>{JOB_STATUS[j.status]?.label}</span>
           </div>
         </div>

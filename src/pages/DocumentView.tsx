@@ -95,12 +95,12 @@ export default function DocumentView() {
             <div className="flex items-center gap-4">
               <Logo className="h-16 w-16" onDark />
               <div>
-                <div className="text-2xl font-bold">{company.name_ar || "مؤسسة أنسام"}</div>
+                <div className="text-2xl font-medium">{company.name_ar || "مؤسسة أنسام"}</div>
                 <div className="mt-1 max-w-xs text-xs text-sky-soft/80">{company.activity}</div>
               </div>
             </div>
             <div className="text-left">
-              <div className="text-xl font-bold">{docTitle}</div>
+              <div className="text-xl font-medium">{docTitle}</div>
               <div className="mt-1 text-sm text-sky-soft/90" dir="ltr">
                 {doc.number}
               </div>
@@ -122,7 +122,7 @@ export default function DocumentView() {
           <div className="grid grid-cols-2 gap-6 border-b border-navy-100 pb-6">
             <div>
               <div className="mb-2 text-xs font-medium text-steel">فاتورة إلى</div>
-              <div className="font-bold text-navy">{doc.client_name}</div>
+              <div className="font-medium text-navy">{doc.client_name}</div>
               {doc.client_address && <div className="text-sm text-slate-brand">{doc.client_address}</div>}
               {doc.client_phone && (
                 <div className="text-sm text-slate-brand" dir="ltr">
@@ -198,7 +198,7 @@ export default function DocumentView() {
               </div>
               <div className="flex justify-between rounded-xl bg-navy px-4 py-3 text-white">
                 <span className="font-medium">الإجمالي</span>
-                <span className="font-bold">{formatMoney(doc.total, currency)}</span>
+                <span className="font-medium">{formatMoney(doc.total, currency)}</span>
               </div>
             </div>
           </div>

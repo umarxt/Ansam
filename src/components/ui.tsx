@@ -42,7 +42,7 @@ export function Modal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-navy-100 px-6 py-4">
-          <h3 className="text-lg font-bold text-navy">{title}</h3>
+          <h3 className="text-lg font-medium text-navy">{title}</h3>
           <button onClick={onClose} className="rounded-lg p-1.5 text-steel hover:bg-navy-50">
             <X className="w-5 h-5" />
           </button>
@@ -75,7 +75,7 @@ export function EmptyState({ icon, title, sub }: { icon?: ReactNode; title: stri
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
       {icon && <div className="mb-3 text-steel">{icon}</div>}
-      <p className="font-semibold text-navy">{title}</p>
+      <p className="font-medium text-navy">{title}</p>
       {sub && <p className="mt-1 text-sm text-steel">{sub}</p>}
     </div>
   );

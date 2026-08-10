@@ -57,7 +57,7 @@ export default function Finance() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-navy">المالية</h1>
+          <h1 className="text-2xl font-medium text-navy">المالية</h1>
           <p className="text-sm text-steel">إدارة الإيرادات والمصروفات وطرق الدفع</p>
         </div>
         <button onClick={() => setModal(true)} className="btn-brand">
@@ -70,7 +70,7 @@ export default function Finance() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-5">
           <div className="text-sm text-steel">صافي الرصيد</div>
-          <div className="mt-1 text-2xl font-bold text-navy">{formatMoney(totalIncome - totalExpense)}</div>
+          <div className="mt-1 text-2xl font-medium text-navy">{formatMoney(totalIncome - totalExpense)}</div>
           <div className="mt-2 flex gap-3 text-xs">
             <span className="text-green-600">وارد {formatMoney(totalIncome)}</span>
             <span className="text-red-500">صادر {formatMoney(totalExpense)}</span>
@@ -87,7 +87,7 @@ export default function Finance() {
                   <Icon className="w-4 h-4" />
                 </span>
               </div>
-              <div className="mt-2 text-xl font-bold text-navy">{formatMoney(val.income - val.expense)}</div>
+              <div className="mt-2 text-xl font-medium text-navy">{formatMoney(val.income - val.expense)}</div>
             </div>
           );
         })}
@@ -96,7 +96,7 @@ export default function Finance() {
       {/* عهدة النقدي حسب الموظف */}
       {summary.cashByEmployee?.length > 0 && (
         <div className="card p-5">
-          <h3 className="mb-4 flex items-center gap-2 font-bold text-navy">
+          <h3 className="mb-4 flex items-center gap-2 font-medium text-navy">
             <Users className="h-5 w-5 text-brand" />
             النقدي المُحصّل حسب الموظف
           </h3>
@@ -104,12 +104,12 @@ export default function Finance() {
             {summary.cashByEmployee.map((e: any) => (
               <div key={e.id} className="flex items-center justify-between rounded-xl bg-navy-50/60 px-4 py-3">
                 <span className="flex items-center gap-2 text-sm font-medium text-navy">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-xs font-medium text-white">
                     {e.name?.charAt(0)}
                   </span>
                   {e.name}
                 </span>
-                <span className="font-bold text-brand">{formatMoney(e.collected)}</span>
+                <span className="font-medium text-brand">{formatMoney(e.collected)}</span>
               </div>
             ))}
           </div>
@@ -214,7 +214,7 @@ export default function Finance() {
                     <td className="px-5 py-3 text-slate-brand">{PAYMENT_LABELS[t.payment_method]}</td>
                     <td className="px-5 py-3 text-slate-brand">{t.employee_name || "-"}</td>
                     <td
-                      className={`px-5 py-3 font-semibold ${
+                      className={`px-5 py-3 font-medium ${
                         t.txn_type === "income" ? "text-green-600" : "text-red-500"
                       }`}
                     >

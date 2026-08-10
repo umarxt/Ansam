@@ -56,7 +56,7 @@ function StatCard({ icon: Icon, label, value, tone = "navy" }: any) {
       <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tones[tone]}`}>
         <Icon className="w-5 h-5" />
       </div>
-      <div className="mt-4 text-2xl font-bold text-navy">{value}</div>
+      <div className="mt-4 text-2xl font-medium text-navy">{value}</div>
       <div className="mt-1 text-sm text-steel">{label}</div>
     </div>
   );
@@ -87,7 +87,7 @@ export default function Financial() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-navy">اللوحة المالية</h1>
+        <h1 className="text-2xl font-medium text-navy">اللوحة المالية</h1>
         <p className="text-sm text-steel">تحليل الإيرادات والمصروفات وطرق الدفع</p>
       </div>
 
@@ -100,7 +100,7 @@ export default function Financial() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="card p-5 lg:col-span-2">
-          <h3 className="mb-4 font-bold text-navy">الإيرادات والمصروفات (آخر 6 أشهر)</h3>
+          <h3 className="mb-4 font-medium text-navy">الإيرادات والمصروفات (آخر 6 أشهر)</h3>
           {monthData.length === 0 ? (
             <p className="py-16 text-center text-sm text-steel">لا توجد بيانات بعد</p>
           ) : (
@@ -122,7 +122,7 @@ export default function Financial() {
         </div>
 
         <div className="card p-5">
-          <h3 className="mb-4 font-bold text-navy">الإيرادات حسب طريقة الدفع</h3>
+          <h3 className="mb-4 font-medium text-navy">الإيرادات حسب طريقة الدفع</h3>
           {pieData.length === 0 ? (
             <p className="py-16 text-center text-sm text-steel">لا توجد بيانات بعد</p>
           ) : (
@@ -146,7 +146,7 @@ export default function Financial() {
                         <Icon className="w-4 h-4" style={{ color: METHOD_COLORS[d.key] }} />
                         {d.name}
                       </span>
-                      <span className="font-semibold text-navy">{formatMoney(d.value)}</span>
+                      <span className="font-medium text-navy">{formatMoney(d.value)}</span>
                     </div>
                   );
                 })}
@@ -158,7 +158,7 @@ export default function Financial() {
 
       <div className="card overflow-hidden">
         <div className="flex items-center justify-between border-b border-navy-100 px-5 py-4">
-          <h3 className="font-bold text-navy">أحدث المستندات</h3>
+          <h3 className="font-medium text-navy">أحدث المستندات</h3>
           <Link to="/app/invoices" className="text-sm text-brand hover:underline">
             عرض الكل
           </Link>
@@ -195,7 +195,7 @@ export default function Financial() {
                     </td>
                     <td className="px-5 py-3 text-navy">{d.client_name}</td>
                     <td className="px-5 py-3 text-steel">{formatDate(d.issue_date)}</td>
-                    <td className="px-5 py-3 font-semibold text-navy">{formatMoney(d.total)}</td>
+                    <td className="px-5 py-3 font-medium text-navy">{formatMoney(d.total)}</td>
                     <td className="px-5 py-3">
                       <span className={`badge ${STATUS_COLORS[d.status] || ""}`}>
                         {STATUS_LABELS[d.status] || d.status}

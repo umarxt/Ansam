@@ -161,7 +161,7 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
             <ArrowRight className="w-4 h-4" />
             رجوع
           </button>
-          <h1 className="text-2xl font-bold text-navy">
+          <h1 className="text-2xl font-medium text-navy">
             {editing ? "تعديل" : "إنشاء"} {type === "invoice" ? "فاتورة" : "عرض سعر"}
           </h1>
         </div>
@@ -179,7 +179,7 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
           <div className="flex items-center gap-3">
             <Logo className="h-12 w-12" onDark />
             <div>
-              <div className="text-lg font-bold">{company.name_ar || "مؤسسة أنسام"}</div>
+              <div className="text-lg font-medium">{company.name_ar || "مؤسسة أنسام"}</div>
               <div className="text-xs text-sky-soft/80">{company.activity}</div>
             </div>
           </div>
@@ -200,7 +200,7 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
         <div className="space-y-6 lg:col-span-2">
           {/* المتغيرات: الرقم والتاريخ */}
           <div className="card p-5">
-            <h3 className="mb-4 font-bold text-navy">بيانات المستند</h3>
+            <h3 className="mb-4 font-medium text-navy">بيانات المستند</h3>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <Field label={type === "invoice" ? "رقم الفاتورة" : "رقم العرض"}>
                 <input
@@ -231,7 +231,7 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
 
           {/* بيانات العميل */}
           <div className="card p-5">
-            <h3 className="mb-4 font-bold text-navy">بيانات العميل</h3>
+            <h3 className="mb-4 font-medium text-navy">بيانات العميل</h3>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Field label="اسم العميل">
                 <input
@@ -270,7 +270,7 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
           {/* البنود */}
           <div className="card p-5">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-bold text-navy">البنود</h3>
+              <h3 className="font-medium text-navy">البنود</h3>
               <button onClick={addItem} className="btn-ghost text-sm">
                 <Plus className="w-4 h-4" />
                 إضافة بند
@@ -307,7 +307,7 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
                     value={it.price}
                     onChange={(e) => setItem(i, "price", e.target.value)}
                   />
-                  <div className="col-span-3 text-sm font-semibold text-navy sm:col-span-1">
+                  <div className="col-span-3 text-sm font-medium text-navy sm:col-span-1">
                     {(Number(it.qty || 0) * Number(it.price || 0)).toLocaleString("ar-SA")}
                   </div>
                   <button
@@ -336,7 +336,7 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
         {/* الملخص والإعدادات */}
         <div className="space-y-6">
           <div className="card p-5">
-            <h3 className="mb-4 font-bold text-navy">الإجمالي</h3>
+            <h3 className="mb-4 font-medium text-navy">الإجمالي</h3>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
                 <span className="text-steel">المجموع الفرعي</span>
@@ -370,13 +370,13 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
               </div>
               <div className="flex justify-between rounded-xl bg-navy p-3 text-white">
                 <span className="font-medium">الإجمالي النهائي</span>
-                <span className="font-bold">{formatMoney(totals.total, currency)}</span>
+                <span className="font-medium">{formatMoney(totals.total, currency)}</span>
               </div>
             </div>
           </div>
 
           <div className="card p-5">
-            <h3 className="mb-4 font-bold text-navy">الحالة والدفع</h3>
+            <h3 className="mb-4 font-medium text-navy">الحالة والدفع</h3>
             <div className="space-y-4">
               <Field label="الحالة">
                 <select

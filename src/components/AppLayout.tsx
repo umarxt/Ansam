@@ -50,7 +50,7 @@ export default function AppLayout() {
       <div className="flex items-center gap-3 px-5 py-6">
         <Logo className="h-11 w-11" onDark />
         <div>
-          <div className="text-xl font-bold text-white leading-none">أنسام</div>
+          <div className="text-xl font-medium text-white leading-none">أنسام</div>
           <div className="text-[11px] text-sky-soft/80 mt-1">منصة الإدارة</div>
         </div>
       </div>
@@ -89,11 +89,11 @@ export default function AppLayout() {
 
       <div className="border-t border-white/10 p-3">
         <div className="mb-2 flex items-center gap-3 rounded-xl bg-white/5 px-4 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-sm font-bold text-white">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-sm font-medium text-white">
             {user?.name?.charAt(0) || "؟"}
           </div>
           <div className="min-w-0">
-            <div className="truncate text-sm font-semibold text-white">{user?.name}</div>
+            <div className="truncate text-sm font-medium text-white">{user?.name}</div>
             <div className="text-[11px] text-sky-soft/70">
               {isAdmin ? "مدير" : "موظف"} {user?.emp_code ? `· ${user.emp_code}` : ""}
             </div>
@@ -130,7 +130,7 @@ export default function AppLayout() {
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-navy-100 bg-cream/80 px-4 py-3 backdrop-blur lg:hidden">
           <div className="flex items-center gap-2">
             <Logo className="h-8 w-8" />
-            <span className="font-bold text-navy">أنسام</span>
+            <span className="font-medium text-navy">أنسام</span>
           </div>
           <button onClick={() => setOpen(!open)} className="rounded-lg p-2 text-navy hover:bg-navy-50">
             {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

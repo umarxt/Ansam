@@ -45,7 +45,7 @@ export default function Settings() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-navy">الإعدادات</h1>
+        <h1 className="text-2xl font-medium text-navy">الإعدادات</h1>
         <p className="text-sm text-steel">تحكم كامل في بيانات الشركة والفوترة والموقع</p>
       </div>
 
@@ -273,7 +273,7 @@ function IntegrationSettings() {
   return (
     <div className="card space-y-5 p-6">
       <div className="rounded-xl bg-sky-soft/40 p-4 text-sm text-navy-700">
-        <p className="font-semibold">النسخ الاحتياطي إلى Google Sheets</p>
+        <p className="font-medium">النسخ الاحتياطي إلى Google Sheets</p>
         <p className="mt-1 leading-relaxed text-slate-brand">
           كل البيانات تُحفظ أساساً في قاعدة بيانات Cloudflare. لتفعيل نسخة احتياطية إضافية في Google
           Sheets: أنشئ Google Apps Script Web App (الكود مرفق في ملف README) والصق رابط النشر هنا.
@@ -508,7 +508,7 @@ function SecuritySettings() {
 
   return (
     <div className="card max-w-md space-y-5 p-6">
-      <h3 className="font-bold text-navy">تغيير كلمة المرور</h3>
+      <h3 className="font-medium text-navy">تغيير كلمة المرور</h3>
       {msg && (
         <div
           className={`rounded-xl px-4 py-3 text-sm ${

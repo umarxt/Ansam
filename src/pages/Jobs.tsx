@@ -49,7 +49,7 @@ export default function Jobs() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="flex items-center gap-2 text-2xl font-bold text-navy">
+        <h1 className="flex items-center gap-2 text-2xl font-medium text-navy">
           <ClipboardList className="h-6 w-6 text-brand" />
           الطلبات الميدانية
         </h1>
@@ -110,13 +110,13 @@ export default function Jobs() {
                 )}
                 <div className="p-4">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-navy">{j.service_name || "خدمة"}</span>
+                    <span className="font-medium text-navy">{j.service_name || "خدمة"}</span>
                     <span className={`badge ${STATUS[j.status]?.cls || ""}`}>{STATUS[j.status]?.label}</span>
                   </div>
                   <div className="mt-2 space-y-1 text-sm text-slate-brand">
                     <div>العميل: {j.client_name || "-"}</div>
                     <div>الموظف: {j.employee_name || "-"}</div>
-                    <div className="font-semibold text-navy">{formatMoney(j.amount)}</div>
+                    <div className="font-medium text-navy">{formatMoney(j.amount)}</div>
                     <div className="text-xs text-steel">{formatDate(j.created_at)}</div>
                   </div>
                   <div className="mt-3 flex gap-2">

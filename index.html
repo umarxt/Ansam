@@ -32,12 +32,13 @@
       content="خدمات التكييف المركزي والتبريد وصيانة المطابخ التجارية والأفران الكبيرة — عقود صيانة وقائية سنوية تضمن استمرارية التشغيل للمنشآت والمطاعم والسلاسل التجارية."
     />
     <meta name="twitter:image" content="https://ansam.sa/og-image.png" />
-    <!-- خط بديل احتياطي لحين إضافة Clother Arabic في /fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- استضافة ذاتية لخط Clother Arabic — preload لوزن 500 فقط -->
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/clother-ar-500.woff2"
+      crossorigin
     />
   </head>
   <body>

@@ -34,7 +34,7 @@ function StatCard({ icon: Icon, label, value, tone = "navy" }: any) {
       <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tones[tone]}`}>
         <Icon className="w-5 h-5" />
       </div>
-      <div className="mt-4 text-2xl font-bold text-navy">{value}</div>
+      <div className="mt-4 text-2xl font-medium text-navy">{value}</div>
       <div className="mt-1 text-sm text-steel">{label}</div>
     </div>
   );
@@ -56,7 +56,7 @@ export default function Dashboard() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-navy">لوحة المعلومات</h1>
+          <h1 className="text-2xl font-medium text-navy">لوحة المعلومات</h1>
           <p className="text-sm text-steel">نظرة تشغيلية على أنسام</p>
         </div>
         {can("finance") && (
@@ -79,21 +79,21 @@ export default function Dashboard() {
         <div className="card flex items-center gap-3 p-4">
           <Wrench className="h-8 w-8 text-brand" />
           <div>
-            <div className="text-xl font-bold text-navy">{t.jobs_total || 0}</div>
+            <div className="text-xl font-medium text-navy">{t.jobs_total || 0}</div>
             <div className="text-xs text-steel">إجمالي الطلبات الميدانية</div>
           </div>
         </div>
         <div className="card flex items-center gap-3 p-4">
           <FileText className="h-8 w-8 text-brand" />
           <div>
-            <div className="text-xl font-bold text-navy">{t.invoices_count || 0}</div>
+            <div className="text-xl font-medium text-navy">{t.invoices_count || 0}</div>
             <div className="text-xs text-steel">فاتورة</div>
           </div>
         </div>
         <div className="card flex items-center gap-3 p-4">
           <ClipboardList className="h-8 w-8 text-brand" />
           <div>
-            <div className="text-xl font-bold text-navy">{t.services_count || 0}</div>
+            <div className="text-xl font-medium text-navy">{t.services_count || 0}</div>
             <div className="text-xs text-steel">خدمة معرّفة</div>
           </div>
         </div>
@@ -101,7 +101,7 @@ export default function Dashboard() {
           <Link to="/app/financial" className="card flex items-center gap-3 bg-navy p-4 text-white hover:bg-navy-700">
             <PieChart className="h-8 w-8" />
             <div>
-              <div className="text-sm font-bold">{formatMoney(net)}</div>
+              <div className="text-sm font-medium">{formatMoney(net)}</div>
               <div className="flex items-center gap-1 text-xs text-sky-soft/80">
                 صافي الدخل <ArrowUpLeft className="w-3 h-3" />
               </div>
@@ -111,7 +111,7 @@ export default function Dashboard() {
           <div className="card flex items-center gap-3 p-4">
             <CalendarCheck className="h-8 w-8 text-brand" />
             <div>
-              <div className="text-xl font-bold text-navy">{t.quotes_count || 0}</div>
+              <div className="text-xl font-medium text-navy">{t.quotes_count || 0}</div>
               <div className="text-xs text-steel">عرض سعر</div>
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function Dashboard() {
       {isAdmin && (
         <div className="card overflow-hidden">
           <div className="flex items-center justify-between border-b border-navy-100 px-5 py-4">
-            <h3 className="font-bold text-navy">أحدث الطلبات الميدانية</h3>
+            <h3 className="font-medium text-navy">أحدث الطلبات الميدانية</h3>
             <Link to="/app/jobs" className="text-sm text-brand hover:underline">
               عرض الكل
             </Link>
@@ -151,7 +151,7 @@ export default function Dashboard() {
                       <td className="px-5 py-3 text-navy">{j.employee_name || "-"}</td>
                       <td className="px-5 py-3 text-navy">{j.client_name || "-"}</td>
                       <td className="px-5 py-3 text-slate-brand">{j.service_name || "-"}</td>
-                      <td className="px-5 py-3 font-semibold text-navy">{formatMoney(j.amount)}</td>
+                      <td className="px-5 py-3 font-medium text-navy">{formatMoney(j.amount)}</td>
                       <td className="px-5 py-3 text-steel">{formatDate(j.created_at)}</td>
                       <td className="px-5 py-3">
                         <span className={`badge ${JOB_STATUS[j.status]?.cls || "bg-navy-100 text-navy-700"}`}>

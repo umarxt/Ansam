@@ -48,7 +48,7 @@ export default function Landing() {
           <div className="flex items-center gap-3">
             <Logo className="h-11 w-11" />
             <div>
-              <div className="text-xl font-bold text-navy leading-none">أنسام</div>
+              <div className="text-xl font-medium text-navy leading-none">أنسام</div>
               <div className="text-[11px] text-steel">صيانة · تبريد · تكييف</div>
             </div>
           </div>
@@ -70,7 +70,7 @@ export default function Landing() {
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:py-24">
           <div className="fade-in">
             <span className="badge bg-sky-soft text-brand-dark">حلول متكاملة للصيانة والتبريد</span>
-            <h1 className="mt-5 text-4xl font-bold leading-tight text-navy md:text-5xl">
+            <h1 className="mt-5 text-4xl font-medium leading-tight text-navy md:text-5xl">
               {l.hero_title || "أنسام للصيانة والتبريد"}
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-slate-brand">
@@ -100,7 +100,7 @@ export default function Landing() {
           <div className="relative fade-in">
             <div className="card overflow-hidden bg-navy-gradient p-8 text-white shadow-glow">
               <Snowflake className="mb-4 h-14 w-14 text-sky-soft" />
-              <div className="text-2xl font-bold">تبريد وتكييف بكفاءة عالية</div>
+              <div className="text-2xl font-medium">تبريد وتكييف بكفاءة عالية</div>
               <p className="mt-3 text-sky-soft/80">
                 صيانة احترافية للمكيفات الكبيرة والأنظمة المركزية والأفران والمعدات الحرارية.
               </p>
@@ -111,7 +111,7 @@ export default function Landing() {
                   { n: "١٠٠٪", t: "جودة" },
                 ].map((s) => (
                   <div key={s.t} className="rounded-xl bg-white/10 py-3">
-                    <div className="text-lg font-bold">{s.n}</div>
+                    <div className="text-lg font-medium">{s.n}</div>
                     <div className="text-xs text-sky-soft/80">{s.t}</div>
                   </div>
                 ))}
@@ -124,7 +124,7 @@ export default function Landing() {
       {/* الخدمات */}
       <section id="services" className="mx-auto max-w-6xl px-5 py-16">
         <div className="mb-10 text-center">
-          <h2 className="text-3xl font-bold text-navy">خدماتنا</h2>
+          <h2 className="text-3xl font-medium text-navy">خدماتنا</h2>
           <p className="mt-2 text-slate-brand">حلول شاملة تغطي كافة احتياجات الصيانة والتبريد</p>
         </div>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -138,7 +138,7 @@ export default function Landing() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand transition group-hover:bg-brand group-hover:text-white">
                   <Icon className="h-6 w-6" />
                 </div>
-                <h3 className="font-bold text-navy">{s.title}</h3>
+                <h3 className="font-medium text-navy">{s.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-brand">{s.desc}</p>
               </div>
             );
@@ -150,7 +150,7 @@ export default function Landing() {
       <section id="sectors" className="bg-navy-gradient py-16 text-white">
         <div className="mx-auto max-w-6xl px-5">
           <div className="mb-10 text-center">
-            <h2 className="text-3xl font-bold">نخدم كبار العملاء</h2>
+            <h2 className="text-3xl font-medium">نخدم كبار العملاء</h2>
             <p className="mt-2 text-sky-soft/80">شراكات موثوقة مع الشركات والفنادق والمنشآت الكبرى</p>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
@@ -161,7 +161,7 @@ export default function Landing() {
             ].map((s) => (
               <div key={s.title} className="rounded-xl2 border border-white/10 bg-white/5 p-6">
                 <s.icon className="mb-4 h-9 w-9 text-sky-soft" />
-                <h3 className="text-lg font-bold">{s.title}</h3>
+                <h3 className="text-lg font-medium">{s.title}</h3>
                 <p className="mt-2 text-sm text-sky-soft/80">{s.desc}</p>
               </div>
             ))}
@@ -174,7 +174,7 @@ export default function Landing() {
         <div className="card overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-2">
             <div className="p-8 md:p-10">
-              <h2 className="text-2xl font-bold text-navy">تواصل معنا</h2>
+              <h2 className="text-2xl font-medium text-navy">تواصل معنا</h2>
               <p className="mt-2 text-slate-brand">نحن جاهزون لخدمتك — تواصل معنا لطلب الخدمة أو عرض سعر.</p>
               <div className="mt-6 space-y-4">
                 <a href={`tel:${phone}`} className="flex items-center gap-3 text-navy hover:text-brand">
@@ -217,7 +217,7 @@ export default function Landing() {
             </div>
             <div className="flex flex-col items-center justify-center bg-navy-gradient p-8 text-center text-white md:p-10">
               <Logo className="h-16 w-16" onDark />
-              <div className="mt-4 text-2xl font-bold">أنسام</div>
+              <div className="mt-4 text-2xl font-medium">أنسام</div>
               <p className="mt-2 max-w-xs text-sm text-sky-soft/80">
                 {c.activity || "خدمات الصيانة والتبريد والتكييف وصيانة المطابخ والأفران الكبيرة"}
               </p>
