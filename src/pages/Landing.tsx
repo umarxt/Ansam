@@ -324,10 +324,9 @@ export default function Landing() {
       {/* التذييل */}
       <footer className="border-t border-navy-100 bg-white py-8">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 text-sm text-steel md:flex-row">
-          <div className="flex items-center gap-2">
-            <Logo className="h-8 w-8" />
-            <span className="font-medium text-navy">أنسام</span>
-          </div>
+          <a href="#" aria-label="أنسام" className="flex items-center">
+            <img src="/ansam-lockup-horizontal.svg" alt="أنسام" className="h-9 w-auto" />
+          </a>
           <span>© {new Date().getFullYear()} جميع الحقوق محفوظة — أنسام</span>
           <a href="#contact" className="text-brand hover:underline">
             تواصل معنا
