@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Snowflake,
   Wrench,
@@ -21,6 +21,8 @@ const SERVICE_ICONS = [Snowflake, UtensilsCrossed, FileCheck, Clock];
 
 export default function Landing() {
   const [data, setData] = useState<any>({ landing: {}, company: {} });
+  const [ctaOpen, setCtaOpen] = useState(false);
+  const ctaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     api.get<any>("/public/landing").then(setData).catch(() => {});
@@ -46,6 +48,23 @@ export default function Landing() {
     return () => io.disconnect();
   }, [data]);
 
+  // إغلاق قائمة «اطلب الخدمة» عند النقر خارجها أو ضغط Escape
+  useEffect(() => {
+    if (!ctaOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (ctaRef.current && !ctaRef.current.contains(e.target as Node)) setCtaOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setCtaOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [ctaOpen]);
+
   const l = data.landing || {};
   const c = data.company || {};
   const services = l.services?.length
@@ -57,6 +76,8 @@ export default function Landing() {
         { title: "صيانة الطوارئ", desc: "استجابة سريعة على مدار الساعة." },
       ];
   const phone = l.phone || c.phone || "0555555555";
+  const email = l.email || c.email || "info@ansam.sa";
+  const whatsapp = (l.whatsapp || phone).replace(/[^0-9]/g, "");
 
   return (
     <div className="min-h-screen bg-cream">
@@ -75,9 +96,59 @@ export default function Landing() {
             <a href="#sectors" className="nav-link hover:text-brand">من نخدم</a>
             <a href="#contact" className="nav-link hover:text-brand">تواصل</a>
           </nav>
-          <a href="#contact" className="btn-primary text-sm">
-            اطلب الخدمة
-          </a>
+          <div className="relative" ref={ctaRef}>
+            <button
+              type="button"
+              onClick={() => setCtaOpen((v) => !v)}
+              aria-haspopup="true"
+              aria-expanded={ctaOpen}
+              className="btn-primary text-sm"
+            >
+              اطلب الخدمة
+            </button>
+            {ctaOpen && (
+              <div
+                role="menu"
+                className="fade-in absolute end-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-navy-100 bg-white p-1.5 shadow-card"
+              >
+                <a
+                  role="menuitem"
+                  href={`https://wa.me/${whatsapp}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => setCtaOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-navy transition hover:bg-navy-50"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand">
+                    <MessageCircle className="h-4 w-4" />
+                  </span>
+                  واتساب
+                </a>
+                <a
+                  role="menuitem"
+                  href={`tel:${phone}`}
+                  onClick={() => setCtaOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-navy transition hover:bg-navy-50"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand">
+                    <Phone className="h-4 w-4" />
+                  </span>
+                  اتصال هاتفي
+                </a>
+                <a
+                  role="menuitem"
+                  href={`mailto:${email}`}
+                  onClick={() => setCtaOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-navy transition hover:bg-navy-50"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand">
+                    <Mail className="h-4 w-4" />
+                  </span>
+                  البريد الإلكتروني
+                </a>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
