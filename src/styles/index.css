@@ -202,3 +202,71 @@ body {
     transform: translateY(0);
   }
 }
+
+/* ============================================================
+   صفحة الهبوط فقط — تفاعلات وحركات
+   (أزرار كبسولة، روابط بخط سفلي متحرك، ظهور عند التمرير)
+   ============================================================ */
+
+/* أزرار كبسولة كاملة الاستدارة + ارتفاع لطيف عند التمرير */
+.landing .btn {
+  border-radius: 9999px;
+}
+.landing .btn:hover {
+  transform: translateY(-2px);
+}
+.landing .btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* رابط التنقل: خط سفلي يتمدّد من البداية عند التمرير */
+.landing .nav-link {
+  position: relative;
+}
+.landing .nav-link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -4px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: inline-start;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.landing .nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* السهم داخل الزر ينزلق نحو البداية (يسار في RTL) عند التمرير */
+.landing .btn .arrow {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.landing .btn:hover .arrow {
+  transform: translateX(-4px);
+}
+
+/* حركة الظهور عند التمرير (تبدأ من القسم الثاني فما تحت) */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing .btn:hover,
+  .landing .btn:active {
+    transform: none;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

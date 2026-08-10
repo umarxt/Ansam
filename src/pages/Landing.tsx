@@ -28,6 +28,24 @@ export default function Landing() {
     return () => document.documentElement.classList.remove("landing");
   }, []);
 
+  // حركة الظهور عند التمرير: تُشغَّل مرة واحدة لكل عنصر ثم تتوقف مراقبته
+  useEffect(() => {
+    const els = document.querySelectorAll<HTMLElement>(".reveal:not(.is-visible)");
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [data]);
+
   const l = data.landing || {};
   const c = data.company || {};
   const services = l.services?.length
@@ -53,9 +71,9 @@ export default function Landing() {
             />
           </a>
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-brand md:flex">
-            <a href="#services" className="hover:text-brand">الخدمات</a>
-            <a href="#sectors" className="hover:text-brand">من نخدم</a>
-            <a href="#contact" className="hover:text-brand">تواصل</a>
+            <a href="#services" className="nav-link hover:text-brand">الخدمات</a>
+            <a href="#sectors" className="nav-link hover:text-brand">من نخدم</a>
+            <a href="#contact" className="nav-link hover:text-brand">تواصل</a>
           </nav>
           <a href="#contact" className="btn-primary text-sm">
             اطلب الخدمة
@@ -84,7 +102,7 @@ export default function Landing() {
               </a>
               <a href="#services" className="btn-ghost">
                 تعرّف على خدماتنا
-                <ArrowLeft className="w-4 h-4" />
+                <ArrowLeft className="arrow w-4 h-4" />
               </a>
             </div>
             <div className="mt-8 flex items-center gap-6 text-sm text-slate-brand">
@@ -123,7 +141,7 @@ export default function Landing() {
 
       {/* الخدمات */}
       <section id="services" className="mx-auto max-w-6xl px-5 py-16">
-        <div className="mb-10 text-center">
+        <div className="reveal mb-10 text-center">
           <h2 className="text-3xl font-medium text-navy">خدماتنا</h2>
           <p className="mt-2 text-slate-brand">حلول شاملة تغطي كافة احتياجات الصيانة والتبريد</p>
         </div>
@@ -131,15 +149,14 @@ export default function Landing() {
           {services.map((s: any, i: number) => {
             const Icon = SERVICE_ICONS[i % SERVICE_ICONS.length];
             return (
-              <div
-                key={i}
-                className="card group p-6 transition-all hover:-translate-y-1 hover:shadow-glow"
-              >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand transition-all duration-300 ease-out group-hover:bg-brand group-hover:text-white group-hover:-rotate-6 group-active:-rotate-12 group-active:scale-95">
-                  <Icon className="h-6 w-6" />
+              <div key={i} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
+                <div className="card group h-full p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-glow">
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand transition-all duration-300 ease-out group-hover:bg-brand group-hover:text-white group-hover:-rotate-6 group-active:-rotate-12 group-active:scale-95">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-medium text-navy">{s.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-brand">{s.desc}</p>
                 </div>
-                <h3 className="font-medium text-navy">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-brand">{s.desc}</p>
               </div>
             );
           })}
@@ -149,7 +166,7 @@ export default function Landing() {
       {/* القطاعات المستهدفة */}
       <section id="sectors" className="bg-navy-gradient py-16 text-white">
         <div className="mx-auto max-w-6xl px-5">
-          <div className="mb-10 text-center">
+          <div className="reveal mb-10 text-center">
             <h2 className="text-3xl font-medium">نخدم كبار العملاء</h2>
             <p className="mt-2 text-sky-soft/80">شراكات موثوقة مع الشركات والفنادق والمنشآت الكبرى</p>
           </div>
@@ -158,11 +175,13 @@ export default function Landing() {
               { icon: Building2, title: "الشركات", desc: "عقود صيانة دورية للمقرات والمنشآت التجارية." },
               { icon: Hotel, title: "الفنادق", desc: "أنظمة تكييف وتبريد تعمل بلا انقطاع لراحة النزلاء." },
               { icon: UtensilsCrossed, title: "المطاعم والمطابخ", desc: "صيانة الأفران الكبيرة ومعدات المطابخ التجارية." },
-            ].map((s) => (
-              <div key={s.title} className="rounded-xl2 border border-white/10 bg-white/5 p-6">
-                <s.icon className="mb-4 h-9 w-9 text-sky-soft" />
-                <h3 className="text-lg font-medium">{s.title}</h3>
-                <p className="mt-2 text-sm text-sky-soft/80">{s.desc}</p>
+            ].map((s, i) => (
+              <div key={s.title} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
+                <div className="group h-full rounded-xl2 border border-white/10 bg-white/5 p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-white/25 hover:bg-white/10">
+                  <s.icon className="mb-4 h-9 w-9 text-sky-soft transition-transform duration-300 ease-out group-hover:-rotate-6 group-active:-rotate-12" />
+                  <h3 className="text-lg font-medium">{s.title}</h3>
+                  <p className="mt-2 text-sm text-sky-soft/80">{s.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -171,7 +190,7 @@ export default function Landing() {
 
       {/* تواصل */}
       <section id="contact" className="mx-auto max-w-6xl px-5 py-16">
-        <div className="card overflow-hidden">
+        <div className="reveal card overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-2">
             <div className="p-8 md:p-10">
               <h2 className="text-2xl font-medium text-navy">تواصل معنا</h2>
