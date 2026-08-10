@@ -29,6 +29,30 @@ function compressImage(file: File, max = 512, quality = 0.9): Promise<string> {
   });
 }
 
+// ضغط صور البنر (JPEG بأبعاد أكبر لتبقى واضحة وخفيفة)
+function compressPhoto(file: File, max = 1280, quality = 0.82): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > max || height > max) {
+        const r = Math.min(max / width, max / height);
+        width = Math.round(width * r);
+        height = Math.round(height * r);
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
 type Tab = "company" | "invoice" | "services" | "integrations" | "landing" | "security";
 
 const TABS: { key: Tab; label: string; icon: any }[] = [
@@ -311,11 +335,21 @@ function LandingSettings() {
     email: "",
     whatsapp: "",
     instagram: "",
+    banners: [],
     services: [],
   });
   if (s.loading) return <Loading />;
   const set = (k: string, v: any) => s.setValue({ ...s.value, [k]: v });
   const services = s.value.services || [];
+  const banners: string[] = s.value.banners || [];
+  async function onBanner(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    if (f) {
+      const d = await compressPhoto(f);
+      set("banners", [...banners, d].slice(0, 3));
+    }
+    e.target.value = "";
+  }
   const setService = (i: number, k: string, v: any) =>
     set(
       "services",
@@ -347,6 +381,36 @@ function LandingSettings() {
         <Field label="إنستغرام / X">
           <input className="input" dir="ltr" value={s.value.instagram} onChange={(e) => set("instagram", e.target.value)} />
         </Field>
+      </div>
+
+      {/* صور البنر خلف الهيرو */}
+      <div className="rounded-xl border border-navy-100 p-4">
+        <label className="label">صور البنر (خلف الهيرو — حتى 3 صور)</label>
+        <p className="mb-3 text-xs text-steel">
+          على الديسكتوب تظهر الصور جنباً إلى جنب، وعلى الجوال تتحرك تلقائياً. يُفضّل صور أفقية عالية الجودة.
+        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          {banners.map((b, i) => (
+            <div key={i} className="relative h-24 w-32 overflow-hidden rounded-xl border border-navy-100">
+              <img src={b} alt="" className="h-full w-full object-cover" />
+              <button
+                type="button"
+                onClick={() => set("banners", banners.filter((_, idx) => idx !== i))}
+                className="absolute end-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white/90 text-red-500 shadow"
+                aria-label="حذف الصورة"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ))}
+          {banners.length < 3 && (
+            <label className="flex h-24 w-32 cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-navy-200 text-steel transition hover:bg-navy-50">
+              <Camera className="h-5 w-5" />
+              <span className="text-xs">إضافة صورة</span>
+              <input type="file" accept="image/*" className="hidden" onChange={onBanner} />
+            </label>
+          )}
+        </div>
       </div>
 
       <div>

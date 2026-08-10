@@ -23,6 +23,7 @@ export default function Landing() {
   const [data, setData] = useState<any>({ landing: {}, company: {} });
   const [ctaOpen, setCtaOpen] = useState(false);
   const ctaRef = useRef<HTMLDivElement>(null);
+  const [bannerIndex, setBannerIndex] = useState(0);
 
   useEffect(() => {
     api.get<any>("/public/landing").then(setData).catch(() => {});
@@ -65,6 +66,14 @@ export default function Landing() {
     };
   }, [ctaOpen]);
 
+  // تدوير صور البنر تلقائياً على الجوال
+  useEffect(() => {
+    const n = (data?.landing?.banners || []).filter(Boolean).length;
+    if (n <= 1) return;
+    const id = setInterval(() => setBannerIndex((i) => (i + 1) % n), 4500);
+    return () => clearInterval(id);
+  }, [data]);
+
   const l = data.landing || {};
   const c = data.company || {};
   const services = l.services?.length
@@ -78,6 +87,7 @@ export default function Landing() {
   const phone = l.phone || c.phone || "0555555555";
   const email = l.email || c.email || "info@ansam.sa";
   const whatsapp = (l.whatsapp || phone).replace(/[^0-9]/g, "");
+  const banners: string[] = (l.banners || []).filter(Boolean);
 
   return (
     <div className="min-h-screen bg-cream">
@@ -154,9 +164,35 @@ export default function Landing() {
 
       {/* البطل */}
       <section className="relative overflow-hidden">
+        {/* بنر الصور خلف الهيرو */}
+        {banners.length > 0 && (
+          <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+            {/* ديسكتوب: حتى ثلاث صور جنباً إلى جنب */}
+            <div className="hidden h-full md:flex">
+              {banners.slice(0, 3).map((src, i) => (
+                <img key={i} src={src} alt="" className="h-full flex-1 object-cover" />
+              ))}
+            </div>
+            {/* جوال: صورة واحدة تتحرك تلقائياً */}
+            <div className="relative h-full md:hidden">
+              {banners.map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  alt=""
+                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+                    i === bannerIndex % banners.length ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+              ))}
+            </div>
+            {/* طبقة تعتيم لإبقاء النص واضحاً */}
+            <div className="absolute inset-0 bg-cream/80" />
+          </div>
+        )}
         <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-brand/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-40 -right-20 h-96 w-96 rounded-full bg-sky-soft/40 blur-3xl" />
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:py-24">
+        <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:py-24">
           <div className="fade-in">
             <span className="badge bg-sky-soft text-brand-dark">حلول متكاملة للصيانة والتبريد</span>
             <h1 className="mt-5 text-4xl font-medium leading-tight text-navy md:text-5xl">
