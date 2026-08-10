@@ -117,7 +117,12 @@ export default function Landing() {
 
           <div className="relative fade-in">
             <div className="card overflow-hidden bg-navy-gradient p-8 text-white shadow-glow">
-              <Snowflake className="mb-4 h-14 w-14 text-sky-soft" />
+              <img
+                src="/ansam-mark-white.svg"
+                alt=""
+                aria-hidden="true"
+                className="mb-4 h-14 w-14 object-contain"
+              />
               <div className="text-2xl font-medium">تبريد وتكييف بكفاءة عالية</div>
               <p className="mt-3 text-sky-soft/80">
                 صيانة احترافية للمكيفات الكبيرة والأنظمة المركزية والأفران والمعدات الحرارية.
