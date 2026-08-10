@@ -1,0 +1,15 @@
+{
+  "name": "أنسام",
+  "short_name": "أنسام",
+  "lang": "ar",
+  "dir": "rtl",
+  "theme_color": "#12283F",
+  "background_color": "#FAF9F6",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+    { "src": "/logos/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/logos/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/logos/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
