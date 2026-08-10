@@ -9,3 +9,6 @@ npm-debug.log*
 .idea
 
 *.tsbuildinfo
+
+# ملف القفل التالف يكسر npm ci على Cloudflare — نعتمد npm install
+package-lock.json
