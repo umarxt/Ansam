@@ -49,7 +49,7 @@ export default function Landing() {
             <img
               src="/ansam-lockup-horizontal.svg"
               alt="أنسام"
-              className="h-12 w-auto md:h-16"
+              className="h-10 w-auto md:h-12"
             />
           </a>
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-brand md:flex">
