@@ -8,14 +8,14 @@ compatibility_flags = ["nodejs_compat"]
 #   - المنصة الإدارية              →  app.ansamair.sa
 # يوجّه التطبيق تلقائياً حسب النطاق (انظر src/lib/sites.ts).
 #
-# النطاقات المخصّصة معطّلة مؤقتاً لأن الـ Zone «ansamair.sa» لم يصبح Active بعد
-# في الحساب الجديد. فعّل الكتلة أدناه (أزل التعليق) بمجرد أن تصبح حالة النطاق
-# Active حتى يُربط الموقعان بالنطاقين تلقائياً عند النشر التالي.
-# routes = [
-#   { pattern = "ansamair.sa", custom_domain = true },
-#   { pattern = "www.ansamair.sa", custom_domain = true },
-#   { pattern = "app.ansamair.sa", custom_domain = true },
-# ]
+# النطاقات المخصّصة — تُربط تلقائياً عند النشر (الـ Zone «ansamair.sa» أصبح Active).
+#   - ansamair.sa / www.ansamair.sa  →  الموقع الرسمي (صفحة الهبوط)
+#   - app.ansamair.sa                →  المنصة الإدارية
+routes = [
+  { pattern = "ansamair.sa", custom_domain = true },
+  { pattern = "www.ansamair.sa", custom_domain = true },
+  { pattern = "app.ansamair.sa", custom_domain = true },
+]
 
 # يبني الواجهة تلقائياً قبل النشر
 [build]
