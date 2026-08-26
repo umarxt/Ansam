@@ -128,6 +128,16 @@ VITE_ADMIN_DOMAIN=app.ansamair.sa
    ```
 6. تحقّق أن `ansamair.sa` تفتح صفحة الهبوط وأن `app.ansamair.sa` تفتح المنصة.
 
+### النشر عبر ربط GitHub (Workers Builds)
+
+عند ربط المستودع مباشرةً بمشروع Worker في لوحة Cloudflare:
+- **فرع الإنتاج (Production branch):** الفرع الذي يبني منه Cloudflare — يجب أن يشير إلى الفرع الذي يحمل أحدث `database_id`.
+- **أمر البناء:** `npm run build` — **أمر النشر:** `npx wrangler deploy` (يجعل النسخة مباشرةً على الهواء؛ `wrangler versions upload` يرفع نسخة فقط دون تفعيلها).
+- **قاعدة البيانات تتهيّأ ذاتياً:** لا حاجة لتشغيل `schema.sql`/`seed.sql` يدوياً — يتكفّل [`worker/schema.ts`](./worker/schema.ts) بإنشاء الجداول وزرع البيانات الأولية عند أول طلب.
+- **رابط المعاينة المؤقت:** `‎https://<اسم-الوركر>.<subdomain>.workers.dev`‎ يعرض الموقعين معاً قبل ربط النطاقات.
+- **بعد نجاح النشر:** عيّن سرّاً حقيقياً لـ `SESSION_SECRET` من **Settings ← Variables and Secrets** (القيمة الافتراضية في `wrangler.toml` غير آمنة).
+- كل `git push` على فرع الإنتاج يشغّل بناءً جديداً تلقائياً؛ ولإعادة النشر بأحدث كوميت استخدم نشراً جديداً وليس **Retry build** (الأخير يعيد اللقطة القديمة نفسها).
+
 ---
 
 ## 📊 النسخ الاحتياطي إلى Google Sheets (اختياري)
