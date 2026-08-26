@@ -7,13 +7,15 @@ compatibility_flags = ["nodejs_compat"]
 #   - الموقع الرسمي (صفحة الهبوط)  →  ansamair.sa
 #   - المنصة الإدارية              →  app.ansamair.sa
 # يوجّه التطبيق تلقائياً حسب النطاق (انظر src/lib/sites.ts).
-# ملاحظة: يجب أن يكون النطاق ansamair.sa مضافاً كموقع (Zone) في حساب
-# Cloudflare الجديد حتى تعمل النطاقات المخصّصة أدناه.
-routes = [
-  { pattern = "ansamair.sa", custom_domain = true },
-  { pattern = "www.ansamair.sa", custom_domain = true },
-  { pattern = "app.ansamair.sa", custom_domain = true },
-]
+#
+# النطاقات المخصّصة معطّلة مؤقتاً لأن الـ Zone «ansamair.sa» لم يصبح Active بعد
+# في الحساب الجديد. فعّل الكتلة أدناه (أزل التعليق) بمجرد أن تصبح حالة النطاق
+# Active حتى يُربط الموقعان بالنطاقين تلقائياً عند النشر التالي.
+# routes = [
+#   { pattern = "ansamair.sa", custom_domain = true },
+#   { pattern = "www.ansamair.sa", custom_domain = true },
+#   { pattern = "app.ansamair.sa", custom_domain = true },
+# ]
 
 # يبني الواجهة تلقائياً قبل النشر
 [build]
