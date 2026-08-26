@@ -78,6 +78,58 @@ npx wrangler pages dev dist --port 8788
 
 ---
 
+## 🌐 فصل الموقعين عبر النطاقات
+
+الموقعان يُنشران معاً من **نشر واحد** على Cloudflare، لكنهما مفصولان عبر نطاقين مختلفين، ويوجّه التطبيق نفسه تلقائياً حسب النطاق (انظر [`src/lib/sites.ts`](./src/lib/sites.ts)):
+
+| الموقع | النطاق |
+|--------|--------|
+| **الموقع الرسمي** (صفحة الهبوط) | `ansamair.sa` (و`www.ansamair.sa`) |
+| **المنصة الإدارية** (الدخول/اللوحة/البوابة) | `app.ansamair.sa` |
+
+كيف يعمل التوجيه:
+- على `ansamair.sa` تُعرض **صفحة الهبوط فقط**؛ وأي طلب لمسار إداري (`/login`، `/app`، `/portal`) يُحوَّل تلقائياً إلى `app.ansamair.sa`.
+- على `app.ansamair.sa` تُعرض **المنصة الإدارية فقط**؛ والجذر `/` يوجّه إلى `/app`.
+- صفحة الهبوط تجلب محتواها القابل للتحكم عبر `‎/api/public/landing`‎، وبما أن الـ API يُخدَم من نفس النشر فهو متاح على النطاقين دون أي إعداد CORS.
+- محلياً / على معاينات `*.workers.dev` يبقى الموقعان متاحين معاً على نفس المضيف لتسهيل التطوير.
+
+لتغيير النطاقين دون تعديل الكود، عيّن متغيّرَي البيئة وقت البناء:
+```bash
+VITE_PUBLIC_DOMAIN=ansamair.sa
+VITE_ADMIN_DOMAIN=app.ansamair.sa
+```
+وحدّث القائمة `routes` في [`wrangler.toml`](./wrangler.toml) بنفس النطاقات.
+
+---
+
+## 🔁 النقل إلى حساب Cloudflare جديد
+
+1. **سجّل الدخول للحساب الجديد:**
+   ```bash
+   npx wrangler logout && npx wrangler login
+   ```
+2. **أضف النطاق `ansamair.sa` كـ Zone** في لوحة Cloudflare للحساب الجديد ووجّه سجلات NS إليه (من مزوّد النطاق).
+3. **أنشئ قاعدة D1 جديدة على الحساب الجديد** وحدّث `database_id` في `wrangler.toml`:
+   ```bash
+   npx wrangler d1 create ansam-db
+   npx wrangler d1 execute ansam-db --remote --file=./schema.sql
+   npx wrangler d1 execute ansam-db --remote --file=./seed.sql
+   ```
+   > لنقل البيانات القائمة من الحساب القديم: صدّرها من هناك بـ
+   > `npx wrangler d1 export ansam-db --remote --output=backup.sql`
+   > ثم نفّذها على الجديد بـ `--file=./backup.sql`.
+4. **عيّن سرّ الجلسات على الحساب الجديد:**
+   ```bash
+   npx wrangler secret put SESSION_SECRET
+   ```
+5. **انشر** — ستُنشأ النطاقات المخصّصة الثلاثة تلقائياً من `routes`:
+   ```bash
+   npm run build && npx wrangler deploy
+   ```
+6. تحقّق أن `ansamair.sa` تفتح صفحة الهبوط وأن `app.ansamair.sa` تفتح المنصة.
+
+---
+
 ## 📊 النسخ الاحتياطي إلى Google Sheets (اختياري)
 
 1. افتح ملف [`google-apps-script.js`](./google-apps-script.js) واتبع الخطوات المكتوبة في أعلاه.

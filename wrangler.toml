@@ -3,6 +3,18 @@ main = "worker/index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
+# فصل الموقعين عبر النطاقات — نشر واحد مربوط بدومينين:
+#   - الموقع الرسمي (صفحة الهبوط)  →  ansamair.sa
+#   - المنصة الإدارية              →  app.ansamair.sa
+# يوجّه التطبيق تلقائياً حسب النطاق (انظر src/lib/sites.ts).
+# ملاحظة: يجب أن يكون النطاق ansamair.sa مضافاً كموقع (Zone) في حساب
+# Cloudflare الجديد حتى تعمل النطاقات المخصّصة أدناه.
+routes = [
+  { pattern = "ansamair.sa", custom_domain = true },
+  { pattern = "www.ansamair.sa", custom_domain = true },
+  { pattern = "app.ansamair.sa", custom_domain = true },
+]
+
 # يبني الواجهة تلقائياً قبل النشر
 [build]
 command = "npm run build"
