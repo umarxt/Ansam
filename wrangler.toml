@@ -33,7 +33,7 @@ run_worker_first = ["/api/*"]
 [[d1_databases]]
 binding = "DB"
 database_name = "ansam-db"
-database_id = "84f7e193-b009-4b53-ba46-9d92dcf27b28"
+database_id = "b6979633-df7f-456f-b6ce-7a865cce4d30"
 
 [vars]
 # غيّرها لقيمة عشوائية طويلة من إعدادات المشروع (Variables and Secrets)
