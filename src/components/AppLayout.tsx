@@ -75,6 +75,7 @@ export default function AppLayout() {
             </NavLink>
           ))}
 
+        <div className="my-2 h-px bg-white/10" />
         <a
           href="/"
           target="_blank"
@@ -83,7 +84,7 @@ export default function AppLayout() {
         >
           <Globe className="w-[18px] h-[18px]" />
           الموقع الرسمي
-          <ChevronLeft className="w-4 h-4 mr-auto opacity-60" />
+          <ChevronLeft className="w-4 h-4 ms-auto opacity-60" />
         </a>
       </nav>
 

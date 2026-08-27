@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Snowflake,
-  Wrench,
   FileCheck,
   Clock,
   Phone,
@@ -13,11 +12,27 @@ import {
   UtensilsCrossed,
   ShieldCheck,
   Instagram,
+  Award,
+  Timer,
+  BadgeCheck,
+  ClipboardCheck,
+  FileSignature,
+  CalendarRange,
+  LineChart,
 } from "lucide-react";
 import { api } from "../lib/api";
 import { Logo } from "../components/Logo";
+import { WaveDivider } from "../components/ui";
 
 const SERVICE_ICONS = [Snowflake, UtensilsCrossed, FileCheck, Clock];
+
+// منهجية العمل — أربع خطوات (تسلسل فعلي فالترقيم مبرّر)
+const STEPS = [
+  { icon: ClipboardCheck, title: "زيارة تقييم", desc: "معاينة ميدانية لموقعك وتحديد احتياجات الصيانة بدقة." },
+  { icon: FileSignature, title: "عرض فني ومالي", desc: "عرض واضح بالنطاق والتكلفة قبل بدء أي عمل." },
+  { icon: CalendarRange, title: "جدول صيانة وقائية", desc: "زيارات دورية مجدولة تمنع الأعطال قبل وقوعها." },
+  { icon: LineChart, title: "تقارير دورية", desc: "تقرير بحالة المعدات والأعمال المنفّذة بعد كل زيارة." },
+];
 
 export default function Landing() {
   const [data, setData] = useState<any>({ landing: {}, company: {} });
@@ -88,6 +103,13 @@ export default function Landing() {
   const email = l.email || c.email || "info@ansam.sa";
   const whatsapp = (l.whatsapp || phone).replace(/[^0-9]/g, "");
   const banners: string[] = (l.banners || []).filter(Boolean);
+  // أرقام الثقة — تُقرأ من الإعدادات إن توفّرت وإلا قيَم افتراضية
+  const trust = [
+    { icon: Award, n: l.stat_years || "+10", t: "سنوات خبرة" },
+    { icon: Building2, n: l.stat_sites || "+50", t: "منشأة مخدومة" },
+    { icon: Timer, n: l.stat_response || "24/7", t: "استجابة الطوارئ" },
+    { icon: BadgeCheck, n: l.stat_techs || "+20", t: "فنيون معتمدون" },
+  ];
 
   return (
     <div className="min-h-screen bg-cream">
@@ -104,6 +126,7 @@ export default function Landing() {
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-brand md:flex">
             <a href="#services" className="nav-link hover:text-brand">الخدمات</a>
             <a href="#sectors" className="nav-link hover:text-brand">من نخدم</a>
+            <a href="#how" className="nav-link hover:text-brand">كيف نعمل</a>
             <a href="#contact" className="nav-link hover:text-brand">تواصل</a>
           </nav>
           <div className="relative" ref={ctaRef}>
@@ -251,10 +274,24 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* شريط أرقام الثقة */}
+      <section className="border-y border-navy-100/60 bg-white">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 divide-navy-100/60 px-5 sm:divide-x sm:divide-x-reverse md:grid-cols-4">
+          {trust.map((s) => (
+            <div key={s.t} className="flex flex-col items-center gap-1.5 px-4 py-8 text-center">
+              <s.icon className="h-6 w-6 text-brand" aria-hidden="true" />
+              <div className="num text-3xl font-medium leading-none text-navy">{s.n}</div>
+              <div className="text-sm text-slate-brand">{s.t}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* الخدمات */}
-      <section id="services" className="mx-auto max-w-6xl px-5 py-16">
-        <div className="reveal mb-10 text-center">
-          <h2 className="text-3xl font-medium text-navy">خدماتنا</h2>
+      <section id="services" className="mx-auto max-w-6xl px-5 py-16 md:py-24">
+        <div className="reveal section-head mx-auto text-center">
+          <span className="badge-eyebrow">ما نقدّمه</span>
+          <h2 className="mt-4 text-3xl font-medium text-navy">خدماتنا</h2>
           <p className="mt-2 text-slate-brand">حلول شاملة تغطي كافة احتياجات الصيانة والتبريد</p>
         </div>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -276,10 +313,12 @@ export default function Landing() {
       </section>
 
       {/* القطاعات المستهدفة */}
-      <section id="sectors" className="bg-navy-gradient py-16 text-white">
+      <WaveDivider className="-mb-px text-navy" fill="currentColor" />
+      <section id="sectors" className="bg-navy-gradient pb-16 pt-4 text-white md:pb-24">
         <div className="mx-auto max-w-6xl px-5">
-          <div className="reveal mb-10 text-center">
-            <h2 className="text-3xl font-medium">نخدم كبار العملاء</h2>
+          <div className="reveal section-head mx-auto text-center">
+            <span className="badge-eyebrow bg-white/10 text-sky-soft">من نخدم</span>
+            <h2 className="mt-4 text-3xl font-medium">نخدم كبار العملاء</h2>
             <p className="mt-2 text-sky-soft/80">شراكات موثوقة مع الشركات والفنادق والمنشآت الكبرى</p>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
@@ -299,9 +338,38 @@ export default function Landing() {
           </div>
         </div>
       </section>
+      <WaveDivider className="-mt-px text-navy" fill="currentColor" flip />
+
+      {/* كيف نعمل */}
+      <section id="how" className="mx-auto max-w-6xl px-5 py-16 md:py-24">
+        <div className="reveal section-head mx-auto text-center">
+          <span className="badge-eyebrow">منهجية العمل</span>
+          <h2 className="mt-4 text-3xl font-medium text-navy">كيف نعمل معك</h2>
+          <p className="mt-2 text-slate-brand">أربع خطوات واضحة من أول تواصل حتى تقارير الصيانة الدورية</p>
+        </div>
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {STEPS.map((s, i) => (
+            <div key={s.title} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
+              <div className="card group relative h-full overflow-hidden p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-glow">
+                <span
+                  className="num pointer-events-none absolute end-4 top-3 text-5xl font-medium text-navy-100 transition-colors group-hover:text-sky-soft"
+                  aria-hidden="true"
+                >
+                  {i + 1}
+                </span>
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand transition-all duration-300 group-hover:bg-brand group-hover:text-white">
+                  <s.icon className="h-6 w-6" />
+                </div>
+                <h3 className="font-medium text-navy">{s.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-brand">{s.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* تواصل */}
-      <section id="contact" className="mx-auto max-w-6xl px-5 py-16">
+      <section id="contact" className="mx-auto max-w-6xl px-5 py-16 md:py-24">
         <div className="reveal card overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-2">
             <div className="p-8 md:p-10">

@@ -24,7 +24,7 @@ import {
 } from "recharts";
 import { api } from "../lib/api";
 import { formatMoney, formatDate, PAYMENT_LABELS, STATUS_COLORS, STATUS_LABELS } from "../lib/format";
-import { PageLoader } from "../components/ui";
+import { PageLoader, PageHeader, StatCard } from "../components/ui";
 
 interface DashData {
   totals: any;
@@ -43,24 +43,6 @@ const METHOD_ICONS: Record<string, any> = {
   transfer: ArrowLeftRight,
   pos: CreditCard,
 };
-
-function StatCard({ icon: Icon, label, value, tone = "navy" }: any) {
-  const tones: Record<string, string> = {
-    navy: "bg-navy text-white",
-    brand: "bg-brand text-white",
-    green: "bg-green-600 text-white",
-    red: "bg-red-500 text-white",
-  };
-  return (
-    <div className="card p-5 fade-in">
-      <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tones[tone]}`}>
-        <Icon className="w-5 h-5" />
-      </div>
-      <div className="mt-4 text-2xl font-medium text-navy">{value}</div>
-      <div className="mt-1 text-sm text-steel">{label}</div>
-    </div>
-  );
-}
 
 export default function Financial() {
   const [data, setData] = useState<DashData | null>(null);
@@ -86,10 +68,7 @@ export default function Financial() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-medium text-navy">اللوحة المالية</h1>
-        <p className="text-sm text-steel">تحليل الإيرادات والمصروفات وطرق الدفع</p>
-      </div>
+      <PageHeader title="اللوحة المالية" subtitle="تحليل الإيرادات والمصروفات وطرق الدفع" />
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard icon={Wallet} tone="brand" label="صافي الدخل" value={formatMoney(net)} />

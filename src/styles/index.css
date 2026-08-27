@@ -35,6 +35,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* تركيز واضح بلوحة المفاتيح على كل عنصر تفاعلي (وصولية — القسم 10) */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
 html,
 body,
 #root {
@@ -150,6 +157,19 @@ body {
   }
   .badge {
     @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+  /* شارة تمهيدية (eyebrow) للأقسام */
+  .badge-eyebrow {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-sky-soft/70 px-3 py-1
+           text-eyebrow font-medium text-brand-dark;
+  }
+  /* رأس قسم موحّد (عنوان + وصف) في الموقع الرسمي */
+  .section-head {
+    @apply mb-10 max-w-2xl;
+  }
+  /* بطاقة إحصائية: ارتفاع لطيف عند المرور */
+  .stat-card {
+    @apply card p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft;
   }
 }
 

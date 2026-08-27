@@ -14,7 +14,7 @@ import {
 import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { formatMoney, formatDate } from "../lib/format";
-import { PageLoader } from "../components/ui";
+import { PageLoader, PageHeader, StatCard } from "../components/ui";
 
 const JOB_STATUS: Record<string, { label: string; cls: string }> = {
   pending: { label: "بانتظار التأكيد", cls: "bg-amber-100 text-amber-700" },
@@ -22,20 +22,17 @@ const JOB_STATUS: Record<string, { label: string; cls: string }> = {
   rejected: { label: "مرفوض", cls: "bg-red-100 text-red-600" },
 };
 
-function StatCard({ icon: Icon, label, value, tone = "navy" }: any) {
-  const tones: Record<string, string> = {
-    navy: "bg-navy text-white",
-    brand: "bg-brand text-white",
-    amber: "bg-amber-500 text-white",
-    green: "bg-green-600 text-white",
-  };
+// بطاقة مؤشّر ثانوية (أيقونة + رقم أفقياً)
+function MiniStat({ icon: Icon, value, label }: any) {
   return (
-    <div className="card p-5 fade-in">
-      <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tones[tone]}`}>
-        <Icon className="w-5 h-5" />
+    <div className="card flex items-center gap-3 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand">
+        <Icon className="h-6 w-6" />
+      </span>
+      <div className="min-w-0">
+        <div className="num text-xl font-medium leading-none text-navy">{value}</div>
+        <div className="mt-1 text-xs text-steel">{label}</div>
       </div>
-      <div className="mt-4 text-2xl font-medium text-navy">{value}</div>
-      <div className="mt-1 text-sm text-steel">{label}</div>
     </div>
   );
 }
@@ -54,18 +51,14 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-medium text-navy">لوحة المعلومات</h1>
-          <p className="text-sm text-steel">نظرة تشغيلية على أنسام</p>
-        </div>
+      <PageHeader title="لوحة المعلومات" subtitle="نظرة تشغيلية على أنسام">
         {can("finance") && (
           <Link to="/app/financial" className="btn-ghost">
             <PieChart className="w-5 h-5" />
             اللوحة المالية
           </Link>
         )}
-      </div>
+      </PageHeader>
 
       {/* مؤشرات تشغيلية */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -76,45 +69,26 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <div className="card flex items-center gap-3 p-4">
-          <Wrench className="h-8 w-8 text-brand" />
-          <div>
-            <div className="text-xl font-medium text-navy">{t.jobs_total || 0}</div>
-            <div className="text-xs text-steel">إجمالي الطلبات الميدانية</div>
-          </div>
-        </div>
-        <div className="card flex items-center gap-3 p-4">
-          <FileText className="h-8 w-8 text-brand" />
-          <div>
-            <div className="text-xl font-medium text-navy">{t.invoices_count || 0}</div>
-            <div className="text-xs text-steel">فاتورة</div>
-          </div>
-        </div>
-        <div className="card flex items-center gap-3 p-4">
-          <ClipboardList className="h-8 w-8 text-brand" />
-          <div>
-            <div className="text-xl font-medium text-navy">{t.services_count || 0}</div>
-            <div className="text-xs text-steel">خدمة معرّفة</div>
-          </div>
-        </div>
+        <MiniStat icon={Wrench} value={t.jobs_total || 0} label="إجمالي الطلبات الميدانية" />
+        <MiniStat icon={FileText} value={t.invoices_count || 0} label="فاتورة" />
+        <MiniStat icon={ClipboardList} value={t.services_count || 0} label="خدمة معرّفة" />
         {can("finance") ? (
-          <Link to="/app/financial" className="card flex items-center gap-3 bg-navy p-4 text-white hover:bg-navy-700">
-            <PieChart className="h-8 w-8" />
-            <div>
-              <div className="text-sm font-medium">{formatMoney(net)}</div>
-              <div className="flex items-center gap-1 text-xs text-sky-soft/80">
+          <Link
+            to="/app/financial"
+            className="card flex items-center gap-3 bg-navy p-4 text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-navy-700 hover:shadow-glow"
+          >
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10">
+              <PieChart className="h-6 w-6" />
+            </span>
+            <div className="min-w-0">
+              <div className="num text-lg font-medium leading-none">{formatMoney(net)}</div>
+              <div className="mt-1 flex items-center gap-1 text-xs text-sky-soft/80">
                 صافي الدخل <ArrowUpLeft className="w-3 h-3" />
               </div>
             </div>
           </Link>
         ) : (
-          <div className="card flex items-center gap-3 p-4">
-            <CalendarCheck className="h-8 w-8 text-brand" />
-            <div>
-              <div className="text-xl font-medium text-navy">{t.quotes_count || 0}</div>
-              <div className="text-xs text-steel">عرض سعر</div>
-            </div>
-          </div>
+          <MiniStat icon={CalendarCheck} value={t.quotes_count || 0} label="عرض سعر" />
         )}
       </div>
 
