@@ -53,11 +53,11 @@ function StatCard({ icon: Icon, label, value, tone = "navy" }: any) {
   };
   return (
     <div className="card p-5 fade-in">
-      <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tones[tone]}`}>
+      <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tones[tone]}`} aria-hidden="true">
         <Icon className="w-5 h-5" />
       </div>
-      <div className="mt-4 text-2xl font-medium text-navy">{value}</div>
-      <div className="mt-1 text-sm text-steel">{label}</div>
+      <div className="mt-4 text-2xl font-medium text-navy num">{value}</div>
+      <div className="mt-1 text-sm text-slate-brand">{label}</div>
     </div>
   );
 }
@@ -88,7 +88,7 @@ export default function Financial() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-medium text-navy">اللوحة المالية</h1>
-        <p className="text-sm text-steel">تحليل الإيرادات والمصروفات وطرق الدفع</p>
+        <p className="text-sm text-slate-brand">تحليل الإيرادات والمصروفات وطرق الدفع</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -107,8 +107,8 @@ export default function Financial() {
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={monthData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" />
-                <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#8B97A6" }} />
-                <YAxis tick={{ fontSize: 12, fill: "#8B97A6" }} width={70} />
+                <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#64748B" }} />
+                <YAxis tick={{ fontSize: 12, fill: "#64748B" }} width={70} />
                 <Tooltip
                   contentStyle={{ borderRadius: 12, border: "1px solid #d6e0ea", fontSize: 13 }}
                   formatter={(v: any) => formatMoney(v)}
@@ -143,7 +143,7 @@ export default function Financial() {
                   return (
                     <div key={d.key} className="flex items-center justify-between text-sm">
                       <span className="flex items-center gap-2 text-slate-brand">
-                        <Icon className="w-4 h-4" style={{ color: METHOD_COLORS[d.key] }} />
+                        <Icon className="w-4 h-4" style={{ color: METHOD_COLORS[d.key] }} aria-hidden="true" />
                         {d.name}
                       </span>
                       <span className="font-medium text-navy">{formatMoney(d.value)}</span>

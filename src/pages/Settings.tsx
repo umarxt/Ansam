@@ -70,19 +70,22 @@ export default function Settings() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-medium text-navy">الإعدادات</h1>
-        <p className="text-sm text-steel">تحكم كامل في بيانات الشركة والفوترة والموقع</p>
+        <p className="text-sm text-slate-brand">تحكم كامل في بيانات الشركة والفوترة والموقع</p>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2" role="tablist" aria-label="أقسام الإعدادات">
         {TABS.map((t) => (
           <button
             key={t.key}
+            type="button"
+            role="tab"
+            aria-selected={tab === t.key}
             onClick={() => setTab(t.key)}
             className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition ${
               tab === t.key ? "bg-navy text-white shadow-soft" : "bg-white text-slate-brand hover:bg-navy-50"
             }`}
           >
-            <t.icon className="w-4 h-4" />
+            <t.icon className="w-4 h-4" aria-hidden="true" />
             {t.label}
           </button>
         ))}
@@ -102,12 +105,12 @@ function SaveBar({ onSave, saving, saved }: { onSave: () => void; saving: boolea
   return (
     <div className="flex items-center justify-end gap-3">
       {saved && (
-        <span className="flex items-center gap-1 text-sm text-green-600">
-          <Check className="w-4 h-4" /> تم الحفظ
+        <span className="flex items-center gap-1 text-sm text-green-600" role="status">
+          <Check className="w-4 h-4" aria-hidden="true" /> تم الحفظ
         </span>
       )}
-      <button onClick={onSave} className="btn-brand" disabled={saving}>
-        {saving ? <Spinner className="w-5 h-5" /> : <Save className="w-5 h-5" />}
+      <button type="button" onClick={onSave} className="btn-brand" disabled={saving}>
+        {saving ? <Spinner className="w-5 h-5" /> : <Save className="w-5 h-5" aria-hidden="true" />}
         حفظ التغييرات
       </button>
     </div>
@@ -179,7 +182,7 @@ function CompanySettings() {
   }
   return (
     <div className="card space-y-5 p-6">
-      <p className="text-sm text-steel">
+      <p className="text-sm text-slate-brand">
         هذه البيانات تُشكّل الهيدر الثابت لكل الفواتير وعروض الأسعار — تُدخلها مرة واحدة فقط.
       </p>
 
@@ -192,12 +195,12 @@ function CompanySettings() {
           </div>
           <div className="flex flex-col gap-2">
             <label className="btn-brand cursor-pointer text-sm">
-              <Camera className="h-4 w-4" />
+              <Camera className="h-4 w-4" aria-hidden="true" />
               رفع شعار (PNG / JPG / SVG)
               <input type="file" accept="image/*" className="hidden" onChange={onLogo} />
             </label>
             {s.value.logo && (
-              <button onClick={() => set("logo", "")} className="text-sm text-red-500 hover:underline">
+              <button type="button" onClick={() => set("logo", "")} className="text-sm text-red-500 hover:underline">
                 إزالة الشعار (العودة للافتراضي)
               </button>
             )}
@@ -357,7 +360,7 @@ function LandingSettings() {
     );
   return (
     <div className="card space-y-5 p-6">
-      <p className="text-sm text-steel">تحكم في محتوى صفحة الهبوط / الموقع الرسمي المعروض للعملاء.</p>
+      <p className="text-sm text-slate-brand">تحكم في محتوى صفحة الهبوط / الموقع الرسمي المعروض للعملاء.</p>
       <Field label="العنوان الرئيسي">
         <input className="input" value={s.value.hero_title} onChange={(e) => set("hero_title", e.target.value)} />
       </Field>
@@ -392,20 +395,20 @@ function LandingSettings() {
         <div className="flex flex-wrap items-center gap-3">
           {banners.map((b, i) => (
             <div key={i} className="relative h-24 w-32 overflow-hidden rounded-xl border border-navy-100">
-              <img src={b} alt="" className="h-full w-full object-cover" />
+              <img src={b} alt={`صورة بنر ${i + 1}`} className="h-full w-full object-cover" />
               <button
                 type="button"
                 onClick={() => set("banners", banners.filter((_, idx) => idx !== i))}
                 className="absolute end-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white/90 text-red-500 shadow"
-                aria-label="حذف الصورة"
+                aria-label={`حذف صورة البنر ${i + 1}`}
               >
-                <Trash2 className="h-3.5 w-3.5" />
+                <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
             </div>
           ))}
           {banners.length < 3 && (
             <label className="flex h-24 w-32 cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-navy-200 text-steel transition hover:bg-navy-50">
-              <Camera className="h-5 w-5" />
+              <Camera className="h-5 w-5" aria-hidden="true" />
               <span className="text-xs">إضافة صورة</span>
               <input type="file" accept="image/*" className="hidden" onChange={onBanner} />
             </label>
@@ -417,10 +420,11 @@ function LandingSettings() {
         <div className="mb-3 flex items-center justify-between">
           <label className="label mb-0">الخدمات</label>
           <button
+            type="button"
             onClick={() => set("services", [...services, { title: "", desc: "" }])}
             className="btn-ghost text-sm"
           >
-            <Plus className="w-4 h-4" /> إضافة خدمة
+            <Plus className="w-4 h-4" aria-hidden="true" /> إضافة خدمة
           </button>
         </div>
         <div className="space-y-3">
@@ -430,17 +434,20 @@ function LandingSettings() {
                 <input
                   className="input"
                   placeholder="عنوان الخدمة"
+                  aria-label={`عنوان الخدمة ${i + 1}`}
                   value={sv.title}
                   onChange={(e) => setService(i, "title", e.target.value)}
                 />
                 <input
                   className="input"
                   placeholder="وصف الخدمة"
+                  aria-label={`وصف الخدمة ${i + 1}`}
                   value={sv.desc}
                   onChange={(e) => setService(i, "desc", e.target.value)}
                 />
               </div>
               <button
+                type="button"
                 onClick={() =>
                   set(
                     "services",
@@ -448,8 +455,9 @@ function LandingSettings() {
                   )
                 }
                 className="rounded-lg p-2 text-red-500 hover:bg-red-50"
+                aria-label={`حذف الخدمة ${i + 1}`}
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
           ))}
@@ -496,7 +504,7 @@ function ServicesSettings() {
 
   return (
     <div className="card space-y-5 p-6">
-      <p className="text-sm text-steel">
+      <p className="text-sm text-slate-brand">
         الخدمات التي تظهر للموظفين في بوابتهم لاختيارها عند تقديم خدمة للعميل.
       </p>
       <div className="flex flex-wrap items-end gap-3 rounded-xl border border-navy-100 p-4">
@@ -510,8 +518,8 @@ function ServicesSettings() {
             <input className="input" type="number" dir="ltr" value={form.default_price} onChange={(e) => setForm({ ...form, default_price: e.target.value })} />
           </Field>
         </div>
-        <button onClick={add} disabled={busy} className="btn-brand">
-          {busy ? <Spinner className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+        <button type="button" onClick={add} disabled={busy} className="btn-brand">
+          {busy ? <Spinner className="w-4 h-4" /> : <Plus className="w-4 h-4" aria-hidden="true" />}
           إضافة
         </button>
       </div>
@@ -532,13 +540,21 @@ function ServicesSettings() {
               </div>
               <div className="flex items-center gap-2">
                 <button
+                  type="button"
                   onClick={() => toggle(s)}
+                  aria-pressed={Boolean(s.active)}
+                  aria-label={`${s.active ? "تعطيل" : "تفعيل"} خدمة ${s.name}`}
                   className={`badge ${s.active ? "bg-green-100 text-green-700" : "bg-navy-100 text-slate-brand"}`}
                 >
                   {s.active ? "مفعّلة" : "معطّلة"}
                 </button>
-                <button onClick={() => remove(s.id)} className="rounded-lg p-1.5 text-red-500 hover:bg-red-50">
-                  <Trash2 className="w-4 h-4" />
+                <button
+                  type="button"
+                  onClick={() => remove(s.id)}
+                  className="rounded-lg p-1.5 text-red-500 hover:bg-red-50"
+                  aria-label={`حذف خدمة ${s.name}`}
+                >
+                  <Trash2 className="w-4 h-4" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -575,6 +591,7 @@ function SecuritySettings() {
       <h3 className="font-medium text-navy">تغيير كلمة المرور</h3>
       {msg && (
         <div
+          role={msg.type === "ok" ? "status" : "alert"}
           className={`rounded-xl px-4 py-3 text-sm ${
             msg.type === "ok" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"
           }`}
@@ -587,6 +604,7 @@ function SecuritySettings() {
           className="input"
           type="password"
           dir="ltr"
+          autoComplete="current-password"
           value={form.current}
           onChange={(e) => setForm({ ...form, current: e.target.value })}
         />
@@ -596,6 +614,7 @@ function SecuritySettings() {
           className="input"
           type="password"
           dir="ltr"
+          autoComplete="new-password"
           value={form.next}
           onChange={(e) => setForm({ ...form, next: e.target.value })}
         />
@@ -605,11 +624,12 @@ function SecuritySettings() {
           className="input"
           type="password"
           dir="ltr"
+          autoComplete="new-password"
           value={form.confirm}
           onChange={(e) => setForm({ ...form, confirm: e.target.value })}
         />
       </Field>
-      <button onClick={save} className="btn-brand w-full" disabled={saving}>
+      <button type="button" onClick={save} className="btn-brand w-full" disabled={saving}>
         {saving ? <Spinner className="w-5 h-5" /> : "حفظ"}
       </button>
     </div>

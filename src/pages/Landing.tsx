@@ -272,13 +272,16 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-cream">
+      <a href="#main-content" className="skip-link">
+        تخطَّ إلى المحتوى
+      </a>
       {/* الشريط العلوي */}
       <header className="sticky top-0 z-40 border-b border-navy-100/60 bg-cream/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <a href="#" aria-label="أنسام" className="flex items-center">
+          <a href="#" aria-label="أنسام — الصفحة الرئيسية" className="flex items-center">
             <img src="/ansam-lockup-horizontal.svg" alt="أنسام" className="h-8 w-auto md:h-10" />
           </a>
-          <nav className="hidden items-center gap-7 text-sm font-medium text-slate-brand lg:flex">
+          <nav aria-label="روابط الموقع" className="hidden items-center gap-7 text-sm font-medium text-slate-brand lg:flex">
             <a href="#about" className="nav-link hover:text-brand">من نحن</a>
             <a href="#services" className="nav-link hover:text-brand">خدماتنا</a>
             <a href="#sectors" className="nav-link hover:text-brand">القطاعات</a>
@@ -301,15 +304,15 @@ export default function Landing() {
                 className="fade-in absolute end-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-navy-100 bg-white p-1.5 shadow-card"
               >
                 <a role="menuitem" href={wa} target="_blank" rel="noreferrer" onClick={() => setCtaOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-navy transition hover:bg-navy-50">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand"><MessageCircle className="h-4 w-4" /></span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand"><MessageCircle className="h-4 w-4" aria-hidden="true" /></span>
                   واتساب
                 </a>
                 <a role="menuitem" href={tel} onClick={() => setCtaOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-navy transition hover:bg-navy-50">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand"><Phone className="h-4 w-4" /></span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand"><Phone className="h-4 w-4" aria-hidden="true" /></span>
                   اتصال هاتفي
                 </a>
                 <a role="menuitem" href={mailto} onClick={() => setCtaOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-navy transition hover:bg-navy-50">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand"><Mail className="h-4 w-4" /></span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand"><Mail className="h-4 w-4" aria-hidden="true" /></span>
                   البريد الإلكتروني
                 </a>
               </div>
@@ -319,7 +322,8 @@ export default function Landing() {
       </header>
 
       {/* البطل */}
-      <section className="relative overflow-hidden">
+      <main id="main-content">
+      <section className="relative overflow-hidden" aria-labelledby="hero-title">
         {banners.length > 0 && (
           <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
             <div className="hidden h-full md:flex">
@@ -340,27 +344,27 @@ export default function Landing() {
         <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:py-24">
           <div className="fade-in">
             <span className="badge bg-sky-soft text-brand-dark">تكييف • تبريد تجاري • مطابخ وأفران</span>
-            <h1 className="mt-5 text-4xl font-medium leading-tight text-navy md:text-5xl">
+            <h1 id="hero-title" className="mt-5 max-w-[20ch] text-4xl font-medium leading-tight text-navy md:text-5xl">
               {l.hero_title || "استمرارية تشغيل — لا مجرد زيارة صيانة"}
             </h1>
-            <p className="mt-5 text-lg leading-relaxed text-slate-brand">
+            <p className="mt-5 max-w-[54ch] text-lg leading-relaxed text-slate-brand">
               {l.hero_subtitle ||
                 "شركة سعودية في الرياض متخصصة في التكييف والتبريد والمعدات التجارية الثقيلة، باستجابة ميدانية مضمونة وفنيين مؤهلين للمعدات التي يندر من يجيد صيانتها."}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href={tel} className="btn-brand">
-                <Phone className="h-5 w-5" />
+                <Phone className="h-5 w-5" aria-hidden="true" />
                 اطلب الخدمة الآن
               </a>
               <a href="#services" className="btn-ghost">
                 تعرّف على خدماتنا
-                <ArrowLeft className="arrow h-4 w-4" />
+                <ArrowLeft className="arrow h-4 w-4" aria-hidden="true" />
               </a>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-brand">
-              <span className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-brand" /> فنيون معتمدون</span>
-              <span className="flex items-center gap-2"><Timer className="h-5 w-5 text-brand" /> استجابة خلال 30 دقيقة</span>
-              <span className="flex items-center gap-2"><Clock className="h-5 w-5 text-brand" /> طوارئ على مدار الساعة</span>
+              <span className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-brand" aria-hidden="true" /> فنيون معتمدون</span>
+              <span className="flex items-center gap-2"><Timer className="h-5 w-5 text-brand" aria-hidden="true" /> استجابة خلال 30 دقيقة</span>
+              <span className="flex items-center gap-2"><Clock className="h-5 w-5 text-brand" aria-hidden="true" /> طوارئ على مدار الساعة</span>
             </div>
           </div>
 
@@ -714,27 +718,27 @@ export default function Landing() {
               <p className="mt-2 text-slate-brand">جاهزون لخدمتك — لطلب الخدمة أو عقد صيانة أو عرض سعر.</p>
               <div className="mt-6 space-y-4">
                 <a href={tel} className="flex items-center gap-3 text-navy hover:text-brand">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand"><Phone className="h-5 w-5" /></span>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand"><Phone className="h-5 w-5" aria-hidden="true" /></span>
                   <span><span className="block text-xs text-steel">الرقم الموحّد</span><span dir="ltr">{COMPANY.phoneDisplay}</span></span>
                 </a>
                 <a href={wa} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-navy hover:text-brand">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand"><MessageCircle className="h-5 w-5" /></span>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand"><MessageCircle className="h-5 w-5" aria-hidden="true" /></span>
                   <span><span className="block text-xs text-steel">واتساب الأعمال</span><span dir="ltr">{COMPANY.phoneDisplay}</span></span>
                 </a>
                 <a href={mailto} className="flex items-center gap-3 text-navy hover:text-brand">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand"><Mail className="h-5 w-5" /></span>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand"><Mail className="h-5 w-5" aria-hidden="true" /></span>
                   <span><span className="block text-xs text-steel">البريد الإلكتروني</span><span dir="ltr">{COMPANY.email}</span></span>
                 </a>
                 <a href={`https://${COMPANY.website}`} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-navy hover:text-brand">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand"><Globe className="h-5 w-5" /></span>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand"><Globe className="h-5 w-5" aria-hidden="true" /></span>
                   <span><span className="block text-xs text-steel">الموقع الإلكتروني</span><span dir="ltr">{COMPANY.website}</span></span>
                 </a>
                 <a href={`https://instagram.com/${COMPANY.social}`} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-navy hover:text-brand">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand"><Instagram className="h-5 w-5" /></span>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand"><Instagram className="h-5 w-5" aria-hidden="true" /></span>
                   <span><span className="block text-xs text-steel">حسابات التواصل</span><span dir="ltr">@{COMPANY.social}</span></span>
                 </a>
                 <div className="flex items-center gap-3 text-navy">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand"><MapPin className="h-5 w-5" /></span>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand"><MapPin className="h-5 w-5" aria-hidden="true" /></span>
                   <span><span className="block text-xs text-steel">الإدارة</span>{COMPANY.address}</span>
                 </div>
               </div>
@@ -748,6 +752,7 @@ export default function Landing() {
           </div>
         </div>
       </section>
+      </main>
 
       {/* التذييل */}
       <footer className="border-t border-navy-100 bg-white py-8">

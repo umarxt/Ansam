@@ -57,31 +57,32 @@ export default function DocumentView() {
       {/* شريط الإجراءات */}
       <div className="no-print flex flex-wrap items-center justify-between gap-3">
         <button
+          type="button"
           onClick={() => navigate(`/app/${base}`)}
           className="flex items-center gap-1 text-sm text-steel hover:text-brand"
         >
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
           رجوع للقائمة
         </button>
         <div className="flex flex-wrap gap-2">
           {!isInvoice && (
-            <button onClick={convert} className="btn-ghost">
-              <FileUp className="w-4 h-4" />
+            <button type="button" onClick={convert} className="btn-ghost">
+              <FileUp className="w-4 h-4" aria-hidden="true" />
               تحويل لفاتورة
             </button>
           )}
-          <button onClick={() => navigate(`/app/${base}/${id}/edit`)} className="btn-ghost">
-            <Pencil className="w-4 h-4" />
+          <button type="button" onClick={() => navigate(`/app/${base}/${id}/edit`)} className="btn-ghost">
+            <Pencil className="w-4 h-4" aria-hidden="true" />
             تعديل
           </button>
           {isAdmin && (
-            <button onClick={remove} className="btn-danger">
-              <Trash2 className="w-4 h-4" />
+            <button type="button" onClick={remove} className="btn-danger">
+              <Trash2 className="w-4 h-4" aria-hidden="true" />
               حذف
             </button>
           )}
-          <button onClick={() => window.print()} className="btn-primary">
-            <Printer className="w-4 h-4" />
+          <button type="button" onClick={() => window.print()} className="btn-primary">
+            <Printer className="w-4 h-4" aria-hidden="true" />
             طباعة / PDF
           </button>
         </div>
