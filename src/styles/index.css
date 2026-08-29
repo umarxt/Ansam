@@ -70,6 +70,36 @@ body {
 }
 
 /* ============================================================
+   إظهار تركيز لوحة المفاتيح على كل عنصر تفاعلي (وصولية).
+   :focus-visible لا تظهر عند النقر بالفأرة، فقط عند التنقّل بلوحة المفاتيح.
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+/* على الخلفية الكحلية الداكنة يُستخدم إطار فاتح ليبقى واضحاً */
+.bg-navy-gradient :focus-visible {
+  outline-color: #d6e4f0;
+}
+
+/* رابط «تخطَّ إلى المحتوى» — مخفي حتى يصله التركيز بلوحة المفاتيح */
+.skip-link {
+  position: absolute;
+  inset-inline-start: 1rem;
+  top: -3rem;
+  z-index: 100;
+  border-radius: 0 0 0.75rem 0.75rem;
+  background: var(--navy);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================================
    المقياس الطباعي (القسم 3) — أصناف دلالية بأحجام متجاوبة.
    الوزن 500 فقط للعناوين، و400 للنص والتسميات.
    ============================================================ */
@@ -260,6 +290,15 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* احترام تفضيل تقليل الحركة على مستوى الموقع كاملاً، لا صفحة الهبوط وحدها */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
   .landing .btn:hover,
   .landing .btn:active {
     transform: none;

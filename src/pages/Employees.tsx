@@ -77,13 +77,13 @@ export default function Employees() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-medium text-navy">
-            <UserCog className="h-6 w-6 text-brand" />
+            <UserCog className="h-6 w-6 text-brand" aria-hidden="true" />
             الموظفون
           </h1>
-          <p className="text-sm text-steel">إضافة الموظفين وتعيين كلمات المرور والرموز والصلاحيات</p>
+          <p className="text-sm text-slate-brand">إضافة الموظفين وتعيين كلمات المرور والرموز والصلاحيات</p>
         </div>
-        <button onClick={() => setModal({ open: true })} className="btn-brand">
-          <Plus className="w-5 h-5" />
+        <button type="button" onClick={() => setModal({ open: true })} className="btn-brand">
+          <Plus className="w-5 h-5" aria-hidden="true" />
           موظف جديد
         </button>
       </div>
@@ -154,24 +154,30 @@ export default function Employees() {
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-1">
                         <button
+                          type="button"
                           onClick={() => setToolsFor(e)}
                           className="rounded-lg p-2 text-brand hover:bg-brand/10"
                           title="أدوات / عدة الموظف"
+                          aria-label={`أدوات وعدة ${e.name}`}
                         >
-                          <Wrench className="w-4 h-4" />
+                          <Wrench className="w-4 h-4" aria-hidden="true" />
                         </button>
                         <button
+                          type="button"
                           onClick={() => setModal({ open: true, emp: e })}
                           className="rounded-lg p-2 text-slate-brand hover:bg-navy-50"
+                          aria-label={`تعديل ${e.name}`}
                         >
-                          <Pencil className="w-4 h-4" />
+                          <Pencil className="w-4 h-4" aria-hidden="true" />
                         </button>
                         {e.id !== user?.id && (
                           <button
+                            type="button"
                             onClick={() => remove(e.id)}
                             className="rounded-lg p-2 text-red-500 hover:bg-red-50"
+                            aria-label={`حذف ${e.name}`}
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-4 h-4" aria-hidden="true" />
                           </button>
                         )}
                       </div>
@@ -247,16 +253,16 @@ function ToolsManager({ emp, onClose }: { emp: Emp; onClose: () => void }) {
             <div>
               <label className="label">صورة الأداة</label>
               <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-navy-100 px-4 py-2.5 text-sm text-slate-brand hover:border-brand">
-                <Camera className="h-4 w-4" />
+                <Camera className="h-4 w-4" aria-hidden="true" />
                 {form.image ? "تم اختيار صورة" : "اختر صورة"}
                 <input type="file" accept="image/*" className="hidden" onChange={onFile} />
               </label>
             </div>
           </div>
-          {form.image && <img src={form.image} alt="" className="mt-3 h-20 rounded-lg object-cover" />}
+          {form.image && <img src={form.image} alt="معاينة صورة الأداة" className="mt-3 h-20 rounded-lg object-cover" />}
           <div className="mt-3 text-left">
-            <button onClick={add} disabled={busy} className="btn-brand">
-              {busy ? <Spinner className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+            <button type="button" onClick={add} disabled={busy} className="btn-brand">
+              {busy ? <Spinner className="w-4 h-4" /> : <Plus className="w-4 h-4" aria-hidden="true" />}
               إضافة أداة
             </button>
           </div>
@@ -273,10 +279,10 @@ function ToolsManager({ emp, onClose }: { emp: Emp; onClose: () => void }) {
             {tools.map((t) => (
               <div key={t.id} className="card overflow-hidden">
                 {t.image ? (
-                  <img src={t.image} alt="" className="h-24 w-full object-cover" />
+                  <img src={t.image} alt={t.name || "أداة"} className="h-24 w-full object-cover" />
                 ) : (
                   <div className="flex h-24 items-center justify-center bg-navy-50 text-steel">
-                    <ImageIcon className="h-7 w-7" />
+                    <ImageIcon className="h-7 w-7" aria-hidden="true" />
                   </div>
                 )}
                 <div className="flex items-center justify-between p-2">
@@ -286,8 +292,13 @@ function ToolsManager({ emp, onClose }: { emp: Emp; onClose: () => void }) {
                       {t.kit_name} · ×{t.qty}
                     </div>
                   </div>
-                  <button onClick={() => remove(t.id)} className="rounded-lg p-1.5 text-red-500 hover:bg-red-50">
-                    <Trash2 className="w-4 h-4" />
+                  <button
+                    type="button"
+                    onClick={() => remove(t.id)}
+                    className="rounded-lg p-1.5 text-red-500 hover:bg-red-50"
+                    aria-label={`حذف الأداة ${t.name}`}
+                  >
+                    <Trash2 className="w-4 h-4" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -361,7 +372,7 @@ function EmployeeModal({
   return (
     <Modal open onClose={onClose} title={editing ? "تعديل الموظف" : "إضافة موظف"}>
       <div className="space-y-4">
-        {error && <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
+        {error && <div role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="الاسم">
             <input className="input" value={form.name} onChange={(e) => set("name", e.target.value)} />
@@ -377,7 +388,7 @@ function EmployeeModal({
           </Field>
           <Field label={editing ? "كلمة مرور جديدة (اختياري)" : "كلمة المرور"}>
             <div className="relative">
-              <KeyRound className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-steel" />
+              <KeyRound className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-steel" aria-hidden="true" />
               <input
                 className="input pr-10"
                 dir="ltr"
@@ -451,10 +462,10 @@ function EmployeeModal({
           حساب نشط
         </label>
         <div className="flex justify-end gap-2 pt-2">
-          <button onClick={onClose} className="btn-ghost">
+          <button type="button" onClick={onClose} className="btn-ghost">
             إلغاء
           </button>
-          <button onClick={save} className="btn-brand" disabled={saving}>
+          <button type="button" onClick={save} className="btn-brand" disabled={saving}>
             {saving ? <Spinner className="w-5 h-5" /> : "حفظ"}
           </button>
         </div>

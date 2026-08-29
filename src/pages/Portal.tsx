@@ -70,10 +70,11 @@ export default function Portal() {
             </div>
           </div>
           <button
+            type="button"
             onClick={() => logout()}
             className="flex items-center gap-1.5 rounded-xl bg-white/10 px-3 py-2 text-sm hover:bg-white/20"
           >
-            <LogOut className="w-4 h-4" /> خروج
+            <LogOut className="w-4 h-4" aria-hidden="true" /> خروج
           </button>
         </div>
       </header>
@@ -81,17 +82,20 @@ export default function Portal() {
       <main className="mx-auto max-w-2xl px-5 py-6">
         {view !== "home" && (
           <button
+            type="button"
             onClick={() => setView("home")}
             className="mb-4 flex items-center gap-1 text-sm text-steel hover:text-brand"
           >
-            <ArrowRight className="w-4 h-4" /> الرئيسية
+            <ArrowRight className="w-4 h-4" aria-hidden="true" /> الرئيسية
           </button>
         )}
 
         {view === "home" && (
           <>
-            <h1 className="mb-1 text-2xl font-medium text-navy">مرحباً {user.name.split(" ")[0]} 👋</h1>
-            <p className="mb-6 text-sm text-steel">اختر الإجراء المطلوب</p>
+            <h1 className="mb-1 text-2xl font-medium text-navy">
+              مرحباً {user.name.split(" ")[0]} <span aria-hidden="true">👋</span>
+            </h1>
+            <p className="mb-6 text-sm text-slate-brand">اختر الإجراء المطلوب من البطاقات أدناه</p>
             <div className="grid grid-cols-2 gap-4">
               {can("tools") && (
                 <PortalTile icon={Wrench} label="أدواتي" sub="العُدد المسندة إليك" onClick={() => setView("tools")} />
@@ -132,6 +136,7 @@ export default function Portal() {
 function PortalTile({ icon: Icon, label, sub, onClick, primary }: any) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={`card flex flex-col items-start gap-3 p-5 text-right transition hover:-translate-y-0.5 hover:shadow-glow ${
         primary ? "bg-navy text-white" : ""
@@ -141,12 +146,13 @@ function PortalTile({ icon: Icon, label, sub, onClick, primary }: any) {
         className={`flex h-12 w-12 items-center justify-center rounded-xl ${
           primary ? "bg-white/15 text-white" : "bg-brand/10 text-brand"
         }`}
+        aria-hidden="true"
       >
         <Icon className="h-6 w-6" />
       </span>
       <div>
         <div className={`font-medium ${primary ? "text-white" : "text-navy"}`}>{label}</div>
-        <div className={`text-xs ${primary ? "text-sky-soft/80" : "text-steel"}`}>{sub}</div>
+        <div className={`text-xs ${primary ? "text-sky-soft/90" : "text-steel"}`}>{sub}</div>
       </div>
     </button>
   );
@@ -190,8 +196,8 @@ function PortalLogin({ onDone }: { onDone: () => Promise<void> }) {
           <h1 className="text-2xl font-medium text-white">بوابة الموظف</h1>
           <p className="mt-1 text-sm text-sky-soft/80">اختر اسمك وأدخل الرمز الخاص بك</p>
         </div>
-        <form onSubmit={submit} className="card space-y-4 p-6">
-          {error && <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
+        <form onSubmit={submit} className="card space-y-4 p-6" aria-label="دخول بوابة الموظف">
+          {error && <div role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
           <Field label="الاسم">
             <select className="input" value={employeeId} onChange={(e) => setEmployeeId(e.target.value)}>
               <option value="">— اختر اسمك —</option>
@@ -204,11 +210,12 @@ function PortalLogin({ onDone }: { onDone: () => Promise<void> }) {
           </Field>
           <Field label="الرمز">
             <div className="relative">
-              <KeyRound className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-steel" />
+              <KeyRound className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-steel" aria-hidden="true" />
               <input
                 className="input pr-10"
                 dir="ltr"
                 inputMode="numeric"
+                autoComplete="one-time-code"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 placeholder="الرمز"
@@ -219,9 +226,9 @@ function PortalLogin({ onDone }: { onDone: () => Promise<void> }) {
             {busy ? <Spinner className="w-5 h-5" /> : "دخول"}
           </button>
         </form>
-        <Link to="/" className="mt-5 flex items-center justify-center gap-1 text-sm text-sky-soft/80 hover:text-white">
+        <Link to="/" className="mt-5 flex items-center justify-center gap-1 text-sm text-sky-soft/90 hover:text-white">
           الموقع الرسمي
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
         </Link>
       </div>
     </div>
@@ -261,10 +268,10 @@ function ToolsView() {
             {items.map((t) => (
               <div key={t.id} className="card overflow-hidden">
                 {t.image ? (
-                  <img src={t.image} alt="" className="h-28 w-full object-cover" />
+                  <img src={t.image} alt={t.name || "أداة"} className="h-28 w-full object-cover" />
                 ) : (
                   <div className="flex h-28 items-center justify-center bg-navy-50 text-steel">
-                    <Wrench className="h-8 w-8" />
+                    <Wrench className="h-8 w-8" aria-hidden="true" />
                   </div>
                 )}
                 <div className="p-3">
@@ -341,17 +348,17 @@ function ServiceForm({ onSubmitted }: { onSubmitted: () => void }) {
 
   if (done)
     return (
-      <div className="card flex flex-col items-center gap-3 py-16 text-center">
-        <CheckCircle2 className="h-14 w-14 text-green-600" />
+      <div className="card flex flex-col items-center gap-3 py-16 text-center" role="status">
+        <CheckCircle2 className="h-14 w-14 text-green-600" aria-hidden="true" />
         <div className="text-lg font-medium text-navy">تم إرسال الطلب بنجاح</div>
-        <p className="text-sm text-steel">سيصل الطلب للإدارة للمراجعة والتأكيد.</p>
+        <p className="text-sm text-slate-brand">سيصل الطلب إلى الإدارة للمراجعة والتأكيد.</p>
       </div>
     );
 
   return (
     <div className="space-y-4">
       <h1 className="text-xl font-medium text-navy">تقديم خدمة للعميل</h1>
-      {error && <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
+      {error && <div role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
 
       <div className="card space-y-4 p-5">
         <Field label="الخدمة المقدمة">
@@ -393,18 +400,20 @@ function ServiceForm({ onSubmitted }: { onSubmitted: () => void }) {
         <div className="grid grid-cols-3 gap-2">
           {photos.map((p, i) => (
             <div key={i} className="relative">
-              <img src={p} alt="" className="h-24 w-full rounded-xl object-cover" />
+              <img src={p} alt={`صورة الخدمة ${i + 1}`} className="h-24 w-full rounded-xl object-cover" />
               <button
+                type="button"
+                aria-label={`حذف الصورة ${i + 1}`}
                 onClick={() => setPhotos((arr) => arr.filter((_, idx) => idx !== i))}
                 className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white"
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
             </div>
           ))}
           {photos.length < 6 && (
             <label className="flex h-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-navy-100 text-steel hover:border-brand hover:text-brand">
-              <Camera className="h-6 w-6" />
+              <Camera className="h-6 w-6" aria-hidden="true" />
               <span className="text-xs">إضافة صورة</span>
               <input type="file" accept="image/*" capture="environment" multiple className="hidden" onChange={onFiles} />
             </label>
@@ -412,8 +421,8 @@ function ServiceForm({ onSubmitted }: { onSubmitted: () => void }) {
         </div>
       </div>
 
-      <button onClick={submit} disabled={busy} className="btn-brand w-full py-3">
-        {busy ? <Spinner className="w-5 h-5" /> : <Send className="w-5 h-5" />}
+      <button type="button" onClick={submit} disabled={busy} className="btn-brand w-full py-3">
+        {busy ? <Spinner className="w-5 h-5" /> : <Send className="w-5 h-5" aria-hidden="true" />}
         إرسال الطلب للإدارة
       </button>
     </div>

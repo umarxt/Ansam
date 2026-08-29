@@ -155,23 +155,24 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
       <div className="flex items-center justify-between">
         <div>
           <button
+            type="button"
             onClick={() => navigate(`/app/${base}`)}
             className="mb-1 flex items-center gap-1 text-sm text-steel hover:text-brand"
           >
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
             رجوع
           </button>
           <h1 className="text-2xl font-medium text-navy">
             {editing ? "تعديل" : "إنشاء"} {type === "invoice" ? "فاتورة" : "عرض سعر"}
           </h1>
         </div>
-        <button onClick={save} className="btn-brand" disabled={saving}>
-          {saving ? <Spinner className="w-5 h-5" /> : <Save className="w-5 h-5" />}
+        <button type="button" onClick={save} className="btn-brand" disabled={saving}>
+          {saving ? <Spinner className="w-5 h-5" /> : <Save className="w-5 h-5" aria-hidden="true" />}
           حفظ
         </button>
       </div>
 
-      {error && <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
+      {error && <div role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
 
       {/* الهيدر الثابت (بيانات الشركة) */}
       <div className="card bg-navy-gradient p-5 text-white">
@@ -189,8 +190,8 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
             {company.website && <div>{company.website}</div>}
           </div>
         </div>
-        <div className="mt-3 flex items-center gap-2 text-[11px] text-sky-soft/70">
-          <Building2 className="w-3.5 h-3.5" />
+        <div className="mt-3 flex items-center gap-2 text-[11px] text-sky-soft/80">
+          <Building2 className="w-3.5 h-3.5" aria-hidden="true" />
           الهيدر الثابت يُدار من صفحة الإعدادات — لن تحتاج لإعادة إدخاله في كل مرة.
         </div>
       </div>
@@ -271,8 +272,8 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
           <div className="card p-5">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="font-medium text-navy">البنود</h3>
-              <button onClick={addItem} className="btn-ghost text-sm">
-                <Plus className="w-4 h-4" />
+              <button type="button" onClick={addItem} className="btn-ghost text-sm">
+                <Plus className="w-4 h-4" aria-hidden="true" />
                 إضافة بند
               </button>
             </div>
@@ -288,6 +289,7 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
                   <input
                     className="input col-span-12 sm:col-span-6"
                     placeholder="وصف الخدمة / المنتج"
+                    aria-label={`وصف البند ${i + 1}`}
                     value={it.desc}
                     onChange={(e) => setItem(i, "desc", e.target.value)}
                   />
@@ -296,6 +298,7 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
                     type="number"
                     min="0"
                     step="any"
+                    aria-label={`كمية البند ${i + 1}`}
                     value={it.qty}
                     onChange={(e) => setItem(i, "qty", e.target.value)}
                   />
@@ -304,6 +307,7 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
                     type="number"
                     min="0"
                     step="any"
+                    aria-label={`سعر البند ${i + 1}`}
                     value={it.price}
                     onChange={(e) => setItem(i, "price", e.target.value)}
                   />
@@ -311,10 +315,12 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
                     {(Number(it.qty || 0) * Number(it.price || 0)).toLocaleString("ar-SA")}
                   </div>
                   <button
+                    type="button"
                     onClick={() => removeItem(i)}
                     className="col-span-1 rounded-lg p-2 text-red-500 hover:bg-red-50"
+                    aria-label={`حذف البند ${i + 1}`}
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-4 h-4" aria-hidden="true" />
                   </button>
                 </div>
               ))}
@@ -439,8 +445,8 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
             </div>
           </div>
 
-          <button onClick={save} className="btn-primary w-full py-3" disabled={saving}>
-            {saving ? <Spinner className="w-5 h-5" /> : <Save className="w-5 h-5" />}
+          <button type="button" onClick={save} className="btn-primary w-full py-3" disabled={saving}>
+            {saving ? <Spinner className="w-5 h-5" /> : <Save className="w-5 h-5" aria-hidden="true" />}
             حفظ {type === "invoice" ? "الفاتورة" : "العرض"}
           </button>
         </div>

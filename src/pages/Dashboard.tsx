@@ -31,11 +31,11 @@ function StatCard({ icon: Icon, label, value, tone = "navy" }: any) {
   };
   return (
     <div className="card p-5 fade-in">
-      <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tones[tone]}`}>
+      <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tones[tone]}`} aria-hidden="true">
         <Icon className="w-5 h-5" />
       </div>
-      <div className="mt-4 text-2xl font-medium text-navy">{value}</div>
-      <div className="mt-1 text-sm text-steel">{label}</div>
+      <div className="mt-4 text-2xl font-medium text-navy num">{value}</div>
+      <div className="mt-1 text-sm text-slate-brand">{label}</div>
     </div>
   );
 }
@@ -57,11 +57,11 @@ export default function Dashboard() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-medium text-navy">لوحة المعلومات</h1>
-          <p className="text-sm text-steel">نظرة تشغيلية على أنسام</p>
+          <p className="text-sm text-slate-brand">نظرة تشغيلية على أنسام</p>
         </div>
         {can("finance") && (
           <Link to="/app/financial" className="btn-ghost">
-            <PieChart className="w-5 h-5" />
+            <PieChart className="w-5 h-5" aria-hidden="true" />
             اللوحة المالية
           </Link>
         )}
@@ -77,41 +77,41 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div className="card flex items-center gap-3 p-4">
-          <Wrench className="h-8 w-8 text-brand" />
+          <Wrench className="h-8 w-8 text-brand" aria-hidden="true" />
           <div>
-            <div className="text-xl font-medium text-navy">{t.jobs_total || 0}</div>
+            <div className="text-xl font-medium text-navy num">{t.jobs_total || 0}</div>
             <div className="text-xs text-steel">إجمالي الطلبات الميدانية</div>
           </div>
         </div>
         <div className="card flex items-center gap-3 p-4">
-          <FileText className="h-8 w-8 text-brand" />
+          <FileText className="h-8 w-8 text-brand" aria-hidden="true" />
           <div>
-            <div className="text-xl font-medium text-navy">{t.invoices_count || 0}</div>
+            <div className="text-xl font-medium text-navy num">{t.invoices_count || 0}</div>
             <div className="text-xs text-steel">فاتورة</div>
           </div>
         </div>
         <div className="card flex items-center gap-3 p-4">
-          <ClipboardList className="h-8 w-8 text-brand" />
+          <ClipboardList className="h-8 w-8 text-brand" aria-hidden="true" />
           <div>
-            <div className="text-xl font-medium text-navy">{t.services_count || 0}</div>
+            <div className="text-xl font-medium text-navy num">{t.services_count || 0}</div>
             <div className="text-xs text-steel">خدمة معرّفة</div>
           </div>
         </div>
         {can("finance") ? (
           <Link to="/app/financial" className="card flex items-center gap-3 bg-navy p-4 text-white hover:bg-navy-700">
-            <PieChart className="h-8 w-8" />
+            <PieChart className="h-8 w-8" aria-hidden="true" />
             <div>
-              <div className="text-sm font-medium">{formatMoney(net)}</div>
-              <div className="flex items-center gap-1 text-xs text-sky-soft/80">
-                صافي الدخل <ArrowUpLeft className="w-3 h-3" />
+              <div className="text-sm font-medium num">{formatMoney(net)}</div>
+              <div className="flex items-center gap-1 text-xs text-sky-soft/90">
+                صافي الدخل <ArrowUpLeft className="w-3 h-3" aria-hidden="true" />
               </div>
             </div>
           </Link>
         ) : (
           <div className="card flex items-center gap-3 p-4">
-            <CalendarCheck className="h-8 w-8 text-brand" />
+            <CalendarCheck className="h-8 w-8 text-brand" aria-hidden="true" />
             <div>
-              <div className="text-xl font-medium text-navy">{t.quotes_count || 0}</div>
+              <div className="text-xl font-medium text-navy num">{t.quotes_count || 0}</div>
               <div className="text-xs text-steel">عرض سعر</div>
             </div>
           </div>
@@ -128,8 +128,8 @@ export default function Dashboard() {
             </Link>
           </div>
           {(data.recentJobs || []).length === 0 ? (
-            <div className="flex flex-col items-center py-12 text-center text-sm text-steel">
-              <Clock className="mb-2 h-8 w-8" />
+            <div className="flex flex-col items-center py-12 text-center text-sm text-slate-brand">
+              <Clock className="mb-2 h-8 w-8" aria-hidden="true" />
               لا توجد طلبات ميدانية بعد — ستظهر هنا عند إرسال الموظفين لها من بوابتهم.
             </div>
           ) : (

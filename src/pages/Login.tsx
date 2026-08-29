@@ -47,13 +47,13 @@ export default function Login() {
             لوحة تحكم، فوترة وعروض أسعار، إدارة مالية، وفريق عمل — كل ذلك في مكان واحد أنيق وسهل.
           </p>
         </div>
-        <div className="flex gap-2 opacity-70">
+        <div className="flex gap-2 opacity-70" aria-hidden="true">
           <span className="h-2 w-10 rounded-full bg-sky-soft" />
           <span className="h-2 w-2 rounded-full bg-white/40" />
           <span className="h-2 w-2 rounded-full bg-white/40" />
         </div>
-        <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-brand/30 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 left-10 h-80 w-80 rounded-full bg-sky-soft/10 blur-3xl" />
+        <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-brand/30 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute -bottom-24 left-10 h-80 w-80 rounded-full bg-sky-soft/10 blur-3xl" aria-hidden="true" />
       </div>
 
       {/* نموذج الدخول */}
@@ -67,13 +67,16 @@ export default function Login() {
             <p className="mt-1 text-sm text-steel">أدخل بياناتك للوصول إلى لوحة الإدارة</p>
           </div>
 
-          <form onSubmit={submit} className="space-y-4">
+          <form onSubmit={submit} className="space-y-4" aria-label="تسجيل الدخول">
             {error && (
-              <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>
+              <div role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>
             )}
             <div>
-              <label className="label">اسم الدخول</label>
+              <label htmlFor="login-username" className="label">اسم الدخول</label>
               <input
+                id="login-username"
+                name="username"
+                autoComplete="username"
                 className="input"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -83,8 +86,11 @@ export default function Login() {
               />
             </div>
             <div>
-              <label className="label">كلمة المرور</label>
+              <label htmlFor="login-password" className="label">كلمة المرور</label>
               <input
+                id="login-password"
+                name="password"
+                autoComplete="current-password"
                 className="input"
                 type="password"
                 value={password}
@@ -94,7 +100,7 @@ export default function Login() {
               />
             </div>
             <button type="submit" className="btn-primary w-full py-3" disabled={busy}>
-              {busy ? <Spinner className="w-5 h-5" /> : <LogIn className="w-5 h-5" />}
+              {busy ? <Spinner className="w-5 h-5" /> : <LogIn className="w-5 h-5" aria-hidden="true" />}
               دخول
             </button>
           </form>
@@ -104,7 +110,7 @@ export default function Login() {
             className="mt-6 flex items-center justify-center gap-1 text-sm text-steel hover:text-brand"
           >
             العودة إلى الموقع الرسمي
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </Link>
         </div>
       </div>

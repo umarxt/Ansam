@@ -50,17 +50,17 @@ export default function Jobs() {
     <div className="space-y-6">
       <div>
         <h1 className="flex items-center gap-2 text-2xl font-medium text-navy">
-          <ClipboardList className="h-6 w-6 text-brand" />
+          <ClipboardList className="h-6 w-6 text-brand" aria-hidden="true" />
           الطلبات الميدانية
         </h1>
-        <p className="text-sm text-steel">
+        <p className="text-sm text-slate-brand">
           طلبات الموظفين من الميدان — أكّد الطلب لإنشاء فاتورة تلقائياً ثم أصدرها.
         </p>
       </div>
 
-      <div className="card flex flex-wrap items-center gap-2 p-3">
+      <div className="card flex flex-wrap items-center gap-2 p-3" role="group" aria-label="تصفية الطلبات حسب الحالة">
         <span className="flex items-center gap-1 px-2 text-sm text-slate-brand">
-          <Filter className="h-4 w-4" /> الحالة:
+          <Filter className="h-4 w-4" aria-hidden="true" /> الحالة:
         </span>
         {[
           ["pending", "بانتظار التأكيد"],
@@ -70,7 +70,9 @@ export default function Jobs() {
         ].map(([v, l]) => (
           <button
             key={v}
+            type="button"
             onClick={() => setStatus(v)}
+            aria-pressed={status === v}
             className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
               status === v ? "bg-navy text-white" : "bg-navy-50 text-slate-brand hover:bg-navy-100"
             }`}
@@ -96,7 +98,7 @@ export default function Jobs() {
               <div key={j.id} className="card overflow-hidden fade-in">
                 {photos[0] ? (
                   <div className="relative h-40 bg-navy-50">
-                    <img src={photos[0]} alt="" className="h-full w-full object-cover" />
+                    <img src={photos[0]} alt={`صورة طلب ${j.service_name || "خدمة"}`} className="h-full w-full object-cover" />
                     {photos.length > 1 && (
                       <span className="absolute bottom-2 left-2 rounded-lg bg-navy/80 px-2 py-0.5 text-xs text-white">
                         +{photos.length - 1}
@@ -105,7 +107,7 @@ export default function Jobs() {
                   </div>
                 ) : (
                   <div className="flex h-40 items-center justify-center bg-navy-50 text-steel">
-                    <ClipboardList className="h-10 w-10" />
+                    <ClipboardList className="h-10 w-10" aria-hidden="true" />
                   </div>
                 )}
                 <div className="p-4">
@@ -120,20 +122,21 @@ export default function Jobs() {
                     <div className="text-xs text-steel">{formatDate(j.created_at)}</div>
                   </div>
                   <div className="mt-3 flex gap-2">
-                    <button onClick={() => setView(j)} className="btn-ghost flex-1 py-2 text-sm">
-                      <Eye className="w-4 h-4" /> تفاصيل
+                    <button type="button" onClick={() => setView(j)} className="btn-ghost flex-1 py-2 text-sm">
+                      <Eye className="w-4 h-4" aria-hidden="true" /> تفاصيل
                     </button>
                     {j.status === "pending" && (
-                      <button onClick={() => confirm(j.id)} disabled={busy} className="btn-brand flex-1 py-2 text-sm">
-                        <Check className="w-4 h-4" /> تأكيد
+                      <button type="button" onClick={() => confirm(j.id)} disabled={busy} className="btn-brand flex-1 py-2 text-sm">
+                        <Check className="w-4 h-4" aria-hidden="true" /> تأكيد
                       </button>
                     )}
                     {j.status === "confirmed" && j.invoice_id && (
                       <button
+                        type="button"
                         onClick={() => navigate(`/app/invoices/${j.invoice_id}`)}
                         className="btn-primary flex-1 py-2 text-sm"
                       >
-                        <FileUp className="w-4 h-4" /> الفاتورة
+                        <FileUp className="w-4 h-4" aria-hidden="true" /> الفاتورة
                       </button>
                     )}
                   </div>
@@ -163,29 +166,29 @@ export default function Jobs() {
               return photos.length ? (
                 <div className="grid grid-cols-3 gap-2">
                   {photos.map((p: string, i: number) => (
-                    <a key={i} href={p} target="_blank" rel="noreferrer">
-                      <img src={p} alt="" className="h-28 w-full rounded-xl object-cover" />
+                    <a key={i} href={p} target="_blank" rel="noreferrer" aria-label={`فتح الصورة ${i + 1} بحجم كامل`}>
+                      <img src={p} alt={`صورة الطلب ${i + 1}`} className="h-28 w-full rounded-xl object-cover" />
                     </a>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-steel">لا توجد صور مرفقة</p>
+                <p className="text-sm text-slate-brand">لا توجد صور مرفقة</p>
               );
             })()}
             <div className="flex justify-end gap-2 border-t border-navy-100 pt-4">
               {view.status === "pending" && (
                 <>
-                  <button onClick={() => reject(view.id)} className="btn-danger">
-                    <X className="w-4 h-4" /> رفض
+                  <button type="button" onClick={() => reject(view.id)} className="btn-danger">
+                    <X className="w-4 h-4" aria-hidden="true" /> رفض
                   </button>
-                  <button onClick={() => confirm(view.id)} disabled={busy} className="btn-brand">
-                    <Check className="w-4 h-4" /> تأكيد وإنشاء فاتورة
+                  <button type="button" onClick={() => confirm(view.id)} disabled={busy} className="btn-brand">
+                    <Check className="w-4 h-4" aria-hidden="true" /> تأكيد وإنشاء فاتورة
                   </button>
                 </>
               )}
               {view.status === "confirmed" && view.invoice_id && (
-                <button onClick={() => navigate(`/app/invoices/${view.invoice_id}`)} className="btn-primary">
-                  <FileUp className="w-4 h-4" /> فتح الفاتورة
+                <button type="button" onClick={() => navigate(`/app/invoices/${view.invoice_id}`)} className="btn-primary">
+                  <FileUp className="w-4 h-4" aria-hidden="true" /> فتح الفاتورة
                 </button>
               )}
             </div>

@@ -58,10 +58,10 @@ export default function Finance() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-medium text-navy">المالية</h1>
-          <p className="text-sm text-steel">إدارة الإيرادات والمصروفات وطرق الدفع</p>
+          <p className="text-sm text-slate-brand">إدارة الإيرادات والمصروفات وطرق الدفع</p>
         </div>
-        <button onClick={() => setModal(true)} className="btn-brand">
-          <Plus className="w-5 h-5" />
+        <button type="button" onClick={() => setModal(true)} className="btn-brand">
+          <Plus className="w-5 h-5" aria-hidden="true" />
           حركة جديدة
         </button>
       </div>
@@ -83,7 +83,7 @@ export default function Finance() {
             <div key={m} className="card p-5">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-steel">{PAYMENT_LABELS[m]}</span>
-                <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${METHOD_COLORS[m]}`}>
+                <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${METHOD_COLORS[m]}`} aria-hidden="true">
                   <Icon className="w-4 h-4" />
                 </span>
               </div>
@@ -97,7 +97,7 @@ export default function Finance() {
       {summary.cashByEmployee?.length > 0 && (
         <div className="card p-5">
           <h3 className="mb-4 flex items-center gap-2 font-medium text-navy">
-            <Users className="h-5 w-5 text-brand" />
+            <Users className="h-5 w-5 text-brand" aria-hidden="true" />
             النقدي المُحصّل حسب الموظف
           </h3>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -120,10 +120,11 @@ export default function Finance() {
       <div className="card p-4">
         <div className="flex flex-wrap items-end gap-3">
           <div className="flex items-center gap-1 text-sm font-medium text-slate-brand">
-            <Filter className="h-4 w-4" /> تصفية:
+            <Filter className="h-4 w-4" aria-hidden="true" /> تصفية:
           </div>
           <select
             className="input w-auto"
+            aria-label="تصفية حسب طريقة الدفع"
             value={filters.method}
             onChange={(e) => setFilters({ ...filters, method: e.target.value })}
           >
@@ -134,6 +135,7 @@ export default function Finance() {
           </select>
           <select
             className="input w-auto"
+            aria-label="تصفية حسب الموظف"
             value={filters.employee_id}
             onChange={(e) => setFilters({ ...filters, employee_id: e.target.value })}
           >
@@ -147,17 +149,20 @@ export default function Finance() {
           <input
             type="date"
             className="input w-auto"
+            aria-label="من تاريخ"
             value={filters.from}
             onChange={(e) => setFilters({ ...filters, from: e.target.value })}
           />
           <input
             type="date"
             className="input w-auto"
+            aria-label="إلى تاريخ"
             value={filters.to}
             onChange={(e) => setFilters({ ...filters, to: e.target.value })}
           />
           {(filters.method || filters.employee_id || filters.from || filters.to) && (
             <button
+              type="button"
               onClick={() => setFilters({ method: "", employee_id: "", from: "", to: "" })}
               className="text-sm text-brand hover:underline"
             >
@@ -222,8 +227,13 @@ export default function Finance() {
                     </td>
                     {isAdmin && (
                       <td className="px-5 py-3">
-                        <button onClick={() => remove(t.id)} className="rounded-lg p-2 text-red-500 hover:bg-red-50">
-                          <Trash2 className="w-4 h-4" />
+                        <button
+                          type="button"
+                          onClick={() => remove(t.id)}
+                          className="rounded-lg p-2 text-red-500 hover:bg-red-50"
+                          aria-label="حذف الحركة"
+                        >
+                          <Trash2 className="w-4 h-4" aria-hidden="true" />
                         </button>
                       </td>
                     )}
@@ -285,7 +295,7 @@ function TxnModal({
   return (
     <Modal open onClose={onClose} title="حركة مالية جديدة">
       <div className="space-y-4">
-        {error && <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
+        {error && <div role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
         <div className="grid grid-cols-2 gap-4">
           <Field label="النوع">
             <select className="input" value={form.txn_type} onChange={(e) => set("txn_type", e.target.value)}>
@@ -337,10 +347,10 @@ function TxnModal({
         </Field>
 
         <div className="flex justify-end gap-2 pt-2">
-          <button onClick={onClose} className="btn-ghost">
+          <button type="button" onClick={onClose} className="btn-ghost">
             إلغاء
           </button>
-          <button onClick={save} className="btn-brand" disabled={saving}>
+          <button type="button" onClick={save} className="btn-brand" disabled={saving}>
             {saving ? <Spinner className="w-5 h-5" /> : "حفظ"}
           </button>
         </div>

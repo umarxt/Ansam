@@ -42,10 +42,10 @@ export default function Documents({ type }: { type: "invoice" | "quote" }) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-medium text-navy">
-            <Icon className="h-6 w-6 text-brand" />
+            <Icon className="h-6 w-6 text-brand" aria-hidden="true" />
             {title}
           </h1>
-          <p className="text-sm text-steel">
+          <p className="text-sm text-slate-brand">
             {type === "invoice"
               ? "إصدار الفواتير مباشرة والاطلاع على السجل الكامل"
               : "إنشاء عروض الأسعار وتحويلها إلى فواتير"}
@@ -65,9 +65,11 @@ export default function Documents({ type }: { type: "invoice" | "quote" }) {
           }}
           className="relative"
         >
-          <Search className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-steel" />
+          <Search className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-steel" aria-hidden="true" />
           <input
             className="input pr-11"
+            type="search"
+            aria-label="بحث في المستندات"
             placeholder="بحث بالرقم أو اسم العميل..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
@@ -125,15 +127,17 @@ export default function Documents({ type }: { type: "invoice" | "quote" }) {
                           to={`/app/${base}/${d.id}`}
                           className="rounded-lg p-2 text-brand hover:bg-brand/10"
                           title="عرض"
+                          aria-label={`عرض ${d.number}`}
                         >
-                          <Eye className="w-4 h-4" />
+                          <Eye className="w-4 h-4" aria-hidden="true" />
                         </Link>
                         <Link
                           to={`/app/${base}/${d.id}/edit`}
                           className="rounded-lg p-2 text-slate-brand hover:bg-navy-50"
                           title="تعديل"
+                          aria-label={`تعديل ${d.number}`}
                         >
-                          <Pencil className="w-4 h-4" />
+                          <Pencil className="w-4 h-4" aria-hidden="true" />
                         </Link>
                       </div>
                     </td>

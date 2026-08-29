@@ -55,7 +55,7 @@ export default function AppLayout() {
         </div>
       </div>
 
-      <nav className="flex-1 space-y-1 px-3 py-2">
+      <nav className="flex-1 space-y-1 px-3 py-2" aria-label="التنقّل الرئيسي">
         {visibleNav.map((n) => (
             <NavLink
               key={n.to}
@@ -70,7 +70,7 @@ export default function AppLayout() {
                 }`
               }
             >
-              <n.icon className="w-[18px] h-[18px]" />
+              <n.icon className="w-[18px] h-[18px]" aria-hidden="true" />
               {n.label}
             </NavLink>
           ))}
@@ -81,29 +81,34 @@ export default function AppLayout() {
           rel="noreferrer"
           className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-sky-soft/90 transition-all hover:bg-white/10"
         >
-          <Globe className="w-[18px] h-[18px]" />
+          <Globe className="w-[18px] h-[18px]" aria-hidden="true" />
           الموقع الرسمي
-          <ChevronLeft className="w-4 h-4 mr-auto opacity-60" />
+          <span className="sr-only">(يفتح في تبويب جديد)</span>
+          <ChevronLeft className="w-4 h-4 mr-auto opacity-60" aria-hidden="true" />
         </a>
       </nav>
 
       <div className="border-t border-white/10 p-3">
         <div className="mb-2 flex items-center gap-3 rounded-xl bg-white/5 px-4 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-sm font-medium text-white">
+          <div
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-sm font-medium text-white"
+            aria-hidden="true"
+          >
             {user?.name?.charAt(0) || "؟"}
           </div>
           <div className="min-w-0">
             <div className="truncate text-sm font-medium text-white">{user?.name}</div>
-            <div className="text-[11px] text-sky-soft/70">
+            <div className="text-[11px] text-sky-soft/80">
               {isAdmin ? "مدير" : "موظف"} {user?.emp_code ? `· ${user.emp_code}` : ""}
             </div>
           </div>
         </div>
         <button
+          type="button"
           onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-sky-soft/80 transition hover:bg-white/10"
+          className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-sky-soft/90 transition hover:bg-white/10"
         >
-          <LogOut className="w-[18px] h-[18px]" />
+          <LogOut className="w-[18px] h-[18px]" aria-hidden="true" />
           تسجيل الخروج
         </button>
       </div>
@@ -112,16 +117,29 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen bg-cream">
+      <a href="#main-content" className="skip-link">
+        تخطَّ إلى المحتوى
+      </a>
+
       {/* الشريط الجانبي - سطح المكتب */}
-      <aside className="fixed inset-y-0 right-0 hidden w-64 bg-navy-gradient lg:block">
+      <aside
+        className="fixed inset-y-0 right-0 hidden w-64 bg-navy-gradient lg:block"
+        aria-label="القائمة الجانبية"
+      >
         {SidebarContent}
       </aside>
 
       {/* الشريط الجانبي - الجوال */}
       {open && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-navy-900/50" onClick={() => setOpen(false)} />
-          <aside className="absolute inset-y-0 right-0 w-64 bg-navy-gradient">{SidebarContent}</aside>
+          <div
+            className="absolute inset-0 bg-navy-900/50"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
+          />
+          <aside id="mobile-sidebar" className="absolute inset-y-0 right-0 w-64 bg-navy-gradient">
+            {SidebarContent}
+          </aside>
         </div>
       )}
 
@@ -132,12 +150,19 @@ export default function AppLayout() {
             <Logo className="h-8 w-8" />
             <span className="font-medium text-navy">أنسام</span>
           </div>
-          <button onClick={() => setOpen(!open)} className="rounded-lg p-2 text-navy hover:bg-navy-50">
-            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          <button
+            type="button"
+            onClick={() => setOpen(!open)}
+            aria-label={open ? "إغلاق القائمة" : "فتح القائمة"}
+            aria-expanded={open}
+            aria-controls="mobile-sidebar"
+            className="rounded-lg p-2 text-navy hover:bg-navy-50"
+          >
+            {open ? <X className="w-5 h-5" aria-hidden="true" /> : <Menu className="w-5 h-5" aria-hidden="true" />}
           </button>
         </header>
 
-        <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <main id="main-content" className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
           <Outlet />
         </main>
       </div>
