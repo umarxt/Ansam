@@ -46,18 +46,18 @@ const METHOD_ICONS: Record<string, any> = {
 
 function StatCard({ icon: Icon, label, value, tone = "navy" }: any) {
   const tones: Record<string, string> = {
-    navy: "bg-navy text-white",
-    brand: "bg-brand text-white",
-    green: "bg-green-600 text-white",
-    red: "bg-red-500 text-white",
+    navy: "bg-sky-soft text-navy",
+    brand: "bg-sky-soft text-brand",
+    green: "bg-green-50 text-green-600",
+    red: "bg-red-50 text-red-500",
   };
   return (
     <div className="card p-5 fade-in">
-      <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tones[tone]}`}>
+      <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${tones[tone]}`}>
         <Icon className="w-5 h-5" />
       </div>
-      <div className="mt-4 text-2xl font-medium text-navy">{value}</div>
-      <div className="mt-1 text-sm text-steel">{label}</div>
+      <div className="num mt-4 text-xl font-medium text-navy md:text-2xl">{value}</div>
+      <div className="mt-1 text-sm text-slate-brand">{label}</div>
     </div>
   );
 }

@@ -32,7 +32,7 @@ export default function Login() {
   return (
     <div className="flex min-h-screen">
       {/* الجانب التعريفي */}
-      <div className="relative hidden w-1/2 overflow-hidden bg-navy-gradient lg:flex lg:flex-col lg:justify-between lg:p-14">
+      <div className="relative hidden w-1/2 overflow-hidden bg-navy lg:flex lg:flex-col lg:justify-between lg:p-14">
         <div className="flex items-center gap-3">
           <Logo className="h-12 w-12" onDark />
           <span className="text-2xl font-medium text-white">أنسام</span>
@@ -52,8 +52,13 @@ export default function Login() {
           <span className="h-2 w-2 rounded-full bg-white/40" />
           <span className="h-2 w-2 rounded-full bg-white/40" />
         </div>
-        <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-brand/30 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 left-10 h-80 w-80 rounded-full bg-sky-soft/10 blur-3xl" />
+        {/* عنصر المروحة: مرة واحدة، باهت، في زاوية اللوحة */}
+        <img
+          src="/ansam-mark-white.svg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-16 -bottom-16 h-72 w-72 opacity-[0.06]"
+        />
       </div>
 
       {/* نموذج الدخول */}

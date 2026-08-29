@@ -24,18 +24,18 @@ const JOB_STATUS: Record<string, { label: string; cls: string }> = {
 
 function StatCard({ icon: Icon, label, value, tone = "navy" }: any) {
   const tones: Record<string, string> = {
-    navy: "bg-navy text-white",
-    brand: "bg-brand text-white",
-    amber: "bg-amber-500 text-white",
-    green: "bg-green-600 text-white",
+    navy: "bg-sky-soft text-navy",
+    brand: "bg-sky-soft text-brand",
+    amber: "bg-amber-50 text-amber-600",
+    green: "bg-green-50 text-green-600",
   };
   return (
     <div className="card p-5 fade-in">
-      <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tones[tone]}`}>
+      <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${tones[tone]}`}>
         <Icon className="w-5 h-5" />
       </div>
-      <div className="mt-4 text-2xl font-medium text-navy">{value}</div>
-      <div className="mt-1 text-sm text-steel">{label}</div>
+      <div className="num mt-4 text-2xl font-medium text-navy">{value}</div>
+      <div className="mt-1 text-sm text-slate-brand">{label}</div>
     </div>
   );
 }
@@ -77,24 +77,30 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div className="card flex items-center gap-3 p-4">
-          <Wrench className="h-8 w-8 text-brand" />
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-soft text-navy">
+            <Wrench className="h-5 w-5" />
+          </span>
           <div>
-            <div className="text-xl font-medium text-navy">{t.jobs_total || 0}</div>
-            <div className="text-xs text-steel">إجمالي الطلبات الميدانية</div>
+            <div className="num text-xl font-medium text-navy">{t.jobs_total || 0}</div>
+            <div className="text-xs text-slate-brand">إجمالي الطلبات الميدانية</div>
           </div>
         </div>
         <div className="card flex items-center gap-3 p-4">
-          <FileText className="h-8 w-8 text-brand" />
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-soft text-navy">
+            <FileText className="h-5 w-5" />
+          </span>
           <div>
-            <div className="text-xl font-medium text-navy">{t.invoices_count || 0}</div>
-            <div className="text-xs text-steel">فاتورة</div>
+            <div className="num text-xl font-medium text-navy">{t.invoices_count || 0}</div>
+            <div className="text-xs text-slate-brand">فاتورة</div>
           </div>
         </div>
         <div className="card flex items-center gap-3 p-4">
-          <ClipboardList className="h-8 w-8 text-brand" />
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-soft text-navy">
+            <ClipboardList className="h-5 w-5" />
+          </span>
           <div>
-            <div className="text-xl font-medium text-navy">{t.services_count || 0}</div>
-            <div className="text-xs text-steel">خدمة معرّفة</div>
+            <div className="num text-xl font-medium text-navy">{t.services_count || 0}</div>
+            <div className="text-xs text-slate-brand">خدمة معرّفة</div>
           </div>
         </div>
         {can("finance") ? (

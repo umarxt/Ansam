@@ -174,7 +174,7 @@ export default function DocumentEditor({ type }: { type: "invoice" | "quote" }) 
       {error && <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
 
       {/* الهيدر الثابت (بيانات الشركة) */}
-      <div className="card bg-navy-gradient p-5 text-white">
+      <div className="card border-navy bg-navy p-5 text-white">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
             <Logo className="h-12 w-12" onDark />

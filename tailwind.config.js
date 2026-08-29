@@ -27,10 +27,10 @@ export default {
           soft: "#D6E4F0",
         },
         slate: {
-          brand: "#4B6076",
+          brand: "#486072",
         },
-        steel: "#8B97A6",
-        cream: "#FAF7F1",
+        steel: "#8A96A3",
+        cream: "#FAF9F6",
       },
       fontFamily: {
         sans: [

@@ -90,7 +90,7 @@ export default function DocumentView() {
       {/* المستند القابل للطباعة */}
       <div className="print-area card mx-auto max-w-3xl overflow-hidden p-0">
         {/* رأس */}
-        <div className="bg-navy-gradient p-8 text-white">
+        <div className="bg-navy p-8 text-white">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-4">
               <Logo className="h-16 w-16" onDark />

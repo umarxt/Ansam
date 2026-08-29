@@ -65,7 +65,7 @@ export default function AppLayout() {
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-white text-navy shadow-soft"
+                    ? "bg-white text-navy"
                     : "text-sky-soft/90 hover:bg-white/10"
                 }`
               }
@@ -113,7 +113,7 @@ export default function AppLayout() {
   return (
     <div className="min-h-screen bg-cream">
       {/* الشريط الجانبي - سطح المكتب */}
-      <aside className="fixed inset-y-0 right-0 hidden w-64 bg-navy-gradient lg:block">
+      <aside className="fixed inset-y-0 right-0 hidden w-64 bg-navy lg:block">
         {SidebarContent}
       </aside>
 
@@ -121,7 +121,7 @@ export default function AppLayout() {
       {open && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div className="absolute inset-0 bg-navy-900/50" onClick={() => setOpen(false)} />
-          <aside className="absolute inset-y-0 right-0 w-64 bg-navy-gradient">{SidebarContent}</aside>
+          <aside className="absolute inset-y-0 right-0 w-64 bg-navy">{SidebarContent}</aside>
         </div>
       )}
 

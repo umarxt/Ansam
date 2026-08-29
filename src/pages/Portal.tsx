@@ -58,7 +58,7 @@ export default function Portal() {
 
   return (
     <div className="min-h-screen bg-cream">
-      <header className="bg-navy-gradient text-white">
+      <header className="bg-navy text-white">
         <div className="mx-auto flex max-w-2xl items-center justify-between px-5 py-4">
           <div className="flex items-center gap-3">
             <Logo className="h-9 w-9" onDark />
@@ -133,7 +133,7 @@ function PortalTile({ icon: Icon, label, sub, onClick, primary }: any) {
   return (
     <button
       onClick={onClick}
-      className={`card flex flex-col items-start gap-3 p-5 text-right transition hover:-translate-y-0.5 hover:shadow-glow ${
+      className={`card flex flex-col items-start gap-3 p-5 text-right transition hover:border-brand ${
         primary ? "bg-navy text-white" : ""
       }`}
     >
@@ -181,7 +181,7 @@ function PortalLogin({ onDone }: { onDone: () => Promise<void> }) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-navy-gradient px-6">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-navy px-6">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
           <div className="mb-3 flex justify-center">

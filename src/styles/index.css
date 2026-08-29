@@ -26,8 +26,10 @@
 
 :root {
   --navy: #12283f;
-  --brand: #2e6da6;
-  --cream: #faf7f1;
+  --slate: #486072;
+  --brand: #2e6fa8;
+  --blue-light: #d6e4f0;
+  --cream: #faf9f6;
 }
 
 * {
@@ -123,26 +125,33 @@ body {
 }
 
 @layer components {
+  /* بطاقة مسطّحة: حدّ رفيع بلون الأزرق الفاتح، بلا ظل (يُسمح الظل للطبقات العائمة فقط) */
   .card {
-    @apply bg-white rounded-xl2 shadow-card border border-navy-100/60;
+    @apply bg-white rounded-2xl border border-navy-100;
   }
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-medium transition-all duration-200 outline-none
+           focus-visible:ring-2 focus-visible:ring-brand/30 disabled:opacity-50 disabled:cursor-not-allowed;
   }
+  /* الأزرق حصري للفعل — الزر الأساسي */
   .btn-primary {
-    @apply btn bg-navy text-white hover:bg-navy-700 shadow-soft;
+    @apply btn bg-brand text-white hover:bg-brand-dark;
   }
   .btn-brand {
-    @apply btn bg-brand text-white hover:bg-brand-dark shadow-soft;
+    @apply btn bg-brand text-white hover:bg-brand-dark;
+  }
+  .btn-dark {
+    @apply btn bg-navy text-white hover:bg-navy-700;
   }
   .btn-ghost {
-    @apply btn bg-navy-50 text-navy hover:bg-navy-100;
+    @apply btn border border-navy-100 bg-white text-navy hover:border-brand hover:text-brand;
   }
   .btn-danger {
     @apply btn bg-red-50 text-red-600 hover:bg-red-100;
   }
+  /* حقول النماذج: زوايا 8px، حدّ أزرق فاتح، حلقة تركيز (الظل الوحيد المسموح) */
   .input {
-    @apply w-full rounded-xl border border-navy-100 bg-white px-4 py-2.5 text-navy-800 outline-none transition
+    @apply w-full rounded-lg border border-navy-100 bg-white px-4 py-2.5 text-navy-800 outline-none transition
            focus:border-brand focus:ring-2 focus:ring-brand/20 placeholder:text-steel;
   }
   .label {
@@ -239,12 +248,16 @@ body {
   transform: scaleX(1);
 }
 
-/* السهم داخل الزر ينزلق نحو البداية (يسار في RTL) عند التمرير */
-.landing .btn .arrow {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+/* السهم داخل البطاقة: يدور -45° ويتلوّن بالأزرق عند تمرير البطاقة كاملة */
+.arrow-icon {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s, color 0.3s,
+    border-color 0.3s;
 }
-.landing .btn:hover .arrow {
-  transform: translateX(-4px);
+.landing-card:hover .arrow-icon {
+  transform: rotate(-45deg);
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
 }
 
 /* حركة الظهور عند التمرير (تبدأ من القسم الثاني فما تحت) */
@@ -259,12 +272,51 @@ body {
   transform: none;
 }
 
+/* عنوان يظهر كلمةً كلمة: العنصر نفسه ثابت، والكلمات فقط ترتفع */
+.reveal-head {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* أثر ظهور النص كلمةً كلمة (القسم 8) — التقسيم بالكلمة فقط، ممنوع بالحرف */
+.reveal-line {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.reveal-line > span {
+  display: inline-block;
+  transform: translateY(115%);
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.is-visible .reveal-line > span {
+  transform: none;
+}
+
+/* دوران المروحة في الهيرو: دورة كاملة كل 25s */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: spin-slow 25s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
   .landing .btn:hover,
   .landing .btn:active {
     transform: none;
   }
-  .reveal {
+  .reveal,
+  .reveal-line > span {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
