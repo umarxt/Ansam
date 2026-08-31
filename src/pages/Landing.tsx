@@ -21,12 +21,17 @@ const SERVICE_ICONS = [Snowflake, UtensilsCrossed, FileCheck, Clock];
 
 export default function Landing() {
   const [data, setData] = useState<any>({ landing: {}, company: {} });
+  const [ready, setReady] = useState(false);
   const [ctaOpen, setCtaOpen] = useState(false);
   const ctaRef = useRef<HTMLDivElement>(null);
   const [bannerIndex, setBannerIndex] = useState(0);
 
   useEffect(() => {
-    api.get<any>("/public/landing").then(setData).catch(() => {});
+    api
+      .get<any>("/public/landing")
+      .then(setData)
+      .catch(() => {})
+      .finally(() => setReady(true));
     document.documentElement.classList.add("landing");
     return () => document.documentElement.classList.remove("landing");
   }, []);
@@ -195,10 +200,16 @@ export default function Landing() {
         <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:py-24">
           <div className="fade-in">
             <span className="badge bg-sky-soft text-brand-dark">حلول متكاملة للصيانة والتبريد</span>
-            <h1 className="mt-5 text-4xl font-medium leading-tight text-navy md:text-5xl">
+            <h1
+              className="mt-5 text-4xl font-medium leading-tight text-navy transition-opacity duration-300 md:text-5xl"
+              style={{ opacity: ready ? 1 : 0 }}
+            >
               {l.hero_title || "أنسام"}
             </h1>
-            <p className="mt-5 text-lg leading-relaxed text-slate-brand">
+            <p
+              className="mt-5 text-lg leading-relaxed text-slate-brand transition-opacity duration-300"
+              style={{ opacity: ready ? 1 : 0 }}
+            >
               {l.hero_subtitle ||
                 "حلول متكاملة للتكييف والتبريد وصيانة المطابخ والأفران الكبيرة للشركات والفنادق والمنشآت."}
             </p>
