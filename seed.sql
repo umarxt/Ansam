@@ -42,7 +42,7 @@ INSERT OR REPLACE INTO settings (key, value) VALUES
   "sheets_enabled": false
 }')),
 ('landing', json('{
-  "hero_title": "أنسام للصيانة والتبريد",
+  "hero_title": "أنسام",
   "hero_subtitle": "حلول متكاملة للتكييف والتبريد وصيانة المطابخ والأفران الكبيرة للشركات والفنادق والمنشآت.",
   "phone": "0555555555",
   "email": "info@ansam.sa",

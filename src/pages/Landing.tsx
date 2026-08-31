@@ -196,7 +196,7 @@ export default function Landing() {
           <div className="fade-in">
             <span className="badge bg-sky-soft text-brand-dark">حلول متكاملة للصيانة والتبريد</span>
             <h1 className="mt-5 text-4xl font-medium leading-tight text-navy md:text-5xl">
-              {l.hero_title || "أنسام للصيانة والتبريد"}
+              {l.hero_title || "أنسام"}
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-slate-brand">
               {l.hero_subtitle ||

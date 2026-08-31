@@ -141,7 +141,7 @@ const SEED: string[] = [
     "sheets_webhook_url": "", "sheets_enabled": false
   }'))`,
   `INSERT OR IGNORE INTO settings (key, value) VALUES ('landing', json('{
-    "hero_title": "أنسام للصيانة والتبريد",
+    "hero_title": "أنسام",
     "hero_subtitle": "حلول متكاملة للتكييف والتبريد وصيانة المطابخ والأفران الكبيرة للشركات والفنادق والمنشآت.",
     "phone": "0555555555", "email": "info@ansam.sa", "whatsapp": "0555555555", "instagram": "AnsamSA",
     "services": [
