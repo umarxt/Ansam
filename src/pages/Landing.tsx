@@ -385,8 +385,64 @@ export default function Landing() {
   // «المزيد عن أنسام»: تجميع الأقسام التفصيلية في قائمة واحدة قابلة للطي
   const moreItems: AccordionItemData[] = [
     {
-      key: "values",
+      key: "vision",
       icon: Sparkles,
+      title: "رؤيتنا ورسالتنا",
+      badge: "إلى أين نتّجه وكيف نعمل",
+      body: (
+        <div className="space-y-4">
+          <div className="rounded-xl2 border border-navy-100 p-5">
+            <h4 className="font-medium text-navy">رؤيتنا</h4>
+            <p className="mt-1.5 text-sm leading-relaxed text-slate-brand">
+              أن نكون الخيار الأول والموثوق في المملكة لحلول التكييف والتبريد والمعدات التجارية، والاسم الذي تستدعيه المنشآت حين لا يكون هناك مجال للخطأ.
+            </p>
+          </div>
+          <div className="rounded-xl2 border border-navy-100 p-5">
+            <h4 className="font-medium text-navy">رسالتنا</h4>
+            <p className="mt-1.5 text-sm leading-relaxed text-slate-brand">
+              تمكين المنشآت التجارية والفندقية من العمل دون انقطاع، عبر صيانة استباقية واستجابة طارئة سريعة ينفّذها فنيون مؤهلون، وفق معايير جودة وسلامة موثّقة وشفافية كاملة في التكلفة والتقارير.
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "why",
+      icon: BadgeCheck,
+      title: "لماذا تتعاقد مع أنسام الآن",
+      badge: "الفرق بين انتظار الأزمة والاستعداد لها",
+      body: (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="rounded-xl2 border border-navy-100 p-5">
+            <h4 className="mb-3 font-medium text-steel">دون عقد صيانة</h4>
+            <ul className="space-y-2.5">
+              {COMPARISON.map((r, i) => (
+                <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-slate-brand">
+                  <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-steel/70" />
+                  <span>{r.without}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-xl2 border border-brand/30 bg-sky-soft/30 p-5">
+            <h4 className="mb-3 flex items-center gap-2 font-medium text-brand-dark">
+              <BadgeCheck className="h-5 w-5 text-brand" /> مع أنسام
+            </h4>
+            <ul className="space-y-2.5">
+              {COMPARISON.map((r, i) => (
+                <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-navy">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+                  <span>{r.withUs}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "values",
+      icon: Award,
       title: "قيمنا",
       badge: "مبادئ نعمل بها كل يوم في الميدان",
       body: (
@@ -405,7 +461,7 @@ export default function Landing() {
     },
     {
       key: "diff",
-      icon: Award,
+      icon: Gauge,
       title: "ما الذي يميّزنا فعلياً",
       badge: "فرق حقيقي تلمسه في كل بلاغ وكل تقرير",
       body: (
@@ -610,16 +666,10 @@ export default function Landing() {
           <span className="badge bg-sky-soft text-brand-dark">كلمة البداية</span>
           <div className="mt-5 space-y-4 text-lg leading-relaxed text-slate-brand">
             <p>
-              في قطاع الضيافة والمنشآت التجارية، لا يُقاس نجاح مزوّد الخدمة بجودة الإصلاح فحسب، بل بسرعة وصوله قبل أن تتحوّل العطل إلى خسارة.
-            </p>
-            <p>
-              توقّف غرفة تبريد لساعات يعني إتلاف مخزون كامل. تعطّل فرن في وقت الذروة يعني إيقاف المطبخ. ارتفاع حرارة جناح فندقي يعني شكوى نزيل وتقييماً سلبياً دائماً.
-            </p>
-            <p>
-              من هذه النقطة تحديداً انطلقت <strong className="text-navy">«أنسام»</strong>: شركة سعودية مقرها الرياض، متخصصة في التكييف والتبريد والمعدات التجارية الثقيلة، تعمل بمعايير تشغيلية واضحة واستجابة ميدانية مضمونة وفنيين مؤهلين للمعدات التي يندر من يجيد صيانتها.
+              في قطاع الضيافة والمنشآت التجارية، لا يُقاس نجاح مزوّد الخدمة بجودة الإصلاح فحسب، بل بسرعة وصوله قبل أن تتحوّل العطل إلى خسارة — فتوقّف غرفة تبريد يعني إتلاف مخزون، وتعطّل فرن في الذروة يعني إيقاف مطبخ.
             </p>
             <p className="text-xl font-medium text-navy">
-              نحن لا نقدّم «زيارة صيانة» — نحن نقدّم استمرارية تشغيل.
+              لذلك نحن لا نقدّم «زيارة صيانة» — نحن نقدّم استمرارية تشغيل.
             </p>
           </div>
           <div className="mt-6 text-sm font-medium text-brand">— المؤسّس</div>
@@ -633,16 +683,10 @@ export default function Landing() {
             <h2 className="text-3xl font-medium text-navy">من نحن</h2>
             <div className="mt-4 space-y-4 leading-relaxed text-slate-brand">
               <p>
-                «أنسام» شركة سعودية في مدينة الرياض، متخصصة في تركيب وصيانة وإصلاح أنظمة التكييف والتبريد والمعدات التجارية للمطاعم والفنادق والمنشآت.
+                «أنسام» شركة سعودية في مدينة الرياض، متخصصة في تركيب وصيانة وإصلاح أنظمة التكييف والتبريد والمعدات التجارية للمطاعم والفنادق والمنشآت — تأسست لسدّ فجوة حقيقية في السوق: نقص الفنيين المؤهلين للمعدات التجارية الضخمة التي يكبّد توقفها المنشأة خسائر مباشرة.
               </p>
               <p>
-                تأسست برؤية واضحة: سدّ فجوة حقيقية في السوق السعودي تتمثل في نقص الفنيين المؤهلين للتعامل مع المعدات التجارية الضخمة — الثلاجات والغرف المبرّدة الكبيرة والأفران الصناعية وخطوط المطابخ التجارية — وهي معدات مرتفعة التكلفة يكبّد توقفها المنشأة خسائر مباشرة.
-              </p>
-              <p>
-                نعمل وفق نموذج العقود التشغيلية مع الشركات والفنادق والمطاعم والمجمعات، إلى جانب خدمات الطوارئ الفورية، معتمدين على كوادر فنية مدرّبة.
-              </p>
-              <p>
-                ونعتزّ بكوننا كياناً وطنياً يسهم في رؤية المملكة 2030 عبر توطين المهن التقنية المتخصصة ورفع جودة الخدمات المساندة.
+                نعمل بنموذج العقود التشغيلية مع الشركات والفنادق والمطاعم والمجمعات، إلى جانب خدمات الطوارئ الفورية، ونعتزّ بكوننا كياناً وطنياً يسهم في رؤية المملكة 2030 عبر توطين المهن التقنية المتخصصة.
               </p>
             </div>
           </div>
@@ -662,30 +706,6 @@ export default function Landing() {
                 ))}
               </dl>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* الرؤية والرسالة */}
-      <section className="bg-navy-gradient py-16 text-white">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="reveal rounded-xl2 border border-white/10 bg-white/5 p-8">
-              <h3 className="text-xl font-medium">رؤيتنا</h3>
-              <p className="mt-3 leading-relaxed text-sky-soft/85">
-                أن نكون الخيار الأول والموثوق في المملكة لحلول التكييف والتبريد والمعدات التجارية، والاسم الذي تستدعيه المنشآت حين لا يكون هناك مجال للخطأ.
-              </p>
-            </div>
-            <div className="reveal rounded-xl2 border border-white/10 bg-white/5 p-8">
-              <h3 className="text-xl font-medium">رسالتنا</h3>
-              <p className="mt-3 leading-relaxed text-sky-soft/85">
-                تمكين المنشآت التجارية والفندقية من العمل دون انقطاع، عبر صيانة استباقية واستجابة طارئة سريعة ينفّذها فنيون مؤهلون، وفق معايير جودة وسلامة موثّقة وشفافية كاملة في التكلفة والتقارير.
-              </p>
-            </div>
-          </div>
-          <div className="reveal mt-6 rounded-xl2 bg-white/10 p-6 text-center">
-            <p className="text-sm text-sky-soft/80">وعدنا لعملائنا</p>
-            <p className="mt-1 text-2xl font-medium">{COMPANY.tagline}</p>
           </div>
         </div>
       </section>
@@ -746,46 +766,12 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* لماذا تتعاقد مع أنسام الآن */}
-      <section className="mx-auto max-w-5xl px-5 py-16">
-        <div className="reveal mb-10 text-center">
-          <h2 className="text-3xl font-medium text-navy">لماذا تتعاقد مع أنسام الآن</h2>
-          <p className="mt-2 text-slate-brand">الفرق بين انتظار الأزمة والاستعداد لها</p>
-        </div>
-        <div className="reveal grid grid-cols-1 gap-5 md:grid-cols-2">
-          <div className="rounded-xl2 border border-navy-100 bg-white p-7">
-            <h3 className="mb-4 font-medium text-steel">الوضع دون عقد صيانة</h3>
-            <ul className="space-y-3">
-              {COMPARISON.map((r, i) => (
-                <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-slate-brand">
-                  <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-steel/70" />
-                  <span>{r.without}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="rounded-xl2 border border-brand/30 bg-sky-soft/30 p-7 shadow-glow">
-            <h3 className="mb-4 flex items-center gap-2 font-medium text-brand-dark">
-              <BadgeCheck className="h-5 w-5 text-brand" /> مع أنسام
-            </h3>
-            <ul className="space-y-3">
-              {COMPARISON.map((r, i) => (
-                <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-navy">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
-                  <span>{r.withUs}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
       {/* المزيد عن أنسام — أقسام تفصيلية في قائمة واحدة قابلة للطي */}
       <section id="more" className="mx-auto max-w-3xl px-5 py-16">
         <div className="reveal mb-8 text-center">
           <span className="badge bg-sky-soft text-brand-dark">المزيد عن أنسام</span>
           <h2 className="mt-4 text-3xl font-medium text-navy">تفاصيل تهمّك</h2>
-          <p className="mt-2 text-slate-brand">قِيَمنا ومزايانا وآلية عملنا ومعايير جودتنا وفريقنا — افتح ما يهمّك</p>
+          <p className="mt-2 text-slate-brand">رؤيتنا وقيمنا ومزايانا وآلية عملنا ومعايير جودتنا وفريقنا — افتح ما يهمّك فقط</p>
         </div>
         <div className="reveal">
           <Accordion items={moreItems} defaultOpen={-1} />
