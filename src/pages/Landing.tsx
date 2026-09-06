@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { ComponentType } from "react";
 import {
   Snowflake,
   Wrench,
@@ -13,17 +14,84 @@ import {
   UtensilsCrossed,
   ShieldCheck,
   Instagram,
+  ChevronDown,
 } from "lucide-react";
 import { api } from "../lib/api";
 import { Logo } from "../components/Logo";
 
 const SERVICE_ICONS = [Snowflake, UtensilsCrossed, FileCheck, Clock];
 
+type AccordionEntry = { title: string; desc: string; Icon: ComponentType<{ className?: string }> };
+
+/** صف قائمة قابل للطي — أنيق وخفيف، يفتح واحد فقط في كل مرة */
+function AccordionItem({
+  entry,
+  open,
+  onToggle,
+  dark = false,
+}: {
+  entry: AccordionEntry;
+  open: boolean;
+  onToggle: () => void;
+  dark?: boolean;
+}) {
+  const { Icon } = entry;
+  return (
+    <div className={dark ? "border-b border-white/10 last:border-0" : "border-b border-navy-100/70 last:border-0"}>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        className={`group flex w-full items-center gap-4 px-5 py-4 text-start transition-colors md:px-6 ${
+          dark ? "hover:bg-white/5" : "hover:bg-navy-50/60"
+        }`}
+      >
+        <span
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-300 ${
+            dark
+              ? open
+                ? "bg-white/20 text-white"
+                : "bg-white/10 text-sky-soft group-hover:bg-white/15"
+              : open
+              ? "bg-brand text-white"
+              : "bg-brand/10 text-brand group-hover:bg-brand/20"
+          }`}
+        >
+          <Icon className="h-5 w-5" />
+        </span>
+        <span className={`flex-1 font-medium ${dark ? "text-white" : "text-navy"}`}>{entry.title}</span>
+        <ChevronDown
+          className={`h-5 w-5 shrink-0 transition-transform duration-300 ${dark ? "text-sky-soft/70" : "text-steel"} ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+      <div
+        className={`grid transition-all duration-300 ease-out ${
+          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <p
+            className={`px-5 pb-5 text-sm leading-relaxed md:px-6 ps-20 ${
+              dark ? "text-sky-soft/80" : "text-slate-brand"
+            }`}
+          >
+            {entry.desc}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Landing() {
   const [data, setData] = useState<any>({ landing: {}, company: {} });
   const [ctaOpen, setCtaOpen] = useState(false);
   const ctaRef = useRef<HTMLDivElement>(null);
   const [bannerIndex, setBannerIndex] = useState(0);
+  const [openService, setOpenService] = useState(0);
+  const [openSector, setOpenSector] = useState(0);
 
   useEffect(() => {
     api.get<any>("/public/landing").then(setData).catch(() => {});
@@ -251,50 +319,46 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* الخدمات */}
-      <section id="services" className="mx-auto max-w-6xl px-5 py-16">
-        <div className="reveal mb-10 text-center">
-          <h2 className="text-3xl font-medium text-navy">خدماتنا</h2>
-          <p className="mt-2 text-slate-brand">حلول شاملة تغطي كافة احتياجات الصيانة والتبريد</p>
+      {/* الخدمات — قائمة قابلة للطي */}
+      <section id="services" className="mx-auto max-w-3xl px-5 py-16">
+        <div className="reveal mb-8 text-center">
+          <span className="badge bg-sky-soft text-brand-dark">خدماتنا</span>
+          <h2 className="mt-4 text-3xl font-medium text-navy">حلول شاملة للصيانة والتبريد</h2>
+          <p className="mt-2 text-slate-brand">اضغط على أي خدمة لعرض تفاصيلها</p>
         </div>
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {services.map((s: any, i: number) => {
-            const Icon = SERVICE_ICONS[i % SERVICE_ICONS.length];
-            return (
-              <div key={i} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
-                <div className="card group h-full p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-glow">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand transition-all duration-300 ease-out group-hover:bg-brand group-hover:text-white group-hover:-rotate-6 group-active:-rotate-12 group-active:scale-95">
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="font-medium text-navy">{s.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-brand">{s.desc}</p>
-                </div>
-              </div>
-            );
-          })}
+        <div className="reveal overflow-hidden rounded-xl2 border border-navy-100/60 bg-white shadow-card">
+          {services.map((s: any, i: number) => (
+            <AccordionItem
+              key={i}
+              entry={{ title: s.title, desc: s.desc, Icon: SERVICE_ICONS[i % SERVICE_ICONS.length] }}
+              open={openService === i}
+              onToggle={() => setOpenService((cur) => (cur === i ? -1 : i))}
+            />
+          ))}
         </div>
       </section>
 
-      {/* القطاعات المستهدفة */}
+      {/* القطاعات المستهدفة — قائمة قابلة للطي */}
       <section id="sectors" className="bg-navy-gradient py-16 text-white">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className="reveal mb-10 text-center">
-            <h2 className="text-3xl font-medium">نخدم كبار العملاء</h2>
+        <div className="mx-auto max-w-3xl px-5">
+          <div className="reveal mb-8 text-center">
+            <span className="badge bg-white/10 text-sky-soft">من نخدم</span>
+            <h2 className="mt-4 text-3xl font-medium">نخدم كبار العملاء</h2>
             <p className="mt-2 text-sky-soft/80">شراكات موثوقة مع الشركات والفنادق والمنشآت الكبرى</p>
           </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+          <div className="reveal overflow-hidden rounded-xl2 border border-white/10 bg-white/5">
             {[
-              { icon: Building2, title: "الشركات", desc: "عقود صيانة دورية للمقرات والمنشآت التجارية." },
-              { icon: Hotel, title: "الفنادق", desc: "أنظمة تكييف وتبريد تعمل بلا انقطاع لراحة النزلاء." },
-              { icon: UtensilsCrossed, title: "المطاعم والمطابخ", desc: "صيانة الأفران الكبيرة ومعدات المطابخ التجارية." },
+              { Icon: Building2, title: "الشركات", desc: "عقود صيانة دورية للمقرات والمنشآت التجارية." },
+              { Icon: Hotel, title: "الفنادق", desc: "أنظمة تكييف وتبريد تعمل بلا انقطاع لراحة النزلاء." },
+              { Icon: UtensilsCrossed, title: "المطاعم والمطابخ", desc: "صيانة الأفران الكبيرة ومعدات المطابخ التجارية." },
             ].map((s, i) => (
-              <div key={s.title} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
-                <div className="group h-full rounded-xl2 border border-white/10 bg-white/5 p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-white/25 hover:bg-white/10">
-                  <s.icon className="mb-4 h-9 w-9 text-sky-soft transition-transform duration-300 ease-out group-hover:-rotate-6 group-active:-rotate-12" />
-                  <h3 className="text-lg font-medium">{s.title}</h3>
-                  <p className="mt-2 text-sm text-sky-soft/80">{s.desc}</p>
-                </div>
-              </div>
+              <AccordionItem
+                key={s.title}
+                entry={s}
+                dark
+                open={openSector === i}
+                onToggle={() => setOpenSector((cur) => (cur === i ? -1 : i))}
+              />
             ))}
           </div>
         </div>
