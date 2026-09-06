@@ -407,6 +407,38 @@ export default function Landing() {
       ),
     },
     {
+      key: "facts",
+      icon: Gauge,
+      title: "مؤشرات سريعة",
+      badge: "الكيان والمقر والتخصص ونموذج العمل",
+      body: (
+        <dl className="divide-y divide-navy-100 overflow-hidden rounded-xl2 border border-navy-100">
+          {QUICK_FACTS.map((f) => (
+            <div key={f.label} className="grid grid-cols-1 gap-1 px-4 py-3 sm:grid-cols-3 sm:gap-4">
+              <dt className="text-sm font-medium text-navy">{f.label}</dt>
+              <dd className="text-sm leading-relaxed text-slate-brand sm:col-span-2">{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+      ),
+    },
+    {
+      key: "contract-benefits",
+      icon: FileText,
+      title: "مزايا عقود الصيانة السنوية",
+      badge: "تكلفة ثابتة وأولوية استجابة وأرشيف موثّق",
+      body: (
+        <ul className="space-y-3">
+          {CONTRACT_BENEFITS.map((b, i) => (
+            <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-slate-brand">
+              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+      ),
+    },
+    {
       key: "why",
       icon: BadgeCheck,
       title: "لماذا تتعاقد مع أنسام الآن",
@@ -461,7 +493,7 @@ export default function Landing() {
     },
     {
       key: "diff",
-      icon: Gauge,
+      icon: Wrench,
       title: "ما الذي يميّزنا فعلياً",
       badge: "فرق حقيقي تلمسه في كل بلاغ وكل تقرير",
       body: (
@@ -676,37 +708,14 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* من نحن + مؤشرات سريعة */}
-      <section id="about" className="mx-auto max-w-6xl px-5 py-16">
-        <div className="grid items-start gap-8 lg:grid-cols-2">
-          <div className="reveal">
-            <h2 className="text-3xl font-medium text-navy">من نحن</h2>
-            <div className="mt-4 space-y-4 leading-relaxed text-slate-brand">
-              <p>
-                «أنسام» شركة سعودية في مدينة الرياض، متخصصة في تركيب وصيانة وإصلاح أنظمة التكييف والتبريد والمعدات التجارية للمطاعم والفنادق والمنشآت — تأسست لسدّ فجوة حقيقية في السوق: نقص الفنيين المؤهلين للمعدات التجارية الضخمة التي يكبّد توقفها المنشأة خسائر مباشرة.
-              </p>
-              <p>
-                نعمل بنموذج العقود التشغيلية مع الشركات والفنادق والمطاعم والمجمعات، إلى جانب خدمات الطوارئ الفورية، ونعتزّ بكوننا كياناً وطنياً يسهم في رؤية المملكة 2030 عبر توطين المهن التقنية المتخصصة.
-              </p>
-            </div>
-          </div>
-          <div className="reveal">
-            <div className="card overflow-hidden">
-              <div className="border-b border-navy-100 bg-navy-50/60 px-6 py-4">
-                <h3 className="flex items-center gap-2 font-medium text-navy">
-                  <Gauge className="h-5 w-5 text-brand" /> مؤشرات سريعة
-                </h3>
-              </div>
-              <dl className="divide-y divide-navy-100">
-                {QUICK_FACTS.map((f) => (
-                  <div key={f.label} className="grid grid-cols-1 gap-1 px-6 py-4 sm:grid-cols-3 sm:gap-4">
-                    <dt className="text-sm font-medium text-navy">{f.label}</dt>
-                    <dd className="text-sm leading-relaxed text-slate-brand sm:col-span-2">{f.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </div>
+      {/* من نحن */}
+      <section id="about" className="mx-auto max-w-3xl px-5 py-16">
+        <div className="reveal text-center">
+          <h2 className="text-3xl font-medium text-navy">من نحن</h2>
+          <p className="mt-4 leading-relaxed text-slate-brand">
+            «أنسام» شركة سعودية في مدينة الرياض، متخصصة في تركيب وصيانة وإصلاح أنظمة التكييف والتبريد والمعدات التجارية للمطاعم والفنادق والمنشآت — تأسست لسدّ فجوة نقص الفنيين المؤهلين للمعدات الضخمة التي يكبّد توقفها المنشأة خسائر مباشرة، ونعمل بنموذج العقود التشغيلية إلى جانب خدمات الطوارئ الفورية.
+          </p>
+          <p className="mt-2 text-sm text-steel">تفاصيل الكيان والمقر ونموذج العمل في قسم «المزيد عن أنسام» بالأسفل.</p>
         </div>
       </section>
 
@@ -736,33 +745,18 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* عقود الصيانة السنوية */}
-      <section id="contracts" className="mx-auto max-w-6xl px-5 py-16">
-        <div className="reveal card overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-2">
-            <div className="p-8 md:p-10">
-              <span className="badge bg-sky-soft text-brand-dark">نموذجنا الأساسي</span>
-              <h2 className="mt-4 text-3xl font-medium text-navy">عقود الصيانة السنوية</h2>
-              <p className="mt-3 leading-relaxed text-slate-brand">
-                تمنح المنشأة أولوية في الاستجابة وتكلفة تشغيلية ثابتة ومتوقعة — راحة بال طوال العام.
-              </p>
-              <a href={wa} target="_blank" rel="noreferrer" className="btn-brand mt-6">
-                <MessageCircle className="h-5 w-5" />
-                اطلب عرض عقد سنوي
-              </a>
-            </div>
-            <div className="bg-navy-50/50 p-8 md:p-10">
-              <h3 className="font-medium text-navy">مزايا التعاقد</h3>
-              <ul className="mt-4 space-y-3">
-                {CONTRACT_BENEFITS.map((b, i) => (
-                  <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-slate-brand">
-                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+      {/* عقود الصيانة السنوية — دعوة مختصرة */}
+      <section id="contracts" className="mx-auto max-w-3xl px-5 py-16">
+        <div className="reveal card overflow-hidden bg-navy-gradient p-8 text-center text-white md:p-12">
+          <span className="badge bg-white/10 text-sky-soft">نموذجنا الأساسي</span>
+          <h2 className="mt-4 text-3xl font-medium">عقود الصيانة السنوية</h2>
+          <p className="mx-auto mt-3 max-w-xl leading-relaxed text-sky-soft/85">
+            أولوية في الاستجابة وتكلفة تشغيلية ثابتة ومتوقعة — راحة بال طوال العام. (مزايا التعاقد بالتفصيل في قسم «المزيد» بالأسفل.)
+          </p>
+          <a href={wa} target="_blank" rel="noreferrer" className="btn-brand mt-6">
+            <MessageCircle className="h-5 w-5" />
+            اطلب عرض عقد سنوي
+          </a>
         </div>
       </section>
 
@@ -771,7 +765,7 @@ export default function Landing() {
         <div className="reveal mb-8 text-center">
           <span className="badge bg-sky-soft text-brand-dark">المزيد عن أنسام</span>
           <h2 className="mt-4 text-3xl font-medium text-navy">تفاصيل تهمّك</h2>
-          <p className="mt-2 text-slate-brand">رؤيتنا وقيمنا ومزايانا وآلية عملنا ومعايير جودتنا وفريقنا — افتح ما يهمّك فقط</p>
+          <p className="mt-2 text-slate-brand">رؤيتنا والمؤشرات والعقود ومزايانا وآلية عملنا وجودتنا وفريقنا — افتح ما يهمّك فقط</p>
         </div>
         <div className="reveal">
           <Accordion items={moreItems} defaultOpen={-1} />
