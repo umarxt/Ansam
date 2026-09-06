@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { ComponentType, ReactNode } from "react";
 import {
   Snowflake,
   Wind,
@@ -29,6 +30,7 @@ import {
   Instagram,
   BadgeCheck,
   Sparkles,
+  ChevronDown,
 } from "lucide-react";
 import { api } from "../lib/api";
 import { Logo } from "../components/Logo";
@@ -209,6 +211,90 @@ const COMPARISON = [
   { without: "عمر أقصر للمعدات", withUs: "إطالة العمر التشغيلي وخفض استهلاك الطاقة" },
 ];
 
+type AccordionItemData = {
+  key: string;
+  icon?: ComponentType<{ className?: string }>;
+  title: string;
+  badge?: string;
+  body: ReactNode;
+};
+
+/** قائمة قابلة للطي — أنيقة وخفيفة، يُفتح بند واحد في كل مرة */
+function Accordion({
+  items,
+  dark = false,
+  defaultOpen = 0,
+}: {
+  items: AccordionItemData[];
+  dark?: boolean;
+  defaultOpen?: number;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div
+      className={`overflow-hidden rounded-xl2 border ${
+        dark ? "border-white/10 bg-white/5" : "border-navy-100/60 bg-white shadow-card"
+      }`}
+    >
+      {items.map((it, i) => {
+        const isOpen = open === i;
+        const Icon = it.icon;
+        return (
+          <div
+            key={it.key}
+            className={dark ? "border-b border-white/10 last:border-0" : "border-b border-navy-100/70 last:border-0"}
+          >
+            <button
+              type="button"
+              onClick={() => setOpen(isOpen ? -1 : i)}
+              aria-expanded={isOpen}
+              className={`group flex w-full items-center gap-4 px-5 py-4 text-start transition-colors md:px-6 ${
+                dark ? "hover:bg-white/5" : "hover:bg-navy-50/60"
+              }`}
+            >
+              {Icon && (
+                <span
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-300 ${
+                    dark
+                      ? isOpen
+                        ? "bg-white/20 text-white"
+                        : "bg-white/10 text-sky-soft group-hover:bg-white/15"
+                      : isOpen
+                      ? "bg-brand text-white"
+                      : "bg-brand/10 text-brand group-hover:bg-brand/20"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                </span>
+              )}
+              <span className="flex-1">
+                <span className={`block font-medium ${dark ? "text-white" : "text-navy"}`}>{it.title}</span>
+                {it.badge && (
+                  <span className={`text-xs font-medium ${dark ? "text-sky-soft" : "text-brand"}`}>{it.badge}</span>
+                )}
+              </span>
+              <ChevronDown
+                className={`h-5 w-5 shrink-0 transition-transform duration-300 ${
+                  dark ? "text-sky-soft/70" : "text-steel"
+                } ${isOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+            <div
+              className={`grid transition-all duration-300 ease-out ${
+                isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <div className={`px-5 pb-5 md:px-6 ${Icon ? "ps-16 md:ps-20" : ""}`}>{it.body}</div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function Landing() {
   const [data, setData] = useState<any>({ landing: {}, company: {} });
   const [ctaOpen, setCtaOpen] = useState(false);
@@ -270,6 +356,130 @@ export default function Landing() {
   const wa = `https://wa.me/${COMPANY.phoneIntl}`;
   const mailto = `mailto:${COMPANY.email}`;
 
+  // قائمة خدماتنا كأكورديون (3 محاور)
+  const serviceItems: AccordionItemData[] = SERVICE_GROUPS.map((g) => ({
+    key: g.title,
+    icon: g.icon,
+    title: g.title,
+    badge: g.highlight,
+    body: (
+      <ul className="space-y-2.5">
+        {g.items.map((it, j) => (
+          <li key={j} className="flex gap-2.5 text-sm leading-relaxed text-slate-brand">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+            <span>{it}</span>
+          </li>
+        ))}
+      </ul>
+    ),
+  }));
+
+  // قائمة القطاعات كأكورديون (خلفية داكنة)
+  const sectorItems: AccordionItemData[] = SECTORS.map((s) => ({
+    key: s.title,
+    icon: s.icon,
+    title: s.title,
+    body: <p className="text-sm leading-relaxed text-sky-soft/80">{s.desc}</p>,
+  }));
+
+  // «المزيد عن أنسام»: تجميع الأقسام التفصيلية في قائمة واحدة قابلة للطي
+  const moreItems: AccordionItemData[] = [
+    {
+      key: "values",
+      icon: Sparkles,
+      title: "قيمنا",
+      badge: "مبادئ نعمل بها كل يوم في الميدان",
+      body: (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {VALUES.map((v) => (
+            <div key={v.title} className="rounded-xl2 border border-navy-100 p-5">
+              <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-brand/10 text-brand">
+                <v.icon className="h-5 w-5" />
+              </div>
+              <h4 className="font-medium text-navy">{v.title}</h4>
+              <p className="mt-1.5 text-sm leading-relaxed text-slate-brand">{v.desc}</p>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
+      key: "diff",
+      icon: Award,
+      title: "ما الذي يميّزنا فعلياً",
+      badge: "فرق حقيقي تلمسه في كل بلاغ وكل تقرير",
+      body: (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {DIFFERENTIATORS.map((d) => (
+            <div key={d.title} className="rounded-xl2 border border-navy-100 p-5">
+              <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-brand/10 text-brand">
+                <d.icon className="h-5 w-5" />
+              </div>
+              <h4 className="font-medium text-navy">{d.title}</h4>
+              <p className="mt-1.5 text-sm leading-relaxed text-slate-brand">{d.desc}</p>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
+      key: "workflow",
+      icon: Timer,
+      title: "آلية العمل",
+      badge: "من البلاغ إلى الاستقرار — سبع خطوات موثّقة",
+      body: (
+        <ol className="space-y-3">
+          {WORKFLOW.map((w, i) => (
+            <li key={w.title} className="flex gap-4">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand font-medium text-white">
+                {i + 1}
+              </span>
+              <div>
+                <h4 className="font-medium text-navy">{w.title}</h4>
+                <p className="mt-0.5 text-sm leading-relaxed text-slate-brand">{w.desc}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      ),
+    },
+    {
+      key: "quality",
+      icon: ShieldCheck,
+      title: "الجودة والسلامة والضمان",
+      badge: "التزام موثّق في كل خطوة",
+      body: (
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {QUALITY.map((q, i) => (
+            <li key={i} className="flex gap-2.5 rounded-xl2 border border-navy-100 p-4 text-sm leading-relaxed text-slate-brand">
+              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+              <span>{q}</span>
+            </li>
+          ))}
+        </ul>
+      ),
+    },
+    {
+      key: "team",
+      icon: Users,
+      title: "فريقنا",
+      badge: "خلف كل استجابة سريعة فريق منظّم",
+      body: (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {TEAM.map((t) => (
+            <div key={t.title} className="rounded-xl2 border border-navy-100 p-5">
+              <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-brand/10 text-brand">
+                <t.icon className="h-5 w-5" />
+              </div>
+              <h4 className="font-medium text-navy">{t.title}</h4>
+              <p className="mt-1.5 text-sm leading-relaxed text-slate-brand">{t.desc}</p>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-cream">
       <a href="#main-content" className="skip-link">
@@ -286,6 +496,7 @@ export default function Landing() {
             <a href="#services" className="nav-link hover:text-brand">خدماتنا</a>
             <a href="#sectors" className="nav-link hover:text-brand">القطاعات</a>
             <a href="#contracts" className="nav-link hover:text-brand">عقود الصيانة</a>
+            <a href="#more" className="nav-link hover:text-brand">المزيد</a>
             <a href="#contact" className="nav-link hover:text-brand">تواصل</a>
           </nav>
           <div className="relative" ref={ctaRef}>
@@ -479,100 +690,28 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* قيمنا */}
-      <section className="mx-auto max-w-6xl px-5 py-16">
-        <div className="reveal mb-10 text-center">
-          <h2 className="text-3xl font-medium text-navy">قيمنا</h2>
-          <p className="mt-2 text-slate-brand">مبادئ نعمل بها كل يوم في الميدان</p>
+      {/* خدماتنا — قائمة قابلة للطي */}
+      <section id="services" className="mx-auto max-w-3xl px-5 py-16">
+        <div className="reveal mb-8 text-center">
+          <span className="badge bg-sky-soft text-brand-dark">خدماتنا</span>
+          <h2 className="mt-4 text-3xl font-medium text-navy">ثلاثة محاور متكاملة</h2>
+          <p className="mt-2 text-slate-brand">اضغط على أي محور لعرض تفاصيله الكاملة</p>
         </div>
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {VALUES.map((v, i) => (
-            <div key={v.title} className="reveal" style={{ transitionDelay: `${i * 70}ms` }}>
-              <div className="card group h-full p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-glow">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand transition-all duration-300 group-hover:bg-brand group-hover:text-white">
-                  <v.icon className="h-6 w-6" />
-                </div>
-                <h3 className="font-medium text-navy">{v.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-brand">{v.desc}</p>
-              </div>
-            </div>
-          ))}
+        <div className="reveal">
+          <Accordion items={serviceItems} />
         </div>
       </section>
 
-      {/* ما يميّزنا */}
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className="reveal mb-10 text-center">
-            <h2 className="text-3xl font-medium text-navy">ما الذي يميّزنا فعلياً</h2>
-            <p className="mt-2 text-slate-brand">فرق حقيقي تلمسه في كل بلاغ وكل تقرير</p>
-          </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {DIFFERENTIATORS.map((d, i) => (
-              <div key={d.title} className="reveal" style={{ transitionDelay: `${i * 70}ms` }}>
-                <div className="group h-full rounded-xl2 border border-navy-100 p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-brand/30 hover:shadow-glow">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand transition-all duration-300 group-hover:bg-brand group-hover:text-white">
-                    <d.icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="font-medium text-navy">{d.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-brand">{d.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* خدماتنا */}
-      <section id="services" className="mx-auto max-w-6xl px-5 py-16">
-        <div className="reveal mb-10 text-center">
-          <h2 className="text-3xl font-medium text-navy">خدماتنا</h2>
-          <p className="mt-2 text-slate-brand">ثلاثة محاور متكاملة تغطي معدات المنشأة من الألف إلى الياء</p>
-        </div>
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-          {SERVICE_GROUPS.map((g, i) => (
-            <div key={g.title} className="reveal" style={{ transitionDelay: `${i * 90}ms` }}>
-              <div className="card flex h-full flex-col p-7">
-                <div className="mb-4 flex items-center gap-3">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
-                    <g.icon className="h-6 w-6" />
-                  </span>
-                  <div>
-                    <h3 className="font-medium text-navy">{g.title}</h3>
-                    {g.highlight && <span className="text-xs font-medium text-brand">{g.highlight}</span>}
-                  </div>
-                </div>
-                <ul className="mt-2 space-y-2.5">
-                  {g.items.map((it, j) => (
-                    <li key={j} className="flex gap-2.5 text-sm leading-relaxed text-slate-brand">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-                      <span>{it}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* القطاعات */}
+      {/* القطاعات — قائمة قابلة للطي */}
       <section id="sectors" className="bg-navy-gradient py-16 text-white">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className="reveal mb-10 text-center">
-            <h2 className="text-3xl font-medium">القطاعات التي نخدمها</h2>
+        <div className="mx-auto max-w-3xl px-5">
+          <div className="reveal mb-8 text-center">
+            <span className="badge bg-white/10 text-sky-soft">القطاعات</span>
+            <h2 className="mt-4 text-3xl font-medium">القطاعات التي نخدمها</h2>
             <p className="mt-2 text-sky-soft/80">حلول مصمّمة لطبيعة كل منشأة</p>
           </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {SECTORS.map((s, i) => (
-              <div key={s.title} className="reveal" style={{ transitionDelay: `${i * 60}ms` }}>
-                <div className="group h-full rounded-xl2 border border-white/10 bg-white/5 p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-white/25 hover:bg-white/10">
-                  <s.icon className="mb-4 h-9 w-9 text-sky-soft transition-transform duration-300 group-hover:-rotate-6" />
-                  <h3 className="text-lg font-medium">{s.title}</h3>
-                  <p className="mt-2 text-sm text-sky-soft/80">{s.desc}</p>
-                </div>
-              </div>
-            ))}
+          <div className="reveal">
+            <Accordion items={sectorItems} dark />
           </div>
         </div>
       </section>
@@ -603,74 +742,6 @@ export default function Landing() {
                 ))}
               </ul>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* آلية العمل */}
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className="reveal mb-10 text-center">
-            <h2 className="text-3xl font-medium text-navy">آلية العمل</h2>
-            <p className="mt-2 text-slate-brand">من البلاغ إلى الاستقرار — سبع خطوات موثّقة</p>
-          </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {WORKFLOW.map((w, i) => (
-              <div key={w.title} className="reveal" style={{ transitionDelay: `${i * 60}ms` }}>
-                <div className="flex h-full gap-4 rounded-xl2 border border-navy-100 p-5">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-white font-medium">
-                    {i + 1}
-                  </span>
-                  <div>
-                    <h3 className="font-medium text-navy">{w.title}</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-slate-brand">{w.desc}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* الجودة والسلامة والضمان */}
-      <section className="mx-auto max-w-6xl px-5 py-16">
-        <div className="grid items-center gap-8 lg:grid-cols-5">
-          <div className="reveal lg:col-span-2">
-            <h2 className="text-3xl font-medium text-navy">الجودة والسلامة والضمان</h2>
-            <p className="mt-3 leading-relaxed text-slate-brand">
-              التزام موثّق في كل خطوة — من قطع الغيار الأصلية إلى سجلّ الصيانة الإلكتروني لدى العميل.
-            </p>
-          </div>
-          <div className="reveal lg:col-span-3">
-            <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {QUALITY.map((q, i) => (
-                <li key={i} className="flex gap-2.5 rounded-xl2 border border-navy-100 p-4 text-sm leading-relaxed text-slate-brand">
-                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
-                  <span>{q}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* فريقنا */}
-      <section className="bg-navy-gradient py-16 text-white">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className="reveal mb-10 text-center">
-            <h2 className="text-3xl font-medium">فريقنا</h2>
-            <p className="mt-2 text-sky-soft/80">خلف كل استجابة سريعة فريق منظّم</p>
-          </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {TEAM.map((t, i) => (
-              <div key={t.title} className="reveal" style={{ transitionDelay: `${i * 70}ms` }}>
-                <div className="h-full rounded-xl2 border border-white/10 bg-white/5 p-6">
-                  <t.icon className="mb-4 h-9 w-9 text-sky-soft" />
-                  <h3 className="font-medium">{t.title}</h3>
-                  <p className="mt-2 text-sm text-sky-soft/80">{t.desc}</p>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -706,6 +777,18 @@ export default function Landing() {
               ))}
             </ul>
           </div>
+        </div>
+      </section>
+
+      {/* المزيد عن أنسام — أقسام تفصيلية في قائمة واحدة قابلة للطي */}
+      <section id="more" className="mx-auto max-w-3xl px-5 py-16">
+        <div className="reveal mb-8 text-center">
+          <span className="badge bg-sky-soft text-brand-dark">المزيد عن أنسام</span>
+          <h2 className="mt-4 text-3xl font-medium text-navy">تفاصيل تهمّك</h2>
+          <p className="mt-2 text-slate-brand">قِيَمنا ومزايانا وآلية عملنا ومعايير جودتنا وفريقنا — افتح ما يهمّك</p>
+        </div>
+        <div className="reveal">
+          <Accordion items={moreItems} defaultOpen={-1} />
         </div>
       </section>
 
