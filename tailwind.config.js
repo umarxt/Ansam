@@ -19,7 +19,7 @@ export default {
           900: "#0d1d2e",
         },
         brand: {
-          DEFAULT: "#2E6DA6",
+          DEFAULT: "#2E6FA8",
           light: "#3f82c0",
           dark: "#255a8a",
         },
@@ -27,12 +27,12 @@ export default {
           soft: "#D6E4F0",
         },
         slate: {
-          brand: "#4B6076",
+          brand: "#486072",
         },
         // نص مساعد مكتوم — دُكِّن ليحقق تباين AA (≈4.5:1) على الخلفية الكريمية،
         // فاللون الأفتح السابق (#8B97A6) كان دون الحد المطلوب للنصوص الصغيرة.
         steel: "#64748B",
-        cream: "#FAF7F1",
+        cream: "#FAF9F6",
       },
       fontFamily: {
         sans: [

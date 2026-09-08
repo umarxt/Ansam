@@ -65,7 +65,7 @@ export default function AppLayout() {
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-white text-navy shadow-soft"
+                    ? "bg-white text-navy"
                     : "text-sky-soft/90 hover:bg-white/10"
                 }`
               }
@@ -123,7 +123,7 @@ export default function AppLayout() {
 
       {/* الشريط الجانبي - سطح المكتب */}
       <aside
-        className="fixed inset-y-0 right-0 hidden w-64 bg-navy-gradient lg:block"
+        className="fixed inset-y-0 right-0 hidden w-64 bg-navy lg:block"
         aria-label="القائمة الجانبية"
       >
         {SidebarContent}
@@ -137,7 +137,7 @@ export default function AppLayout() {
             onClick={() => setOpen(false)}
             aria-hidden="true"
           />
-          <aside id="mobile-sidebar" className="absolute inset-y-0 right-0 w-64 bg-navy-gradient">
+          <aside id="mobile-sidebar" className="absolute inset-y-0 right-0 w-64 bg-navy">
             {SidebarContent}
           </aside>
         </div>

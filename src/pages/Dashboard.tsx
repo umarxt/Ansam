@@ -24,14 +24,14 @@ const JOB_STATUS: Record<string, { label: string; cls: string }> = {
 
 function StatCard({ icon: Icon, label, value, tone = "navy" }: any) {
   const tones: Record<string, string> = {
-    navy: "bg-navy text-white",
-    brand: "bg-brand text-white",
-    amber: "bg-amber-500 text-white",
-    green: "bg-green-600 text-white",
+    navy: "bg-sky-soft text-navy",
+    brand: "bg-sky-soft text-brand",
+    amber: "bg-amber-50 text-amber-600",
+    green: "bg-green-50 text-green-600",
   };
   return (
     <div className="card p-5 fade-in">
-      <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tones[tone]}`} aria-hidden="true">
+      <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${tones[tone]}`} aria-hidden="true">
         <Icon className="w-5 h-5" />
       </div>
       <div className="mt-4 text-2xl font-medium text-navy num">{value}</div>
@@ -77,21 +77,21 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div className="card flex items-center gap-3 p-4">
-          <Wrench className="h-8 w-8 text-brand" aria-hidden="true" />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky-soft text-navy" aria-hidden="true"><Wrench className="h-5 w-5" /></span>
           <div>
             <div className="text-xl font-medium text-navy num">{t.jobs_total || 0}</div>
             <div className="text-xs text-steel">إجمالي الطلبات الميدانية</div>
           </div>
         </div>
         <div className="card flex items-center gap-3 p-4">
-          <FileText className="h-8 w-8 text-brand" aria-hidden="true" />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky-soft text-navy" aria-hidden="true"><FileText className="h-5 w-5" /></span>
           <div>
             <div className="text-xl font-medium text-navy num">{t.invoices_count || 0}</div>
             <div className="text-xs text-steel">فاتورة</div>
           </div>
         </div>
         <div className="card flex items-center gap-3 p-4">
-          <ClipboardList className="h-8 w-8 text-brand" aria-hidden="true" />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky-soft text-navy" aria-hidden="true"><ClipboardList className="h-5 w-5" /></span>
           <div>
             <div className="text-xl font-medium text-navy num">{t.services_count || 0}</div>
             <div className="text-xs text-steel">خدمة معرّفة</div>
@@ -109,7 +109,7 @@ export default function Dashboard() {
           </Link>
         ) : (
           <div className="card flex items-center gap-3 p-4">
-            <CalendarCheck className="h-8 w-8 text-brand" aria-hidden="true" />
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky-soft text-navy" aria-hidden="true"><CalendarCheck className="h-5 w-5" /></span>
             <div>
               <div className="text-xl font-medium text-navy num">{t.quotes_count || 0}</div>
               <div className="text-xs text-steel">عرض سعر</div>

@@ -219,6 +219,24 @@ type AccordionItemData = {
   body: ReactNode;
 };
 
+/**
+ * فاصل موجي بين الأقسام — مشتق من عنصر الأنابيب في الهوية (القسم 5).
+ * يُستخدم بدل الخط المستقيم عند تغيّر خلفية القسم.
+ */
+function Wave({ flip = false }: { flip?: boolean }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className="block w-full"
+      style={{ height: 64, transform: flip ? "scaleY(-1)" : undefined }}
+      viewBox="0 0 1200 64"
+      preserveAspectRatio="none"
+    >
+      <path d="M0 40 C 200 8, 340 8, 520 34 S 900 68, 1200 28 L 1200 64 L 0 64 Z" fill="#D6E4F0" />
+    </svg>
+  );
+}
+
 /** قائمة قابلة للطي — أنيقة وخفيفة، يُفتح بند واحد في كل مرة */
 function Accordion({
   items,
@@ -232,8 +250,8 @@ function Accordion({
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div
-      className={`overflow-hidden rounded-xl2 border ${
-        dark ? "border-white/10 bg-white/5" : "border-navy-100/60 bg-white shadow-card"
+      className={`overflow-hidden rounded-2xl border ${
+        dark ? "border-white/10 bg-white/5" : "border-navy-100 bg-white"
       }`}
     >
       {items.map((it, i) => {
@@ -600,7 +618,7 @@ export default function Landing() {
             {ctaOpen && (
               <div
                 role="menu"
-                className="fade-in absolute end-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-navy-100 bg-white p-1.5 shadow-card"
+                className="fade-in absolute end-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-navy-100 bg-white p-1.5"
               >
                 <a role="menuitem" href={wa} target="_blank" rel="noreferrer" onClick={() => setCtaOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-navy transition hover:bg-navy-50">
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand"><MessageCircle className="h-4 w-4" aria-hidden="true" /></span>
@@ -638,8 +656,13 @@ export default function Landing() {
             <div className="absolute inset-0 bg-cream/85" />
           </div>
         )}
-        <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-brand/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-40 -right-20 h-96 w-96 rounded-full bg-sky-soft/40 blur-3xl" />
+        {/* عنصر المروحة: مرة واحدة فقط، كبير وباهت في زاوية الهيرو (القسم 5) */}
+        <img
+          src="/ansam-mark.svg"
+          alt=""
+          aria-hidden="true"
+          className="spin-slow pointer-events-none absolute -left-24 -top-28 z-0 h-[26rem] w-[26rem] opacity-[0.05]"
+        />
         <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:py-24">
           <div className="fade-in">
             <span className="badge bg-sky-soft text-brand-dark">تكييف • تبريد تجاري • مطابخ وأفران</span>
@@ -661,17 +684,17 @@ export default function Landing() {
               </a>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-brand">
-              <span className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-brand" aria-hidden="true" /> فنيون معتمدون</span>
-              <span className="flex items-center gap-2"><Timer className="h-5 w-5 text-brand" aria-hidden="true" /> استجابة خلال 30 دقيقة</span>
-              <span className="flex items-center gap-2"><Clock className="h-5 w-5 text-brand" aria-hidden="true" /> طوارئ على مدار الساعة</span>
+              <span className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-navy" aria-hidden="true" /> فنيون معتمدون</span>
+              <span className="flex items-center gap-2"><Timer className="h-5 w-5 text-navy" aria-hidden="true" /> استجابة خلال 30 دقيقة</span>
+              <span className="flex items-center gap-2"><Clock className="h-5 w-5 text-navy" aria-hidden="true" /> طوارئ على مدار الساعة</span>
             </div>
           </div>
 
           <div className="relative fade-in">
-            <div className="card overflow-hidden bg-navy-gradient p-8 text-white shadow-glow">
-              <img src="/ansam-mark-white.svg" alt="" aria-hidden="true" className="mb-4 h-14 w-14 object-contain" />
-              <div className="text-2xl font-medium">{COMPANY.tagline}</div>
-              <p className="mt-3 text-sky-soft/80">
+            <div className="card overflow-hidden p-8">
+              <img src="/ansam-mark.svg" alt="" aria-hidden="true" className="mb-4 h-14 w-14 object-contain" />
+              <div className="text-2xl font-medium text-navy">{COMPANY.tagline}</div>
+              <p className="mt-3 leading-relaxed text-slate-brand">
                 نُمكّن المنشآت التجارية والفندقية من العمل دون انقطاع عبر صيانة استباقية واستجابة طارئة سريعة.
               </p>
               <div className="mt-6 grid grid-cols-3 gap-3 text-center">
@@ -680,9 +703,9 @@ export default function Landing() {
                   { n: "24/7", t: "طوارئ" },
                   { n: "100%", t: "توثيق" },
                 ].map((s) => (
-                  <div key={s.t} className="rounded-xl bg-white/10 py-3">
-                    <div className="text-lg font-medium">{s.n}</div>
-                    <div className="text-xs text-sky-soft/80">{s.t}</div>
+                  <div key={s.t} className="rounded-xl bg-sky-soft/50 py-3">
+                    <div className="num text-lg font-medium text-navy">{s.n}</div>
+                    <div className="text-xs text-slate-brand">{s.t}</div>
                   </div>
                 ))}
               </div>
@@ -731,23 +754,27 @@ export default function Landing() {
         </div>
       </section>
 
+      <Wave />
+
       {/* القطاعات — قائمة قابلة للطي */}
-      <section id="sectors" className="bg-navy-gradient py-16 text-white">
+      <section id="sectors" className="bg-white py-16">
         <div className="mx-auto max-w-3xl px-5">
           <div className="reveal mb-8 text-center">
-            <span className="badge bg-white/10 text-sky-soft">القطاعات</span>
-            <h2 className="mt-4 text-3xl font-medium">القطاعات التي نخدمها</h2>
-            <p className="mt-2 text-sky-soft/80">حلول مصمّمة لطبيعة كل منشأة</p>
+            <span className="badge border border-navy-100 bg-cream text-slate-brand">القطاعات</span>
+            <h2 className="mt-4 text-3xl font-medium text-navy">القطاعات التي نخدمها</h2>
+            <p className="mt-2 text-slate-brand">حلول مصمّمة لطبيعة كل منشأة</p>
           </div>
           <div className="reveal">
-            <Accordion items={sectorItems} dark />
+            <Accordion items={sectorItems} />
           </div>
         </div>
       </section>
 
+      <Wave flip />
+
       {/* عقود الصيانة السنوية — دعوة مختصرة */}
       <section id="contracts" className="mx-auto max-w-3xl px-5 py-16">
-        <div className="reveal card overflow-hidden bg-navy-gradient p-8 text-center text-white md:p-12">
+        <div className="reveal overflow-hidden rounded-2xl bg-navy p-8 text-center text-white md:p-12">
           <span className="badge bg-white/10 text-sky-soft">نموذجنا الأساسي</span>
           <h2 className="mt-4 text-3xl font-medium">عقود الصيانة السنوية</h2>
           <p className="mx-auto mt-3 max-w-xl leading-relaxed text-sky-soft/85">
@@ -806,11 +833,11 @@ export default function Landing() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-center justify-center bg-navy-gradient p-8 text-center text-white md:p-10">
-              <Logo className="h-16 w-16" onDark />
-              <div className="mt-4 text-2xl font-medium">أنسام</div>
-              <p className="mt-2 max-w-xs text-sm text-sky-soft/80">{COMPANY.tagline}</p>
-              <p className="mt-4 text-xs text-sky-soft/70">سجل تجاري رقم {COMPANY.cr}</p>
+            <div className="flex flex-col items-center justify-center border-t border-navy-100 bg-cream p-8 text-center md:border-s md:border-t-0 md:p-10">
+              <Logo className="h-16 w-16" />
+              <div className="mt-4 text-2xl font-medium text-navy">أنسام</div>
+              <p className="mt-2 max-w-xs text-sm text-slate-brand">{COMPANY.tagline}</p>
+              <p className="num mt-4 text-xs text-steel">سجل تجاري رقم {COMPANY.cr}</p>
             </div>
           </div>
         </div>
